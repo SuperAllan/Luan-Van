@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Built-By: Phuong
-Build-Jdk: 1.8.0_11
+Built-By: phuon_000
+Build-Jdk: 1.8.0_25
 Created-By: Maven Integration for Eclipse
 

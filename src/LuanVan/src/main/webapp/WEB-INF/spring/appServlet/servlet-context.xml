@@ -54,6 +54,7 @@
 	</beans:bean>
 	<beans:bean id="myUserDetailsService" class="vn.com.luanvan.service.MyUserDetailsService">
 	</beans:bean>
+	
 	<!-- Hibernate Transaction Manager -->
 	<beans:bean id="transactionManager"
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager">

@@ -86,8 +86,8 @@
 				</script>
 		 
 				<c:if test="${pageContext.request.userPrincipal.name != null}">
-					<li class="dropdown" style="padding-top: 10px; padding-right: 20px">
-					  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" >
+					<li class="dropdown" style="padding-top: 10px; padding-right: 20px;">			  
+						<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" >
 					    ${pageContext.request.userPrincipal.name}
 					    <span class="caret"></span>
 					  </button>
@@ -95,7 +95,7 @@
 					    <li role="presentation" id="nutdmk"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#changePasswordModal" >Đổi mật khẩu</a></li>
 					    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:formSubmit()">Logout</a></li>
 					  </ul>
-					<li>
+					</li>
 				</c:if>
 			</sec:authorize>
         </li>
