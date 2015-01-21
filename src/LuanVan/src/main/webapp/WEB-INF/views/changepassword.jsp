@@ -2,7 +2,7 @@
 
 <form action="/luanvan/doimatkhau" method="POST" role="form" id="form-doi-mat-khau"> 
 		  <input type="hidden" name="username" id="username" class="form-control" value="${pageContext.request.userPrincipal.name}">
-		  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+		  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		<div class="form-group">
 		<div class="input-group">
 		  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>

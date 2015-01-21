@@ -2,11 +2,13 @@
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ include file="/WEB-INF/views/menu.jsp" %>
-<link href="<c:url value="/resources/css/background.css" />" rel="stylesheet">
+
 <html>
 <head>
 <title>Thông tin cá nhân</title>
+<link href="<c:url value="/resources/css/background.css" />" rel="stylesheet">
 <style>
 .table{
 	margin-bottom: 0px;
@@ -26,9 +28,32 @@
 <div class="container">
 <div class="row">
 <div class="col-md-2 text-center">
-	<a href="#" class="thumbnail" style="margin-bottom:0;">
-      <img src="<c:url value="/resources/img/hinh.svg" />" style="height: 180px; width: 171px;">
-    </a>
+	<div class="thumbnail" style="margin-bottom:0; height: 180px; width: 171px; padding: 0px;">
+      <form:form method="POST" action="/luanvan/uploadFile" role="form" modelAttribute="formUpload" enctype="multipart/form-data" id="formUploadFile">
+     
+      	<div onclick="showDialog()" style="height: 180px; width: 171px; padding: 0px; margin: 0px;">
+      		<c:if test="${not empty image }">
+      			<img src="<c:url value="${image}" />" style="height: 180px; width: 171px;">
+      		</c:if>
+      		<c:if test="${empty image }">
+      			<img src="<c:url value="/resources/img/hinh.svg" />" style="height: 180px; width: 171px;">
+      		</c:if>
+      	</div>
+      	 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+      	 <input type="file" name="file" style="opacity:0;" id="uploadImageId"/>
+      </form:form>
+    </div>
+    <script>
+		function showDialog() {
+			$("#uploadImageId").click();
+		}
+	
+		$(":file").change(function() {
+			alert($(":file").val());
+			$("#formUploadFile").submit();
+			alert("ok");
+		});
+	</script>
     <span style="font-size:20px; color:#666;">${username}</span>
     <div class="tabs-left">
 		<ul class="nav nav-tabs tab-left">

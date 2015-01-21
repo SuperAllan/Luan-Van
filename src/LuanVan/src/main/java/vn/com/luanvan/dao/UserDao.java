@@ -23,4 +23,5 @@ public interface UserDao {
 	
 	boolean checkEmail(String email);
 	
+	
 }

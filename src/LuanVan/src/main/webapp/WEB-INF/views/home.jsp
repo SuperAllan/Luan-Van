@@ -21,7 +21,7 @@
 	</div>
 	<div class="col-md-4">
 			<form action="/luanvan/dangky" method="POST" role="form" id="form-dang-ky">
-					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+					
 					<div class="form-group">
 						<div class="input-group">
 						  <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>

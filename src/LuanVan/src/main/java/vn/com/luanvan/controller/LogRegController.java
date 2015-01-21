@@ -155,6 +155,7 @@ public class LogRegController {
 			model.addAttribute("listMaking", making);
 			model.addAttribute("listFinish", finish);
 			model.addAttribute("listStopping", stopping);
+			model.addAttribute("image", user.getImage());
 			return "background";
 		}
 		

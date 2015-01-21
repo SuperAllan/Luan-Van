@@ -2,6 +2,7 @@ package vn.com.luanvan.model;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,27 +21,30 @@ public class User implements java.io.Serializable {
 	private String password;
 	private boolean enabled;
 	private String email;
+	private String image;
 	private Set<Project> projects = new HashSet<Project>(0);
 	private Set<UserRole> userroles = new HashSet<UserRole>(0);
 
 	public User() {
 	}
 
-	public User(String username, String password, boolean enabled, String email) {
+	public User(String username, String password, boolean enabled, String email, String image) {
 		this.username = username;
 		this.password = password;
 		this.enabled = enabled;
 		this.email = email;
+		this.image = image;
 	}
 
 	public User(String username, String password, boolean enabled,
-			String email, Set<Project> projects, Set<UserRole> userroles) {
+			String email, Set<Project> projects, Set<UserRole> userroles, String image) {
 		this.username = username;
 		this.password = password;
 		this.enabled = enabled;
 		this.email = email;
 		this.projects = projects;
 		this.userroles = userroles;
+		this.image = image;
 	}
 
 	@Id
@@ -97,5 +101,12 @@ public class User implements java.io.Serializable {
 	public void setUserroles(Set<UserRole> userroles) {
 		this.userroles = userroles;
 	}
+	@Column(name = "IMAGE", length = 999)
+	public String getImage() {
+		return this.image;
+	}
 
+	public void setImage(String image) {
+		this.image = image;
+	}
 }

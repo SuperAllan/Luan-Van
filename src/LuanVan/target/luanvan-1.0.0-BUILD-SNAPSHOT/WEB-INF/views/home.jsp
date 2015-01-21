@@ -7,12 +7,6 @@
 <head>
 <title>Trang chủ</title>
 </head>
-<script type="text/javascript">
-
-$('form-dang-ky').validate({
-});
-}
-</script>
 <body style="padding-top: 50px;" >
 <div class="container-fluid" style="padding-top: 20px; background-color: #202021;height: 500px;">
 <div class="container">
@@ -26,13 +20,7 @@ $('form-dang-ky').validate({
 			<span class="glyphicon glyphicon-arrow-right"></span></p>
 	</div>
 	<div class="col-md-4">
-			<form action="/luanvan/dangky" method="POST" role="form" id="form-dang-ky"
-			data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
-    		data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
-    		data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
-		    
-					<input type="hidden" name="${_csrf.parameterName}"
-					value="${_csrf.token}" />
+			<form action="/luanvan/dangky" method="POST" role="form" id="form-dang-ky">
 					
 					<div class="form-group">
 						<div class="input-group">

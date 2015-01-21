@@ -8,7 +8,14 @@
 <!-- BootstraoValidator -->
 <script src="<c:url value="/resources/js/bootstrapValidator.min.js" />" ></script>
 <link href="<c:url value="/resources/css/bootstrapValidator.min.css" />" rel="stylesheet">
+<style>
+ .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus{
+ background-color: transparent;
+ color: #337ab7;
+ }
 
+
+</style>
 
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
@@ -72,7 +79,7 @@
 		 
 				<c:if test="${pageContext.request.userPrincipal.name != null}">
 					<li class="dropdown" style="padding-top: 10px; ">			  
-						<a type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="cursor: pointer;">
+						<a type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="cursor: pointer; ">
 					    ${pageContext.request.userPrincipal.name}
 					    <span class="caret"></span>
 					  </a>

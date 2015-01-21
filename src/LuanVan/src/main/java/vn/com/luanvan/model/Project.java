@@ -29,6 +29,7 @@ public class Project implements java.io.Serializable {
 	private int status;
 	private String description;
 
+
 	public Project() {
 	}
 
@@ -128,5 +129,7 @@ public class Project implements java.io.Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	
 
 }

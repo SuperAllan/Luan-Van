@@ -29,7 +29,7 @@
 	<!-- MySQL data source -->
 	<beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<beans:property name="url" value="jdbc:mysql://localhost:3306/luanvan?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
+		<beans:property name="url" value="jdbc:mysql://localhost:3306/luanvan2?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
 		<beans:property name="username" value="root" />
 		<beans:property name="password" value="" />
 	</beans:bean>
@@ -52,6 +52,11 @@
 	<beans:bean id="userDao" class="vn.com.luanvan.dao.UserDaoImpl">
 		<beans:property name="sessionFactory" ref="sessionFactory" />
 	</beans:bean>
+	
+	<beans:bean id="projectDao" class="vn.com.luanvan.dao.ProjectDaoImpl">
+		<beans:property name="sessionFactory" ref="sessionFactory" />
+	</beans:bean>
+	
 	<beans:bean id="myUserDetailsService" class="vn.com.luanvan.service.MyUserDetailsService">
 	</beans:bean>
 	
@@ -91,5 +96,7 @@
             </beans:props>
         </beans:property>
     </beans:bean>
-		
+	<beans:bean id="multipartResolver" 
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+	
 </beans:beans>
