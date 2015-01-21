@@ -1,12 +1,8 @@
 package vn.com.luanvan.dao;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -26,7 +22,7 @@ public class UserDaoImpl implements UserDao {
 	    
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public User findByUserName(String username) {
+	public boolean findByUserName(String username) {
 
 		List<User> users = new ArrayList<User>();
 
@@ -35,9 +31,9 @@ public class UserDaoImpl implements UserDao {
 				.setParameter(0, username).list();
 
 		if (users.size() > 0) {
-			return users.get(0);
+			return true;
 		} else {
-			return null;
+			return false;
 		}
 
 	}
@@ -49,7 +45,12 @@ public class UserDaoImpl implements UserDao {
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-
+	
+	@Transactional
+	public final User findUserbyUserName(String username) {
+		return (User) sessionFactory.getCurrentSession()
+				.get(User.class, username);
+	}
 	
 
 	/**
@@ -67,18 +68,17 @@ public class UserDaoImpl implements UserDao {
 	public void add(User user) {
 		sessionFactory.getCurrentSession().save(user);
 	}
-	@Transactional
-	public final User findUserbyUserName(String username) {
-		return (User) sessionFactory.getCurrentSession()
-				.get(User.class, username);
-	}
+	
 	
 	@Transactional
-	public void sendMail(User user, String pass){
+	public void sendMail(User user){
 		SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(user.getEmail());
         email.setSubject("Đăng ký tài khoản");
-        email.setText("Xin chào bạn đã đăng ký thành công tài khoản \n"+pass);
+        email.setText("Xin chào bạn đã đăng ký thành công tài khoản \n\n"
+        		+ "Tài khoản: "+user.getUsername() +"\n\n"
+        		+"Mật khẩu: "+user.getPassword()+ "\n"
+        		);
         // sends the e-mail
         mailSender.send(email);
 	}
@@ -90,7 +90,19 @@ public class UserDaoImpl implements UserDao {
 		}
 		return false;
 	}
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public boolean checkEmail(String email) {
+		List<User> users = new ArrayList<User>();
+		users = sessionFactory.getCurrentSession().createQuery("from User where email=?").setParameter(0, email).list();
+		if (users.size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
+	
 	
 	
 

@@ -5,7 +5,7 @@ import vn.com.luanvan.model.User;
 
 public interface UserDao {
 
-	User findByUserName(String username);
+	boolean findByUserName(String username);
 
 	/**
 	 * @author lonel_000
@@ -17,7 +17,10 @@ public interface UserDao {
 
 	User findUserbyUserName(String username);
 	
-	void sendMail (User user, String pass);
+	void sendMail (User user);
 
 	boolean checkOldPassword (User user, String oldPass);
+	
+	boolean checkEmail(String email);
+	
 }
