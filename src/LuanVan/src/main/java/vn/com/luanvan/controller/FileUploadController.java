@@ -36,7 +36,7 @@ public class FileUploadController{
 				+ "/resources/file/";
 		MultipartFile file = formUpload.getFile();
         if(null != file) {
-        	System.out.print(file.getOriginalFilename());
+        	
             String username = principal.getName();
             String fileName = file.getOriginalFilename();
             if (!(fileName + locationSave).equals(locationSave)) {

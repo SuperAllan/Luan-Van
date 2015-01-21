@@ -78,8 +78,11 @@
 				</script>
 		 
 				<c:if test="${pageContext.request.userPrincipal.name != null}">
-					<li class="dropdown" style="padding-top: 10px; ">			  
+					<li class="dropdown">			  
 						<a type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="cursor: pointer; ">
+					    <c:if test="${not empty image}">
+					    	<img src="<c:url value="${image}" />" class="img-rounded" style="width: 20px; height: 20px;">
+					    </c:if>
 					    ${pageContext.request.userPrincipal.name}
 					    <span class="caret"></span>
 					  </a>

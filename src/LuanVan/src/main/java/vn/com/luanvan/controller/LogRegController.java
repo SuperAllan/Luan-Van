@@ -140,7 +140,7 @@ public class LogRegController {
 			else{
 				model.addAttribute("errorOldPass", "Nhập mật khẩu cũ không chính xác");
 			}
-			return "background";
+			return "redirect:/background";
 		}
 		
 		

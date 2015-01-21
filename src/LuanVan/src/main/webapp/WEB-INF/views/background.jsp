@@ -9,19 +9,6 @@
 <head>
 <title>Thông tin cá nhân</title>
 <link href="<c:url value="/resources/css/background.css" />" rel="stylesheet">
-<style>
-.table{
-	margin-bottom: 0px;
-}
-.projectName{
-	font-weight: bold;
-	font-size: 14px;
-}
-.description{
-	font-size: 12px;
-}
-</style>
-
 </head>
 <body style="padding-top: 70px;">
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
@@ -43,17 +30,7 @@
       	 <input type="file" name="file" style="opacity:0;" id="uploadImageId"/>
       </form:form>
     </div>
-    <script>
-		function showDialog() {
-			$("#uploadImageId").click();
-		}
-	
-		$(":file").change(function() {
-			alert($(":file").val());
-			$("#formUploadFile").submit();
-			alert("ok");
-		});
-	</script>
+    
     <span style="font-size:20px; color:#666;">${username}</span>
     <div class="tabs-left">
 		<ul class="nav nav-tabs tab-left">
@@ -142,6 +119,6 @@
 </div>  
 <%@ include file="/WEB-INF/views/footer.jsp" %>  
 </div>
-
+<script src="<c:url value="/resources/js/background.js" />" ></script>
 </body>
 </html>

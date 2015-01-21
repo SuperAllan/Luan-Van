@@ -37,3 +37,13 @@
   *border-right-color: #ffffff;
   color:black;
 }
+.table{
+	margin-bottom: 0px;
+}
+.projectName{
+	font-weight: bold;
+	font-size: 14px;
+}
+.description{
+	font-size: 12px;
+}
