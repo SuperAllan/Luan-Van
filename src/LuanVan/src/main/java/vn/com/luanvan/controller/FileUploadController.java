@@ -6,6 +6,7 @@ import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,31 +31,13 @@ public class FileUploadController{
 	private ProjectDao projectDao;
 	
 	@RequestMapping(value="/uploadFile",  method = RequestMethod.POST)
-	public String onSubmit(HttpServletRequest request, 
-			@ModelAttribute("formUpload") FileUpload formUpload, Principal principal){
-		String locationSave = request.getSession().getServletContext().getRealPath("/") 
-				+ "/resources/file/";
-		MultipartFile file = formUpload.getFile();
-        if(null != file) {
-        	
-            String username = principal.getName();
-            String fileName = file.getOriginalFilename();
-            if (!(fileName + locationSave).equals(locationSave)) {
-            	File pathFile = new File(locationSave + fileName);
-                try {
-					file.transferTo(pathFile);
-				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-                User user = userDao.findUserbyUserName(username);
-                user.setImage("/resources/file/" + fileName);
-                userDao.save(user);
-            }
-        }
+	public String onSubmit(HttpServletRequest request, Principal principal){
+		String file  = request.getParameter("file");
+		String username = principal.getName();
+		User user = userDao.findUserbyUserName(username);
+		user.setImage(file);
+		userDao.save(user);
+		
 		
 		return "redirect:/background";	
 	}

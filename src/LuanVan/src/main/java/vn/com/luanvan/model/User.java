@@ -22,22 +22,28 @@ public class User implements java.io.Serializable {
 	private boolean enabled;
 	private String email;
 	private String image;
+	private String phone;
+	private String address;
+	private String name;
 	private Set<Project> projects = new HashSet<Project>(0);
 	private Set<UserRole> userroles = new HashSet<UserRole>(0);
 
 	public User() {
 	}
 
-	public User(String username, String password, boolean enabled, String email, String image) {
+	public User(String username, String password, boolean enabled, String email, String image, String phone, String address, String name) {
 		this.username = username;
 		this.password = password;
 		this.enabled = enabled;
 		this.email = email;
 		this.image = image;
+		this.phone = phone;
+		this.address = address;
+		this.name = name;
 	}
 
 	public User(String username, String password, boolean enabled,
-			String email, Set<Project> projects, Set<UserRole> userroles, String image) {
+			String email, Set<Project> projects, Set<UserRole> userroles, String image, String name, String phone, String address) {
 		this.username = username;
 		this.password = password;
 		this.enabled = enabled;
@@ -45,6 +51,9 @@ public class User implements java.io.Serializable {
 		this.projects = projects;
 		this.userroles = userroles;
 		this.image = image;
+		this.phone = phone;
+		this.address = address;
+		this.name = name;
 	}
 
 	@Id
@@ -101,7 +110,7 @@ public class User implements java.io.Serializable {
 	public void setUserroles(Set<UserRole> userroles) {
 		this.userroles = userroles;
 	}
-	@Column(name = "IMAGE", length = 999)
+	@Column(name = "IMAGE")
 	public String getImage() {
 		return this.image;
 	}
@@ -109,4 +118,31 @@ public class User implements java.io.Serializable {
 	public void setImage(String image) {
 		this.image = image;
 	}
+	@Column(name = "PHONE", length = 12)
+	public String getPhone() {
+		return this.phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	
+	@Column(name = "NAME", length = 255)
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	@Column(name = "ADDRESS", length = 999)
+	public String getAddress() {
+		return this.address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
 }

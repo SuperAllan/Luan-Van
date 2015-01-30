@@ -68,5 +68,16 @@ public class ProjectDaoImpl implements ProjectDao{
 		projects = query.list();
 		return projects;
 	}
+
+	@Transactional
+	public Project findProjectByName(String username,String projectName) {
+		List<Project> projects = new ArrayList<Project>();
+		String hql = "from Project as a where a.user.username= :username and a.name= :name"; 
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("username", username);
+		query.setParameter("name", projectName);
+		projects = query.list();
+		return projects.get(0);
+	}
 	
 }

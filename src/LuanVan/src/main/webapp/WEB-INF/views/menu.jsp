@@ -1,21 +1,22 @@
 <%@ page language="java" pageEncoding="utf8" contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <script src="<c:url value="/resources/js/jquery-1.11.2.min.js" />" ></script>
 <script src="<c:url value="/resources/js/bootstrap.min.js" />" ></script>
 <link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
 <!-- BootstraoValidator -->
 <script src="<c:url value="/resources/js/bootstrapValidator.min.js" />" ></script>
 <link href="<c:url value="/resources/css/bootstrapValidator.min.css" />" rel="stylesheet">
+<link href="<c:url value="/resources/css/font.css" />" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900,200italic,300italic,400italic,600italic,700italic,900italic&subset=latin,vietnamese,latin-ext' rel='stylesheet' type='text/css'>
 <style>
  .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus{
  background-color: transparent;
  color: #337ab7;
  }
-
-
 </style>
+
 
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
@@ -80,8 +81,8 @@
 				<c:if test="${pageContext.request.userPrincipal.name != null}">
 					<li class="dropdown">			  
 						<a type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="cursor: pointer; ">
-					    <c:if test="${not empty image}">
-					    	<img src="<c:url value="${image}" />" class="img-rounded" style="width: 20px; height: 20px;">
+					    <c:if test="${not empty user.image}">
+					    	<img src="<c:url value="${user.image}" />" class="img-rounded" style="width: 20px; height: 20px;">
 					    </c:if>
 					    ${pageContext.request.userPrincipal.name}
 					    <span class="caret"></span>

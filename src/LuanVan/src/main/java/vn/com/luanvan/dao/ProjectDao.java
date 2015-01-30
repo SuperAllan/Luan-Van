@@ -15,4 +15,6 @@ public interface ProjectDao{
 	boolean checkProjectName(String username, String projectName);
 	
 	List<Project> getListProject(String username,int status);
+	
+	Project findProjectByName(String username, String projectName);
 }

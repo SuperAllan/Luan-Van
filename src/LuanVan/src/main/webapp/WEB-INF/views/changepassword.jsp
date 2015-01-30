@@ -39,4 +39,4 @@
      <div class="text-center" id="successChangePassword">${successChangePassword}</div>
 </form>
 
-<script src="<c:url value="/resources/js/changepassword.js" />" ></script>
+

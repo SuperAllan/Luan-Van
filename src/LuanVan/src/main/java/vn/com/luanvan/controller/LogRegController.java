@@ -4,6 +4,10 @@ package vn.com.luanvan.controller;
 import java.math.BigInteger;
 import java.security.Principal;
 import java.security.SecureRandom;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import vn.com.luanvan.dao.ProjectDao;
 import vn.com.luanvan.dao.UserDao;
@@ -130,33 +135,59 @@ public class LogRegController {
 			}
 		}
 		@RequestMapping(value = "/doimatkhau", method = RequestMethod.POST)
-		public String changePassword(HttpServletRequest http, User user,Model model ) {
+		public String changePassword(HttpServletRequest http, User user,RedirectAttributes redirectAttributes) {
 			user = userDao.findUserbyUserName(http.getParameter("username"));
 			if(userDao.checkOldPassword(user, http.getParameter("oldPassword"))){
 				user.setPassword(http.getParameter("newPassword"));
 				userDao.save(user);
-				model.addAttribute("successChangePassword", "Bạn đã thay đổi mật khẩu thành công");
+				redirectAttributes.addFlashAttribute("successChangePassword", "Bạn đã thay đổi mật khẩu thành công");
 			}
 			else{
-				model.addAttribute("errorOldPass", "Nhập mật khẩu cũ không chính xác");
+				redirectAttributes.addFlashAttribute("errorOldPass", "Nhập mật khẩu cũ không chính xác");
 			}
 			return "redirect:/background";
 		}
 		
 		
 		@RequestMapping(value = "/background", method = RequestMethod.GET)
-		public String background(Model model, User user,Principal principal){
+		public String background(Model model, User user,Principal principal) throws ParseException{
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			String name = principal.getName();
 			user = userDao.findUserbyUserName(name);
 			List<Project> making = projectDao.getListProject(name, 0);
 			List<Project> finish = projectDao.getListProject(name, 1);
 			List<Project> stopping = projectDao.getListProject(name, 2);
-			model.addAttribute("username", user.getUsername());
+			
+			model.addAttribute("user", user);
 			model.addAttribute("listMaking", making);
 			model.addAttribute("listFinish", finish);
 			model.addAttribute("listStopping", stopping);
-			model.addAttribute("image", user.getImage());
 			return "background";
 		}
 		
+		@RequestMapping(value = "/updateInformation", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+		public String updateInformation(HttpServletRequest request, User user, Principal principal, RedirectAttributes redirectAttributes){
+			String username = principal.getName();
+			user = userDao.findUserbyUserName(username);
+			String name = request.getParameter("name");
+			String phone = request.getParameter("phone");
+			String email = request.getParameter("updateEmail");
+			String address = request.getParameter("address");
+			if(name != "" || name != null){
+				user.setName(name);
+			}
+			if(phone != "" || phone != null){
+				user.setPhone(phone);
+			}
+			if(address != "" || address != null){
+				user.setAddress(address);;
+			}
+			if(email != "" || email != null){
+				user.setEmail(email);
+			}
+			userDao.save(user);
+			redirectAttributes.addFlashAttribute("updateSuccess", "Cập nhật thông tin  thành công");
+			return "redirect:/background";
+			
+		}
 }

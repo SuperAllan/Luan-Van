@@ -1,17 +1,19 @@
 package vn.com.luanvan.model;
 
+import java.io.File;
+
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileUpload{
  
-	MultipartFile file;
+	File file;
 	//getter and setter methods
 
-	public MultipartFile getFile() {
+	public File getFile() {
 		return file;
 	}
 
-	public void setFile(MultipartFile file) {
+	public void setFile(File file) {
 		this.file = file;
 	}
 	
