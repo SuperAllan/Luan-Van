@@ -37,9 +37,7 @@ public class ProjectDaoImpl implements ProjectDao{
 	@Transactional
 	public boolean checkProjectName(String username, String projectName) {
 		List<Project> project = new ArrayList<Project>();
-		System.out.print(username);
-		System.out.print(projectName);
-		String hql = "from Project as a where  a.user.username= :username and a.name= :projectName";
+		String hql = "from Project as a where  a.user.username= :username and a.tenproject= :projectName";
 		Query query = (Query) sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("username", username);
 		query.setParameter("projectName", projectName);
@@ -61,7 +59,7 @@ public class ProjectDaoImpl implements ProjectDao{
 	@Transactional
 	public List<Project> getListProject(String username, int status) {
 		List<Project> projects = new ArrayList<Project>();
-		String hql = "from Project as a where a.user.username= :username and a.status= :status"; 
+		String hql = "from Project as a where a.user.username= :username and a.trangthai= :status"; 
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("username", username);
 		query.setParameter("status", status);
@@ -72,7 +70,7 @@ public class ProjectDaoImpl implements ProjectDao{
 	@Transactional
 	public Project findProjectByName(String username,String projectName) {
 		List<Project> projects = new ArrayList<Project>();
-		String hql = "from Project as a where a.user.username= :username and a.name= :name"; 
+		String hql = "from Project as a where a.user.username= :username and a.tenproject= :name"; 
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("username", username);
 		query.setParameter("name", projectName);

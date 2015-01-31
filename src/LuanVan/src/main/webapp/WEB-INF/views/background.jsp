@@ -52,7 +52,7 @@
             <div class="panel panel-default">
 			  <div class="panel-heading" >
 			  		<span style="font-size: 20px">Các dự án</span>
-			 	 <a type="button" class="btn btn-default pull-right"  href="${contextPath}/formCreateProject">
+			 	 <a type="button" class="btn btn-primary pull-right"  href="${contextPath}/formCreateProject">
 			 	 	<i class="glyphicon glyphicon-plus"></i> Tạo dự án</a>
 			  </div>
 			  <div class="panel-body">
@@ -64,8 +64,8 @@
 							<c:forEach var="list" items="${listMaking}">
 								<tr>
 									<td>
-										<a href="${contextPath}/detailProject/name=${list.name}" class="projectName">${list.name}</a><br>
-										<span class="description">${list.description}</span>
+										<a href="${contextPath}/detailProject/name=${list.tenproject}" class="projectName">${list.tenproject}</a><br>
+										<span class="description">${list.motaproject}</span>
 										<span class="pull-right date-create"><fmt:formatDate value="${list.ngaytao}" pattern="dd-MM-yyyy" /></span>
 									</td>
 								</tr>
@@ -83,8 +83,8 @@
 								<c:forEach var="list" items="${listFinish}">
 									<tr>
 										<td>
-											<a href="${contextPath}/detailProject/name=${list.name}" class="projectName">${list.name}</a><br>
-											<span class="description">${list.description}</span>
+											<a href="${contextPath}/detailProject/name=${list.tenproject}" class="projectName">${list.tenproject}</a><br>
+											<span class="description">${list.motaproject}</span>
 											<span class="pull-right date-create"><fmt:formatDate value="${list.ngaytao}" pattern="dd-MM-yyyy" /></span>
 										</td>
 									</tr>
@@ -102,8 +102,8 @@
 							<c:forEach var="list" items="${listStopping}">
 								<tr>
 									<td>
-										<a href="${contextPath}/detailProject/name=${list.name}" class="projectName">${list.name}</a><br>
-										<span class="description">${list.description}</span>
+										<a href="${contextPath}/detailProject/name=${list.tenproject}" class="projectName">${list.tenproject}</a><br>
+										<span class="description">${list.motaproject}</span>
 										<span class="pull-right date-create"><fmt:formatDate value="${list.ngaytao}" pattern="dd-MM-yyyy" /></span>
 									</td>
 								</tr>
@@ -126,7 +126,7 @@
 				  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					  	<div class="form-group">
 					  		<span>Họ và tên:</span>
-					  		<input type="text" name="name" class="form-control" value="${user.name}"  placeholder="Nhập họ và tên vào đây">
+					  		<input type="text" name="name" class="form-control" value="${user.fullname}"  placeholder="Nhập họ và tên vào đây">
 					  	</div>
 					  	<div class="form-group">
 					  		<span>Email:</span>
@@ -138,12 +138,15 @@
 					  	</div>
 					  	<div class="form-group">
 					  		<span>Địa chỉ:</span>
-					  		<textarea name="address"  class="form-control" rows="3" >
-					  		${user.address}
-					  		</textarea>
+					  		<textarea name="address"  class="form-control" rows="3" >${user.address}</textarea>
 					  	</div>
 					  	<button type="submit" class="btn btn-default btn-primary">Cập nhật</button>
-					  	<div class="text-center">${updateSuccess }</div>
+					  	<c:if test="${not empty updateSuccess}">
+						  	<div class="alert alert-success text-center alert-update-success" style="margin-top: 10px;">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+								${updateSuccess}
+							</div>
+					  	</c:if>
 				  </form>
 			  </div>
 			</div><!-- End panel -->
@@ -151,10 +154,11 @@
     </div>
 </div>
 
-</div>  
-<%@ include file="/WEB-INF/views/footer.jsp" %>  
+</div>
+<%@ include file="/WEB-INF/views/footer.jsp" %>
 </div>
 <script src="<c:url value="/resources/js/background.js" />" ></script>
 <script src="<c:url value="/resources/js/changepassword.js" />" ></script>
+<script src="<c:url value="/resources/js/updateInfor.js" />" ></script>
 </body>
 </html>

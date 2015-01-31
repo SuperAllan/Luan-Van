@@ -18,7 +18,7 @@
     
     <span style="font-size:20px; color:#666;">${project.name}</span>
     <div class="tabs-left">
-		<ul class="nav nav-tabs tab-left">
+		<ul class="nav nav-stacked tab-left">
 	        <li class="classLi active" id="UC"><a href="#tabUC" data-toggle="tab">Sơ đô Use Case</a></li>
 	        <li class="classLi" id="thamKhao"><a href="#tabThamKhao" data-toggle="tab">Thông tin tham khảo</a></li>
 	        <li class="classLi" id="thuThap"><a href="#tabThuThap" data-toggle="tab">Thu thập thông tin</a></li>
@@ -29,7 +29,7 @@
 <div class="col-md-10">
 	 <div class="tab-content">
         <div class="tab-pane fade in active" id="tabUC">
-            a
+            so do UC
         </div>
         <div class="tab-pane fade" id="tabThamKhao">
             <%@ include file="/WEB-INF/views/thamkhao.jsp" %>

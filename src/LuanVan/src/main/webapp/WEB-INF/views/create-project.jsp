@@ -10,7 +10,7 @@
 
 </head>
 
-<body style="padding-top: 90px;" >
+<body style="padding-top: 90px; font-family: 'Source Sans Pro', sans-serif;" >
 <div class="container">
 	<div class="edit-container">
 	<form action="/luanvan/createProject" method="GET" role="form" id="form-tao-du-an">
@@ -33,7 +33,6 @@
 		</div>
 		
 		<button type="submit" class="btn btn-primary btn-lg	" style="width: 200px;">Đồng ý</button>
-		<div></div>
 		<c:if test="${not empty success}">
 		  	<div class="alert alert-success" style="margin-top: 10px;">
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>

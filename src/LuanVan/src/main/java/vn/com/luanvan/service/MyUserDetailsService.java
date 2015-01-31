@@ -23,10 +23,9 @@ public class MyUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(final String username)
 			throws UsernameNotFoundException {
-
+ 
 		vn.com.luanvan.model.User user = userDao.findUserbyUserName(username);
-		List<GrantedAuthority> authorities = buildUserAuthority(user
-				.getUserroles());
+		List<GrantedAuthority> authorities = buildUserAuthority(user.getUserroles());
 
 		return buildUserForAuthentication(user, authorities);
 

@@ -2,20 +2,6 @@ function showDialog() {
 		$("#uploadImageId").click();
 	}
 
-
-$(document).ready(function(){
-	if ($("#updateSuccess").html() != "") {
-		$(".classLi").each(function(){
-			$(this).removeClass("active");
-		});
-		$(".tab-pane").each(function(){
-			$(this).removeClass("in active");
-		});
-		$("#thongTin").addClass("active");
-		$("#tabThongTin").addClass("in active")
-	}
-});
-
 $(document).ready(function(){
 	$(".logoImg").hover(function(){
 		$(".hoverImg").css('background', 'rgba(34, 85, 85, 0.8)');
@@ -37,3 +23,4 @@ $("#uploadImageId").change(function(evt) {
 		}
 	}
 });
+

@@ -1,9 +1,7 @@
 package vn.com.luanvan.controller;
 
 import java.security.Principal;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,9 +46,9 @@ public class ProjectController {
 			model.addAttribute("errorName", "Tên của dự án đã tồn tại.");
 			return "create-project";
 		}else{
-			project.setName(projectName);
-			project.setDescription(description);
-			project.setStatus(0);
+			project.setTenproject(projectName);
+			project.setMotaproject(description);
+			project.setTrangthai(0);
 			User user = new User();
 			user.setUsername(username);
 			project.setUser(user);

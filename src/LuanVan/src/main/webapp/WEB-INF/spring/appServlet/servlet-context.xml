@@ -32,7 +32,7 @@
 	<!-- MySQL data source -->
 	<beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<beans:property name="url" value="jdbc:mysql://localhost:3306/luanvan2?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
+		<beans:property name="url" value="jdbc:mysql://localhost:3306/luanvan?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
 		<beans:property name="username" value="root" />
 		<beans:property name="password" value="" />
 	</beans:bean>

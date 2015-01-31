@@ -7,7 +7,6 @@ import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -174,7 +173,7 @@ public class LogRegController {
 			String email = request.getParameter("updateEmail");
 			String address = request.getParameter("address");
 			if(name != "" || name != null){
-				user.setName(name);
+				user.setFullname(name);
 			}
 			if(phone != "" || phone != null){
 				user.setPhone(phone);
