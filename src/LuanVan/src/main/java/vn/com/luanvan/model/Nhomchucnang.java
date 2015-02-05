@@ -5,11 +5,16 @@ package vn.com.luanvan.model;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -23,6 +28,7 @@ public class Nhomchucnang implements java.io.Serializable {
 
 	private Integer nhomid;
 	private String tennhom;
+	private Project project;
 	private Set<Chucnang> chucnangs = new HashSet<Chucnang>(0);
 
 	public Nhomchucnang() {
@@ -57,7 +63,7 @@ public class Nhomchucnang implements java.io.Serializable {
 		this.tennhom = tennhom;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "nhomchucnang")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "nhomchucnang")
 	public Set<Chucnang> getChucnangs() {
 		return this.chucnangs;
 	}
@@ -66,4 +72,13 @@ public class Nhomchucnang implements java.io.Serializable {
 		this.chucnangs = chucnangs;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PROJECTID", nullable = false)
+	public Project getProject() {
+		return this.project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
+	}
 }

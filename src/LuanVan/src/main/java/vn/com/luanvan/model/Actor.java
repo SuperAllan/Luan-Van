@@ -5,11 +5,14 @@ package vn.com.luanvan.model;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+
 import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,8 +29,9 @@ public class Actor implements java.io.Serializable {
 	private Integer actorid;
 	private Loaiactor loaiactor;
 	private String ghichu;
-	private String motamucdo;
+	private String motaactor;
 	private String nameofactor;
+	private Project project;
 	private Set<Phanloai> phanloais = new HashSet<Phanloai>(0);
 
 	public Actor() {
@@ -42,7 +46,7 @@ public class Actor implements java.io.Serializable {
 			String nameofactor, Set<Phanloai> phanloais) {
 		this.loaiactor = loaiactor;
 		this.ghichu = ghichu;
-		this.motamucdo = motamucdo;
+		this.motaactor = motamucdo;
 		this.nameofactor = nameofactor;
 		this.phanloais = phanloais;
 	}
@@ -77,13 +81,13 @@ public class Actor implements java.io.Serializable {
 		this.ghichu = ghichu;
 	}
 
-	@Column(name = "MOTAMUCDO")
-	public String getMotamucdo() {
-		return this.motamucdo;
+	@Column(name = "MOTAACTOR")
+	public String getMotaactor() {
+		return this.motaactor;
 	}
 
-	public void setMotamucdo(String motamucdo) {
-		this.motamucdo = motamucdo;
+	public void setMotaactor(String motaactor) {
+		this.motaactor = motaactor;
 	}
 
 	@Column(name = "NAMEOFACTOR", nullable = false)
@@ -104,4 +108,13 @@ public class Actor implements java.io.Serializable {
 		this.phanloais = phanloais;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PROJECTID", nullable = false)
+	public Project getProject() {
+		return this.project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
+	}
 }

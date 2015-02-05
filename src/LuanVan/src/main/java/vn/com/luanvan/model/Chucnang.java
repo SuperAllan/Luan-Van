@@ -64,7 +64,7 @@ public class Chucnang implements java.io.Serializable {
 		this.mayeucau = mayeucau;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "MUCDOID", nullable = false)
 	public Mucdo getMucdo() {
 		return this.mucdo;
@@ -74,7 +74,7 @@ public class Chucnang implements java.io.Serializable {
 		this.mucdo = mucdo;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "NHOMID", nullable = false)
 	public Nhomchucnang getNhomchucnang() {
 		return this.nhomchucnang;
@@ -105,7 +105,7 @@ public class Chucnang implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "USECASEID", nullable = false)
+	@JoinColumn(name = "USECASEID")
 	public Usecase getUsecase() {
 		return this.usecase;
 	}
@@ -123,7 +123,7 @@ public class Chucnang implements java.io.Serializable {
 		this.motayeucau = motayeucau;
 	}
 
-	@Column(name = "GHICHU")
+	@Column(name = "GHICHU", nullable = true)
 	public String getGhichu() {
 		return this.ghichu;
 	}

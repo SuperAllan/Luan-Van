@@ -24,7 +24,7 @@ public class Bmt implements java.io.Serializable {
 	private Integer bmtid;
 	private String ten;
 	private Integer trongso;
-	private Integer hesobmt;
+	private float hesobmt;
 	private String motabmt;
 	private Set<Usecase> usecases = new HashSet<Usecase>(0);
 
@@ -70,11 +70,11 @@ public class Bmt implements java.io.Serializable {
 	}
 
 	@Column(name = "HESOBMT")
-	public Integer getHesobmt() {
+	public float getHesobmt() {
 		return this.hesobmt;
 	}
 
-	public void setHesobmt(Integer hesobmt) {
+	public void setHesobmt(float hesobmt) {
 		this.hesobmt = hesobmt;
 	}
 

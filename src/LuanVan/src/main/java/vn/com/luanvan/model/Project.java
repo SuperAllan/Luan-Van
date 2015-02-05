@@ -6,11 +6,14 @@ package vn.com.luanvan.model;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+
 import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -33,9 +36,11 @@ public class Project implements java.io.Serializable {
 	private Date ngaytao;
 	private String tenproject;
 	private String motaproject;
+	private String sodo;
 	private Set<Phichucnang> phichucnangs = new HashSet<Phichucnang>(0);
 	private Set<Xephangnhom> xephangnhoms = new HashSet<Xephangnhom>(0);
 	private Set<Chucnang> chucnangs = new HashSet<Chucnang>(0);
+	private Set<Nhomchucnang> nhomchucnangs = new HashSet<Nhomchucnang>(0);
 	private Set<Usecase> usecases = new HashSet<Usecase>(0);
 	private Set<Xephangkythuat> xephangkythuats = new HashSet<Xephangkythuat>(0);
 
@@ -78,7 +83,7 @@ public class Project implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "LUONGID", nullable = false)
+	@JoinColumn(name = "LUONGID")
 	public Luong getLuong() {
 		return this.luong;
 	}
@@ -151,6 +156,15 @@ public class Project implements java.io.Serializable {
 	public void setChucnangs(Set<Chucnang> chucnangs) {
 		this.chucnangs = chucnangs;
 	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
+	public Set<Nhomchucnang> getNhomchucnangs() {
+		return this.nhomchucnangs;
+	}
+
+	public void setNhomchucnangs(Set<Nhomchucnang> chucnangs) {
+		this.nhomchucnangs = chucnangs;
+	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
 	public Set<Usecase> getUsecases() {
@@ -177,5 +191,14 @@ public class Project implements java.io.Serializable {
 
 	public void setMotaproject(String mota) {
 		this.motaproject = mota;
+	}
+	
+	@Column(name = "SODO")
+	public String getSodo() {
+		return this.sodo;
+	}
+
+	public void setSodo(String sodo) {
+		this.sodo = sodo;
 	}
 }

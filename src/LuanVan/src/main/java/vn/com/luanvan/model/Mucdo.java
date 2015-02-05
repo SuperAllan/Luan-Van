@@ -23,7 +23,6 @@ public class Mucdo implements java.io.Serializable {
 
 	private Integer mucdoid;
 	private String motamucdo;
-	private Set<Usecase> usecases = new HashSet<Usecase>(0);
 	private Set<Chucnang> chucnangs = new HashSet<Chucnang>(0);
 
 	public Mucdo() {
@@ -33,9 +32,8 @@ public class Mucdo implements java.io.Serializable {
 		this.motamucdo = motamucdo;
 	}
 
-	public Mucdo(String motamucdo, Set<Usecase> usecases, Set<Chucnang> chucnangs) {
+	public Mucdo(String motamucdo, Set<Chucnang> chucnangs) {
 		this.motamucdo = motamucdo;
-		this.usecases = usecases;
 		this.chucnangs = chucnangs;
 	}
 
@@ -57,15 +55,6 @@ public class Mucdo implements java.io.Serializable {
 
 	public void setMotamucdo(String motamucdo) {
 		this.motamucdo = motamucdo;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "mucdo")
-	public Set<Usecase> getUsecases() {
-		return this.usecases;
-	}
-
-	public void setUsecases(Set<Usecase> usecases) {
-		this.usecases = usecases;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "mucdo")

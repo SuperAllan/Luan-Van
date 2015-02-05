@@ -13,12 +13,12 @@ import javax.persistence.Embeddable;
 public class PhanloaiId implements java.io.Serializable {
 
 	private int actorid;
-	private int usecaseid;
+	private String usecaseid;
 
 	public PhanloaiId() {
 	}
 
-	public PhanloaiId(int actorid, int usecaseid) {
+	public PhanloaiId(int actorid, String usecaseid) {
 		this.actorid = actorid;
 		this.usecaseid = usecaseid;
 	}
@@ -33,11 +33,11 @@ public class PhanloaiId implements java.io.Serializable {
 	}
 
 	@Column(name = "USECASEID", nullable = false)
-	public int getUsecaseid() {
+	public String getUsecaseid() {
 		return this.usecaseid;
 	}
 
-	public void setUsecaseid(int usecaseid) {
+	public void setUsecaseid(String usecaseid) {
 		this.usecaseid = usecaseid;
 	}
 
@@ -58,7 +58,7 @@ public class PhanloaiId implements java.io.Serializable {
 		int result = 17;
 
 		result = 37 * result + this.getActorid();
-		result = 37 * result + this.getUsecaseid();
+		result = 37 * result + Integer.parseInt(this.getUsecaseid());
 		return result;
 	}
 

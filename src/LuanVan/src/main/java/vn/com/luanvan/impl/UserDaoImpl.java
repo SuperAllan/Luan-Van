@@ -1,4 +1,4 @@
-package vn.com.luanvan.dao;
+package vn.com.luanvan.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import vn.com.luanvan.dao.UserDao;
 import vn.com.luanvan.model.User;
 
 @Repository

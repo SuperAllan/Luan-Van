@@ -52,11 +52,27 @@
 		</beans:property>
 	</beans:bean>
 	
-	<beans:bean id="userDao" class="vn.com.luanvan.dao.UserDaoImpl">
+	<beans:bean id="userDao" class="vn.com.luanvan.impl.UserDaoImpl">
 		<beans:property name="sessionFactory" ref="sessionFactory" />
 	</beans:bean>
 	
-	<beans:bean id="projectDao" class="vn.com.luanvan.dao.ProjectDaoImpl">
+	<beans:bean id="projectDao" class="vn.com.luanvan.impl.ProjectDaoImpl">
+		<beans:property name="sessionFactory" ref="sessionFactory" />
+	</beans:bean>
+	
+	<beans:bean id="phanLoaiChucNangDao" class="vn.com.luanvan.impl.PhanLoaiChucNangDaoImpl">
+		<beans:property name="sessionFactory" ref="sessionFactory" />
+	</beans:bean>
+	
+	<beans:bean id="mucDoDao" class="vn.com.luanvan.impl.MucDoDaoImpl">
+		<beans:property name="sessionFactory" ref="sessionFactory" />
+	</beans:bean>
+	
+	<beans:bean id="nhomChucNangDao" class="vn.com.luanvan.impl.NhomChucNangDaoImpl">
+		<beans:property name="sessionFactory" ref="sessionFactory" />
+	</beans:bean>
+	
+	<beans:bean id="chucNangDao" class="vn.com.luanvan.impl.ChucNangDaoImpl">
 		<beans:property name="sessionFactory" ref="sessionFactory" />
 	</beans:bean>
 	

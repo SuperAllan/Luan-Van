@@ -1,6 +1,5 @@
-package vn.com.luanvan.dao;
+package vn.com.luanvan.impl;
 
-import java.nio.channels.SeekableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +10,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import vn.com.luanvan.dao.ProjectDao;
 import vn.com.luanvan.model.Project;
-import vn.com.luanvan.model.User;
 
 @Repository
 public class ProjectDaoImpl implements ProjectDao{

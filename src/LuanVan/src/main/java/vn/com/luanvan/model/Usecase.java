@@ -23,10 +23,8 @@ import javax.persistence.Table;
 @Table(name = "usecase", catalog = "luanvan")
 public class Usecase implements java.io.Serializable {
 
-	private Integer usecaseid;
+	private String usecaseid;
 	private Bmt bmt;
-	private Mucdo mucdo;
-	private Mucdocanthiet mucdocanthiet;
 	private Nhomuc nhomuc;
 	private Project project;
 	private String nameofuc;
@@ -40,12 +38,8 @@ public class Usecase implements java.io.Serializable {
 	public Usecase() {
 	}
 
-	public Usecase(Bmt bmt, Mucdo mucdo, Mucdocanthiet mucdocanthiet,
-			Nhomuc nhomuc, Project project, String nameofuc, String motauc,
-			int tinhtien) {
+	public Usecase(Bmt bmt, Nhomuc nhomuc, Project project, String nameofuc, String motauc, int tinhtien) {
 		this.bmt = bmt;
-		this.mucdo = mucdo;
-		this.mucdocanthiet = mucdocanthiet;
 		this.nhomuc = nhomuc;
 		this.project = project;
 		this.nameofuc = nameofuc;
@@ -53,12 +47,11 @@ public class Usecase implements java.io.Serializable {
 		this.tinhtien = tinhtien;
 	}
 
-	public Usecase(Bmt bmt, Mucdo mucdo, Mucdocanthiet mucdocanthiet,
-			Nhomuc nhomuc, Project project, String nameofuc, String motauc,
+	public Usecase(Bmt bmt, Nhomuc nhomuc, Project project, String nameofuc, String motauc,
 			String cauhoi, int tinhtien, Set<File> files, Set<Phanloai> phanloais, Set<Chucnang> chucnangs) {
 		this.bmt = bmt;
-		this.mucdo = mucdo;
-		this.mucdocanthiet = mucdocanthiet;
+//		this.mucdo = mucdo;
+//		this.mucdocanthiet = mucdocanthiet;
 		this.nhomuc = nhomuc;
 		this.project = project;
 		this.nameofuc = nameofuc;
@@ -71,13 +64,13 @@ public class Usecase implements java.io.Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
+//	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "USECASEID", unique = true, nullable = false)
-	public Integer getUsecaseid() {
+	public String getUsecaseid() {
 		return this.usecaseid;
 	}
 
-	public void setUsecaseid(Integer usecaseid) {
+	public void setUsecaseid(String usecaseid) {
 		this.usecaseid = usecaseid;
 	}
 
@@ -92,27 +85,7 @@ public class Usecase implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "MUCDOID", nullable = false)
-	public Mucdo getMucdo() {
-		return this.mucdo;
-	}
-
-	public void setMucdo(Mucdo mucdo) {
-		this.mucdo = mucdo;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "MUCDOCANTHIETID", nullable = false)
-	public Mucdocanthiet getMucdocanthiet() {
-		return this.mucdocanthiet;
-	}
-
-	public void setMucdocanthiet(Mucdocanthiet mucdocanthiet) {
-		this.mucdocanthiet = mucdocanthiet;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "NHOMUCID", nullable = false)
+	@JoinColumn(name = "NHOMUCID")
 	public Nhomuc getNhomuc() {
 		return this.nhomuc;
 	}

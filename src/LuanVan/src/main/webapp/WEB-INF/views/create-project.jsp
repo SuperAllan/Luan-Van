@@ -16,7 +16,7 @@
 	<form action="/luanvan/createProject" method="GET" role="form" id="form-tao-du-an">
 		<div class="form-group">
 			<span class="index">Tên dự án</span>
-			<input type="text" class="form-control input-lg" placeholder="Tên dự án" name="projectName" style="width: 310px;" maxlength="30"
+			<input type="text" class="form-control input-lg" placeholder="Tên dự án" name="projectName"  maxlength="200"
 			data-bv-notempty="true"
           	data-bv-notempty-message="Tên dự án phải khác rỗng."
           	data-bv-stringlength="true">

@@ -5,11 +5,14 @@ package vn.com.luanvan.model;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+
 import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -22,25 +25,25 @@ import javax.persistence.Table;
 public class Loaiactor implements java.io.Serializable {
 
 	private Integer loaiactorid;
-	private int loai;
+	private String loai;
 	private Integer trongso;
 	private String ghichu;
-	private String motaloaiactoer;
+	private String motaloaiactor;
 	private Set<Actor> actors = new HashSet<Actor>(0);
 
 	public Loaiactor() {
 	}
 
-	public Loaiactor(int loai) {
+	public Loaiactor(String loai) {
 		this.loai = loai;
 	}
 
-	public Loaiactor(int loai, Integer trongso, String ghichu,
+	public Loaiactor(String loai, Integer trongso, String ghichu,
 			String motaloaiactoer, Set<Actor> actors) {
 		this.loai = loai;
 		this.trongso = trongso;
 		this.ghichu = ghichu;
-		this.motaloaiactoer = motaloaiactoer;
+		this.motaloaiactor = motaloaiactoer;
 		this.actors = actors;
 	}
 
@@ -56,11 +59,11 @@ public class Loaiactor implements java.io.Serializable {
 	}
 
 	@Column(name = "LOAI", nullable = false)
-	public int getLoai() {
+	public String getLoai() {
 		return this.loai;
 	}
 
-	public void setLoai(int loai) {
+	public void setLoai(String loai) {
 		this.loai = loai;
 	}
 
@@ -82,13 +85,13 @@ public class Loaiactor implements java.io.Serializable {
 		this.ghichu = ghichu;
 	}
 
-	@Column(name = "MOTALOAIACTOER")
-	public String getMotaloaiactoer() {
-		return this.motaloaiactoer;
+	@Column(name = "MOTALOAIACTOR")
+	public String getMotaloaiactor() {
+		return this.motaloaiactor;
 	}
 
-	public void setMotaloaiactoer(String motaloaiactoer) {
-		this.motaloaiactoer = motaloaiactoer;
+	public void setMotaloaiactor(String motaloaiacter) {
+		this.motaloaiactor = motaloaiacter;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "loaiactor")
