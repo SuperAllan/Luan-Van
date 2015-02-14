@@ -1,10 +1,12 @@
 //function loadData(){
 ////	document.location.href = "/luanvan/loadData";
 //}
+
 var number = 0;
 var count = 0;
 $(document).ready(function() {
 	//$('.scrollBar').perfectScrollbar();
+	window.setTimeout(function() { $(".alert-chucnang-success").alert('close'); }, 2000);
     $('.countNhomChucNangFromData').each(function(){
     	count++;
     	$(this).attr("id","soLuongNhom"+count+"");

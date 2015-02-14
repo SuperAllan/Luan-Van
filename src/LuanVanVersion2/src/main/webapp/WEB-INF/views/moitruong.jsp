@@ -1,7 +1,7 @@
 <%@ page language="java" pageEncoding="utf8" contentType="text/html;charset=UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-	<div class="text-center"><h2>BẢNG TÍNH TOÁN HỆ SỐ PHỨC TẠP VỀ MÔI TRƯỜNG</h2></div>
+	<div class="text-center"><h3>BẢNG TÍNH TOÁN HỆ SỐ PHỨC TẠP VỀ MÔI TRƯỜNG</h3></div>
 <form action="/luanvan/updateHeSoMoiTruong" method="GET" role="form">
 	<input type="hidden" name="projectNameForMoiTruong" value="${project.tenproject}">
 	<table class="table table-bordered">

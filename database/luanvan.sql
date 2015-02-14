@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 31, 2015 at 01:58 PM
+-- Generation Time: Feb 14, 2015 at 05:49 PM
 -- Server version: 5.6.14
 -- PHP Version: 5.5.6
 
@@ -30,11 +30,21 @@ CREATE TABLE IF NOT EXISTS `actor` (
   `ACTORID` int(11) NOT NULL AUTO_INCREMENT,
   `LOAIACTORID` int(11) NOT NULL,
   `GHICHU` varchar(255) DEFAULT NULL,
-  `MOTAMUCDO` varchar(255) DEFAULT NULL,
+  `MOTAACTOR` varchar(255) DEFAULT NULL,
   `NAMEOFACTOR` varchar(255) NOT NULL,
+  `PROJECTID` int(11) NOT NULL,
   PRIMARY KEY (`ACTORID`),
-  KEY `FK_ACTOR_LOAI` (`LOAIACTORID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  KEY `FK_ACTOR_LOAI` (`LOAIACTORID`),
+  KEY `PROJECTID` (`PROJECTID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
+
+--
+-- Dumping data for table `actor`
+--
+
+INSERT INTO `actor` (`ACTORID`, `LOAIACTORID`, `GHICHU`, `MOTAACTOR`, `NAMEOFACTOR`, `PROJECTID`) VALUES
+(15, 1, NULL, '', 'Actor', 1),
+(16, 1, NULL, '', 'Actor', 1);
 
 -- --------------------------------------------------------
 
@@ -46,10 +56,25 @@ CREATE TABLE IF NOT EXISTS `bmt` (
   `BMTID` int(11) NOT NULL AUTO_INCREMENT,
   `TEN` varchar(100) DEFAULT NULL,
   `TRONGSO` int(11) DEFAULT NULL,
-  `HESOBMT` int(11) DEFAULT NULL,
+  `HESOBMT` float DEFAULT NULL,
   `MOTABMT` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`BMTID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
+
+--
+-- Dumping data for table `bmt`
+--
+
+INSERT INTO `bmt` (`BMTID`, `TEN`, `TRONGSO`, `HESOBMT`, `MOTABMT`) VALUES
+(1, 'B - Đơn giản', 5, 1, NULL),
+(2, 'B - Trung bình', 10, 1, NULL),
+(3, 'B - Phức tạp', 15, 1, NULL),
+(4, 'M - Đơn giản', 5, 1.2, NULL),
+(5, 'M - Trung bình', 10, 1.2, NULL),
+(6, 'M - Phức tạp', 15, 1.2, NULL),
+(7, 'T - Đơn giản', 5, 1.5, NULL),
+(8, 'T - Trung bình', 10, 1.5, NULL),
+(9, 'T - Phức tạp', 15, 1.5, NULL);
 
 -- --------------------------------------------------------
 
@@ -63,16 +88,23 @@ CREATE TABLE IF NOT EXISTS `chucnang` (
   `MALOAI` int(11) NOT NULL,
   `PROJECTID` int(11) NOT NULL,
   `NHOMID` int(11) NOT NULL,
-  `USECASEID` int(11) NOT NULL,
+  `USECASEID` varchar(255) DEFAULT NULL,
   `MOTAYEUCAU` text,
   `GHICHU` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`MAYEUCAU`),
   KEY `FK_CHUCNANG_PHANLOAI` (`MALOAI`),
-  KEY `FK_CHUCNANG_USECASE` (`USECASEID`),
   KEY `FK_MUCDO_CHUCNANG` (`MUCDOID`),
   KEY `FK_NHONCHUCNANG_CHUCNANG` (`NHOMID`),
-  KEY `FK_PROJECT_YEUCAU` (`PROJECTID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  KEY `FK_PROJECT_YEUCAU` (`PROJECTID`),
+  KEY `FK_USECASE_ChucNang` (`USECASEID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=84 ;
+
+--
+-- Dumping data for table `chucnang`
+--
+
+INSERT INTO `chucnang` (`MAYEUCAU`, `MUCDOID`, `MALOAI`, `PROJECTID`, `NHOMID`, `USECASEID`, `MOTAYEUCAU`, `GHICHU`) VALUES
+(83, 1, 1, 1, 75, NULL, 'chúc', 'Ghi chú');
 
 -- --------------------------------------------------------
 
@@ -82,13 +114,67 @@ CREATE TABLE IF NOT EXISTS `chucnang` (
 
 CREATE TABLE IF NOT EXISTS `file` (
   `FILEID` int(11) NOT NULL AUTO_INCREMENT,
-  `USECASEID` int(11) NOT NULL,
+  `USECASEID` varchar(255) NOT NULL,
   `FILENAME` varchar(255) NOT NULL,
   `LINK` varchar(255) DEFAULT NULL,
   `GHICHU` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`FILEID`),
-  KEY `FK_USECASE_FILE` (`USECASEID`)
+  KEY `FK_FILE_USECASE` (`USECASEID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `giatriluong`
+--
+
+CREATE TABLE IF NOT EXISTS `giatriluong` (
+  `PROJECTID` int(100) NOT NULL,
+  `LUONGID` int(100) NOT NULL,
+  `LUONGTANGTHEM` int(100) NOT NULL,
+  `PCKHUVUC` int(100) NOT NULL,
+  `PCLUUDONG` int(100) NOT NULL,
+  PRIMARY KEY (`PROJECTID`,`LUONGID`),
+  KEY `FK_GIATRI_LUONG` (`LUONGID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `giatriluong`
+--
+
+INSERT INTO `giatriluong` (`PROJECTID`, `LUONGID`, `LUONGTANGTHEM`, `PCKHUVUC`, `PCLUUDONG`) VALUES
+(1, 1, 0, 0, 0),
+(1, 2, 0, 0, 0),
+(1, 3, 0, 0, 200000),
+(1, 4, 0, 0, 0),
+(1, 5, 0, 0, 0),
+(1, 6, 0, 0, 0),
+(1, 7, 0, 0, 0),
+(1, 8, 200000, 0, 0),
+(2, 1, 0, 0, 200000),
+(2, 2, 0, 0, 0),
+(2, 3, 0, 0, 0),
+(2, 4, 0, 0, 0),
+(2, 5, 150000, 150000, 200000),
+(2, 6, 0, 0, 0),
+(2, 7, 0, 0, 0),
+(2, 8, 0, 0, 0),
+(3, 1, 0, 0, 0),
+(3, 2, 0, 0, 0),
+(3, 3, 0, 0, 0),
+(3, 4, 0, 0, 0),
+(3, 5, 0, 0, 0),
+(3, 6, 0, 0, 0),
+(3, 7, 0, 0, 0),
+(3, 8, 0, 0, 0),
+(4, 1, 0, 0, 0),
+(4, 2, 0, 0, 0),
+(4, 3, 0, 0, 0),
+(4, 4, 0, 0, 0),
+(4, 5, 0, 0, 0),
+(4, 6, 0, 0, 0),
+(4, 7, 0, 0, 0),
+(4, 8, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -101,7 +187,26 @@ CREATE TABLE IF NOT EXISTS `hesokythuat` (
   `TENHESO` varchar(255) NOT NULL,
   `TRONGSO` int(11) NOT NULL,
   PRIMARY KEY (`HESOKYTHUATID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
+
+--
+-- Dumping data for table `hesokythuat`
+--
+
+INSERT INTO `hesokythuat` (`HESOKYTHUATID`, `TENHESO`, `TRONGSO`) VALUES
+(1, 'Hệ thống phân tán (distributed system)', 2),
+(2, 'Tính chất đáp ứng tức thời hoặc yêu cầu đảm bảo thông lượng (response throughput performance objectives)', 1),
+(3, 'Hiệu quả sử dụng trực tuyến (end user efficiency online)', 1),
+(4, 'Độ phức tạp của xử lý bên trong (Complex internal processing)', 1),
+(5, 'Mã nguồn tái sử dụng (Code must be re-usable)', 1),
+(6, 'Dễ cài đặt (Easy to install)', 1),
+(7, 'Dễ sử dụng (Easy to use)', 1),
+(8, 'Khả năng chuyển đổi (Portable)', 2),
+(9, 'Khả năng dễ thay đổi (Easy to change)', 1),
+(10, 'Sử dụng đồng thời (Concurrent)', 1),
+(11, 'Có các tính năng bảo mật đặc biệt (Include special security features)', 1),
+(12, 'Cung cấp truy cập trực tiếp với các phần mềm (Provide direct access for third parties)', 1),
+(13, 'Yêu cầu phương tiện đào tạo đặc biệt cho người sử dụng (Special user training faciities are required)', 1);
 
 -- --------------------------------------------------------
 
@@ -111,10 +216,24 @@ CREATE TABLE IF NOT EXISTS `hesokythuat` (
 
 CREATE TABLE IF NOT EXISTS `hesomoitruong` (
   `HESOMOITRUONGID` int(11) NOT NULL AUTO_INCREMENT,
-  `TRONGSO` int(11) NOT NULL,
+  `TRONGSO` float NOT NULL,
   `MOTAHESOMT` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`HESOMOITRUONGID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+
+--
+-- Dumping data for table `hesomoitruong`
+--
+
+INSERT INTO `hesomoitruong` (`HESOMOITRUONGID`, `TRONGSO`, `MOTAHESOMT`) VALUES
+(1, 1.5, 'Có áp dụng quy trình phát triển phần mềm theo mẫu RUP và có hiểu biết về RUP (Familiar with Rational Unified Process)'),
+(2, 0.5, 'Có kinh nghiệm về ứng dụng tương tự (application experiences)'),
+(3, 1, 'Có kinh nghiệm  hướng đối tượng (Object-oriented experience)'),
+(4, 0.5, 'Có khả năng lãnh đạo nhóm (Lead analyst capability)'),
+(5, 1, 'Tính chất năng động (The dynamic)'),
+(6, 2, 'Độ ổn định Yêu cầu (Stable requirements)'),
+(7, -1, 'Có sử dụng nhân viên làm bán thời gian (Part-time workers)'),
+(8, -1, 'Ngôn ngữ lập trình khó (Difficult programming language)');
 
 -- --------------------------------------------------------
 
@@ -124,12 +243,21 @@ CREATE TABLE IF NOT EXISTS `hesomoitruong` (
 
 CREATE TABLE IF NOT EXISTS `loaiactor` (
   `LOAIACTORID` int(11) NOT NULL AUTO_INCREMENT,
-  `LOAI` int(11) NOT NULL,
+  `LOAI` varchar(255) NOT NULL,
   `TRONGSO` int(11) DEFAULT NULL,
   `GHICHU` varchar(255) DEFAULT NULL,
-  `MOTALOAIACTOER` varchar(255) DEFAULT NULL,
+  `MOTALOAIACTOR` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`LOAIACTORID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `loaiactor`
+--
+
+INSERT INTO `loaiactor` (`LOAIACTORID`, `LOAI`, `TRONGSO`, `GHICHU`, `MOTALOAIACTOR`) VALUES
+(1, 'Đơn giản', 1, NULL, 'Thuộc loại giao diện của chương trình'),
+(2, 'Trung bình', 2, NULL, 'Giao diện tương tác hoặc phục vụ một giao thức họat động'),
+(3, 'Phức tạp', 3, NULL, 'Giao diện đồ họa');
 
 -- --------------------------------------------------------
 
@@ -139,10 +267,24 @@ CREATE TABLE IF NOT EXISTS `loaiactor` (
 
 CREATE TABLE IF NOT EXISTS `luong` (
   `LUONGID` int(11) NOT NULL AUTO_INCREMENT,
-  `BAC` int(11) NOT NULL,
-  `HESO` float NOT NULL,
+  `BAC` int(11) DEFAULT NULL,
+  `HESO` float DEFAULT NULL,
   PRIMARY KEY (`LUONGID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+
+--
+-- Dumping data for table `luong`
+--
+
+INSERT INTO `luong` (`LUONGID`, `BAC`, `HESO`) VALUES
+(1, 1, 2.34),
+(2, 2, 2.67),
+(3, 3, 3),
+(4, 4, 3.33),
+(5, 5, 3.66),
+(6, 6, 3.99),
+(7, 7, 4.32),
+(8, 8, 4.65);
 
 -- --------------------------------------------------------
 
@@ -154,19 +296,16 @@ CREATE TABLE IF NOT EXISTS `mucdo` (
   `MUCDOID` int(11) NOT NULL AUTO_INCREMENT,
   `MOTAMUCDO` varchar(255) NOT NULL,
   PRIMARY KEY (`MUCDOID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
--- Table structure for table `mucdocanthiet`
+-- Dumping data for table `mucdo`
 --
 
-CREATE TABLE IF NOT EXISTS `mucdocanthiet` (
-  `MUCDOCANTHIETID` int(11) NOT NULL AUTO_INCREMENT,
-  `TENMUCDO` varchar(255) NOT NULL,
-  PRIMARY KEY (`MUCDOCANTHIETID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+INSERT INTO `mucdo` (`MUCDOID`, `MOTAMUCDO`) VALUES
+(1, 'Đơn giản'),
+(2, 'Trung bình'),
+(3, 'Phức tạp');
 
 -- --------------------------------------------------------
 
@@ -179,6 +318,13 @@ CREATE TABLE IF NOT EXISTS `mucluongnhanuoc` (
   PRIMARY KEY (`MUC`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `mucluongnhanuoc`
+--
+
+INSERT INTO `mucluongnhanuoc` (`MUC`) VALUES
+(1050000);
+
 -- --------------------------------------------------------
 
 --
@@ -188,8 +334,16 @@ CREATE TABLE IF NOT EXISTS `mucluongnhanuoc` (
 CREATE TABLE IF NOT EXISTS `nhomchucnang` (
   `NHOMID` int(11) NOT NULL AUTO_INCREMENT,
   `TENNHOM` varchar(255) NOT NULL,
+  `PROJECTID` int(11) NOT NULL,
   PRIMARY KEY (`NHOMID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=76 ;
+
+--
+-- Dumping data for table `nhomchucnang`
+--
+
+INSERT INTO `nhomchucnang` (`NHOMID`, `TENNHOM`, `PROJECTID`) VALUES
+(75, 'hnom 1', 1);
 
 -- --------------------------------------------------------
 
@@ -211,11 +365,20 @@ CREATE TABLE IF NOT EXISTS `nhomuc` (
 
 CREATE TABLE IF NOT EXISTS `phanloai` (
   `ACTORID` int(11) NOT NULL AUTO_INCREMENT,
-  `USECASEID` int(11) NOT NULL,
+  `USECASEID` varchar(255) NOT NULL,
   `VAITRO` int(11) NOT NULL,
   PRIMARY KEY (`ACTORID`,`USECASEID`),
-  KEY `FK_USECASE_PHANLOAI` (`USECASEID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  KEY `FK_PHANLOAI_USECASE` (`USECASEID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
+
+--
+-- Dumping data for table `phanloai`
+--
+
+INSERT INTO `phanloai` (`ACTORID`, `USECASEID`, `VAITRO`) VALUES
+(15, 'e0474f36-3dec-47f4-a6bd-b9ca9b78297a', 0),
+(16, '22f6f34c-99bc-4899-9d62-06afa36c1488', 0),
+(16, 'bb388d16-a49d-4db0-8b61-f0e1b0403037', 0);
 
 -- --------------------------------------------------------
 
@@ -227,7 +390,18 @@ CREATE TABLE IF NOT EXISTS `phanloaichucnang` (
   `MALOAI` int(11) NOT NULL AUTO_INCREMENT,
   `TENLOAI` varchar(255) NOT NULL,
   PRIMARY KEY (`MALOAI`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+
+--
+-- Dumping data for table `phanloaichucnang`
+--
+
+INSERT INTO `phanloaichucnang` (`MALOAI`, `TENLOAI`) VALUES
+(1, 'Dữ liệu đầu vào'),
+(2, 'Dữ liệu đầu ra'),
+(3, 'Yêu cầu truy vấn'),
+(4, 'Cơ sở dữ liệu'),
+(5, 'Dữ liệu tra cứu');
 
 -- --------------------------------------------------------
 
@@ -251,16 +425,53 @@ CREATE TABLE IF NOT EXISTS `phichucnang` (
 
 CREATE TABLE IF NOT EXISTS `project` (
   `PROJECTID` int(11) NOT NULL AUTO_INCREMENT,
-  `LUONGID` int(11) NOT NULL,
   `USERNAME` varchar(45) NOT NULL,
   `TRANGTHAI` int(11) NOT NULL,
   `NGAYTAO` date NOT NULL,
   `TENPROJECT` varchar(255) NOT NULL,
   `motaproject` varchar(255) DEFAULT NULL,
+  `SODO` longtext,
+  `luongcoban` int(100) DEFAULT NULL,
+  `TRONGSONOLUC` double DEFAULT NULL,
+  `BACLUONG` int(100) DEFAULT NULL,
   PRIMARY KEY (`PROJECTID`),
-  KEY `FK_CREATE` (`USERNAME`),
-  KEY `FK_PROJECT_LUONG` (`LUONGID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  KEY `FK_CREATE` (`USERNAME`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+
+--
+-- Dumping data for table `project`
+--
+
+INSERT INTO `project` (`PROJECTID`, `USERNAME`, `TRANGTHAI`, `NGAYTAO`, `TENPROJECT`, `motaproject`, `SODO`, `luongcoban`, `TRONGSONOLUC`, `BACLUONG`) VALUES
+(1, 'phuong', 0, '2015-02-01', 'du an 3', 'lam cho truong dai hoc can tho 20135', '{"cells":[{"type":"uml.Actor","size":{"width":43,"height":78},"name":"Actor","role":"0_e0474f36-3dec-47f4-a6bd-b9ca9b78297a/","level":"1","description":"","shapes":{"circle":{"cx":21,"cy":15,"fill":"#fcfcfc","r":10,"stroke":"black","stroke-dasharray":"none","stroke-width":2},"line":[{"fill":"#fcfcfc","stroke":"black","stroke-dasharray":"none","stroke-width":2,"x1":21,"x2":21,"y1":25,"y2":50},{"fill":"#fcfcfc","stroke":"black","stroke-dasharray":"none","stroke-width":2,"x1":21,"x2":6,"y1":50,"y2":70},{"fill":"#fcfcfc","stroke":"black","stroke-dasharray":"none","stroke-width":2,"x1":21,"x2":36,"y1":50,"y2":70},{"fill":"#fcfcfc","stroke":"black","stroke-dasharray":"none","stroke-width":2,"x1":6,"x2":36,"y1":35,"y2":35}],"text":{"fill":"black","y":98,"text-anchor":"middle","x":23}},"position":{"x":175,"y":224},"angle":0,"id":"04b9d8eb-0ccd-4865-9f5c-37f85d4c0dcc","z":1,"attrs":{}},{"type":"uml.Usecase","size":{"width":130,"height":60},"name":"Usecase","level":"9","description":"","payMoney":true,"shapes":{"ellipse":{"stroke":"black","stroke-width":2,"rx":60,"ry":25,"fill":"white","cx":65,"cy":30},"text":{"fill":"black","y":82,"text-anchor":"middle","x":66}},"position":{"x":472,"y":201},"angle":0,"id":"e0474f36-3dec-47f4-a6bd-b9ca9b78297a","z":2,"attrs":{}},{"type":"uml.Association","shapes":{".connection":{"stroke-width":2,"stroke":"#aaa","fill":"transparent"}},"source":{"id":"04b9d8eb-0ccd-4865-9f5c-37f85d4c0dcc"},"target":{"id":"e0474f36-3dec-47f4-a6bd-b9ca9b78297a"},"id":"20824a4f-fa62-4cb4-95be-fed6ceeced5a","z":3,"embeds":"","attrs":{}},{"type":"uml.Usecase","size":{"width":130,"height":60},"name":"Usecase","level":"8","description":"saadssada","payMoney":true,"shapes":{"ellipse":{"stroke":"black","stroke-width":2,"rx":60,"ry":25,"fill":"white","cx":65,"cy":30},"text":{"fill":"black","y":82,"text-anchor":"middle","x":66}},"position":{"x":194,"y":159},"angle":0,"id":"78a3a8b0-500c-4284-9da6-a66bcb7d08cf","z":4,"attrs":{}},{"type":"uml.Actor","size":{"width":43,"height":78},"name":"Actor","role":"0_22f6f34c-99bc-4899-9d62-06afa36c1488/0_bb388d16-a49d-4db0-8b61-f0e1b0403037/","level":"1","description":"","shapes":{"circle":{"cx":21,"cy":15,"fill":"#fcfcfc","r":10,"stroke":"black","stroke-dasharray":"none","stroke-width":2},"line":[{"fill":"#fcfcfc","stroke":"black","stroke-dasharray":"none","stroke-width":2,"x1":21,"x2":21,"y1":25,"y2":50},{"fill":"#fcfcfc","stroke":"black","stroke-dasharray":"none","stroke-width":2,"x1":21,"x2":6,"y1":50,"y2":70},{"fill":"#fcfcfc","stroke":"black","stroke-dasharray":"none","stroke-width":2,"x1":21,"x2":36,"y1":50,"y2":70},{"fill":"#fcfcfc","stroke":"black","stroke-dasharray":"none","stroke-width":2,"x1":6,"x2":36,"y1":35,"y2":35}],"text":{"fill":"black","y":98,"text-anchor":"middle","x":23}},"position":{"x":745,"y":151},"angle":0,"id":"bd01b28f-f83e-4ef7-bc35-af1e881d0bbf","z":5,"attrs":{}},{"type":"uml.Usecase","size":{"width":130,"height":60},"name":"Usecase","level":"1","description":"","payMoney":true,"shapes":{"ellipse":{"stroke":"black","stroke-width":2,"rx":60,"ry":25,"fill":"white","cx":65,"cy":30},"text":{"fill":"black","y":82,"text-anchor":"middle","x":66}},"position":{"x":712,"y":389},"angle":0,"id":"22f6f34c-99bc-4899-9d62-06afa36c1488","z":6,"attrs":{}},{"type":"uml.Association","shapes":{".connection":{"stroke-width":2,"stroke":"#aaa","fill":"transparent"}},"source":{"id":"bd01b28f-f83e-4ef7-bc35-af1e881d0bbf"},"target":{"id":"22f6f34c-99bc-4899-9d62-06afa36c1488"},"id":"a8dbc355-95a1-4bd1-a317-087335a5794d","z":12,"embeds":"","attrs":{}},{"type":"uml.Usecase","size":{"width":130,"height":60},"name":"Usecase","level":"1","description":"","payMoney":true,"shapes":{"ellipse":{"stroke":"black","stroke-width":2,"rx":60,"ry":25,"fill":"white","cx":65,"cy":30},"text":{"fill":"black","y":82,"text-anchor":"middle","x":66}},"position":{"x":443,"y":94},"angle":0,"id":"bb388d16-a49d-4db0-8b61-f0e1b0403037","z":13,"attrs":{}},{"type":"uml.Association","shapes":{".connection":{"stroke-width":2,"stroke":"#aaa","fill":"transparent"}},"source":{"id":"bb388d16-a49d-4db0-8b61-f0e1b0403037"},"target":{"id":"bd01b28f-f83e-4ef7-bc35-af1e881d0bbf"},"id":"736892a1-4b20-4155-9b0b-91842b9299b6","z":15,"embeds":"","attrs":{}},{"type":"uml.Usecase","size":{"width":130,"height":60},"name":"Usecase","level":"1","description":"","payMoney":false,"shapes":{"ellipse":{"stroke":"black","stroke-width":2,"rx":60,"ry":25,"fill":"white","cx":65,"cy":30},"text":{"fill":"black","y":82,"text-anchor":"middle","x":66}},"position":{"x":467,"y":343},"angle":0,"id":"0eeaaaa4-6313-4410-a1ef-a690906a7496","z":16,"attrs":{}}]}', 1050000, 1, 24839),
+(2, 'phuong', 0, '2015-02-05', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', NULL, 1050000, 0, 37389),
+(3, 'phuong', 0, '2015-02-06', 'du an 1', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', NULL, 1050000, 0, 0),
+(4, 'phuong', 1, '2015-02-06', 'du an 2', '123', NULL, 1050000, 0, 0),
+(5, 'phuong', 0, '2015-02-12', 'du an 4', '123', NULL, 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `trongsonoluc`
+--
+
+CREATE TABLE IF NOT EXISTS `trongsonoluc` (
+  `trongsoid` int(11) NOT NULL AUTO_INCREMENT,
+  `mota` varchar(255) DEFAULT NULL,
+  `giatri` double DEFAULT NULL,
+  PRIMARY KEY (`trongsoid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+
+--
+-- Dumping data for table `trongsonoluc`
+--
+
+INSERT INTO `trongsonoluc` (`trongsoid`, `mota`, `giatri`) VALUES
+(1, '6/6', 1),
+(2, '7/6', 1.16666666666667),
+(3, '8/6', 1.33333333333333),
+(4, '9/6', 1.5),
+(5, '10/6', 1.66666666666667);
 
 -- --------------------------------------------------------
 
@@ -269,23 +480,30 @@ CREATE TABLE IF NOT EXISTS `project` (
 --
 
 CREATE TABLE IF NOT EXISTS `usecase` (
-  `USECASEID` int(11) NOT NULL AUTO_INCREMENT,
+  `USECASEID` varchar(255) NOT NULL,
   `NAMEOFUC` varchar(255) NOT NULL,
-  `MUCDOCANTHIETID` int(11) NOT NULL,
   `BMTID` int(11) NOT NULL,
-  `NHOMUCID` int(11) NOT NULL,
+  `NHOMUCID` int(11) DEFAULT NULL,
   `PROJECTID` int(11) NOT NULL,
-  `MUCDOID` int(11) NOT NULL,
   `MOTAUC` text NOT NULL,
   `CAUHOI` text,
   `TINHTIEN` int(11) NOT NULL,
   PRIMARY KEY (`USECASEID`),
-  KEY `FK_CANTHIET_USECASE` (`MUCDOCANTHIETID`),
-  KEY `FK_MUCDO_USECASE` (`MUCDOID`),
   KEY `FK_PROJECT_USECASE` (`PROJECTID`),
   KEY `FK_USECASE_BMT` (`BMTID`),
   KEY `FK_USECASE_NHOMUC` (`NHOMUCID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `usecase`
+--
+
+INSERT INTO `usecase` (`USECASEID`, `NAMEOFUC`, `BMTID`, `NHOMUCID`, `PROJECTID`, `MOTAUC`, `CAUHOI`, `TINHTIEN`) VALUES
+('0eeaaaa4-6313-4410-a1ef-a690906a7496', 'Usecase', 1, NULL, 1, '', NULL, 0),
+('22f6f34c-99bc-4899-9d62-06afa36c1488', 'Usecase', 1, NULL, 1, '', NULL, 1),
+('78a3a8b0-500c-4284-9da6-a66bcb7d08cf', 'Usecase', 8, NULL, 1, 'saadssada', NULL, 1),
+('bb388d16-a49d-4db0-8b61-f0e1b0403037', 'Usecase', 1, NULL, 1, '', NULL, 1),
+('e0474f36-3dec-47f4-a6bd-b9ca9b78297a', 'Usecase', 9, NULL, 1, '', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -348,20 +566,74 @@ CREATE TABLE IF NOT EXISTS `xephangkythuat` (
   KEY `FK_XEPHANG_HESO` (`HESOKYTHUATID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `xephangkythuat`
+--
+
+INSERT INTO `xephangkythuat` (`PROJECTID`, `HESOKYTHUATID`, `GIATRIXEPHANG`, `GHICHU`) VALUES
+(1, 1, 2, ''),
+(1, 2, 2, ''),
+(1, 3, 1, ''),
+(1, 4, 0, ''),
+(1, 5, 2, ''),
+(1, 6, 1, ''),
+(1, 7, 1, ''),
+(1, 8, 3, ''),
+(1, 9, 1, ''),
+(1, 10, 1, ''),
+(1, 11, 3, ''),
+(1, 12, 1, ''),
+(1, 13, 1, ''),
+(2, 1, 2, ''),
+(2, 2, 1, ''),
+(2, 3, 1, ''),
+(2, 4, 2, ''),
+(2, 5, 2, ''),
+(2, 6, 0, ''),
+(2, 7, 3, ''),
+(2, 8, 3, ''),
+(2, 9, 2, ''),
+(2, 10, 2, ''),
+(2, 11, 3, ''),
+(2, 12, 3, ''),
+(2, 13, 5, '');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xephangnhom`
+-- Table structure for table `xephangmoitruong`
 --
 
-CREATE TABLE IF NOT EXISTS `xephangnhom` (
+CREATE TABLE IF NOT EXISTS `xephangmoitruong` (
   `PROJECTID` int(11) NOT NULL,
   `HESOMOITRUONGID` int(11) NOT NULL,
   `GIATRIXEPHANG` int(11) DEFAULT NULL,
-  `ONDINH` int(11) DEFAULT NULL,
+  `ONDINH` float DEFAULT NULL,
   PRIMARY KEY (`PROJECTID`,`HESOMOITRUONGID`),
   KEY `FK_PROJECT_DSNHOM` (`HESOMOITRUONGID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `xephangmoitruong`
+--
+
+INSERT INTO `xephangmoitruong` (`PROJECTID`, `HESOMOITRUONGID`, `GIATRIXEPHANG`, `ONDINH`) VALUES
+(1, 1, 2, 0.6),
+(1, 2, 4, 0.1),
+(1, 3, 5, 1),
+(1, 4, 4, 0.1),
+(1, 5, 4, 1),
+(1, 6, 4, 1),
+(1, 7, 3, 0),
+(1, 8, 2, 0),
+(2, 1, 2, 0),
+(2, 2, 3, 0.3),
+(2, 3, 2, 0),
+(2, 4, 1, 0.3),
+(2, 5, 1, 0.4),
+(2, 6, 0, 0.3),
+(2, 7, 3, 0.4),
+(2, 8, 2, 0.3);
 
 --
 -- Constraints for dumped tables
@@ -371,30 +643,38 @@ CREATE TABLE IF NOT EXISTS `xephangnhom` (
 -- Constraints for table `actor`
 --
 ALTER TABLE `actor`
-  ADD CONSTRAINT `FK_ACTOR_LOAI` FOREIGN KEY (`LOAIACTORID`) REFERENCES `loaiactor` (`LOAIACTORID`);
+  ADD CONSTRAINT `FK_ACTOR_LOAI` FOREIGN KEY (`LOAIACTORID`) REFERENCES `loaiactor` (`LOAIACTORID`),
+  ADD CONSTRAINT `FK_ACTOR_Project` FOREIGN KEY (`PROJECTID`) REFERENCES `project` (`PROJECTID`);
 
 --
 -- Constraints for table `chucnang`
 --
 ALTER TABLE `chucnang`
-  ADD CONSTRAINT `FK_PROJECT_YEUCAU` FOREIGN KEY (`PROJECTID`) REFERENCES `project` (`PROJECTID`),
   ADD CONSTRAINT `FK_CHUCNANG_PHANLOAI` FOREIGN KEY (`MALOAI`) REFERENCES `phanloaichucnang` (`MALOAI`),
-  ADD CONSTRAINT `FK_CHUCNANG_USECASE` FOREIGN KEY (`USECASEID`) REFERENCES `usecase` (`USECASEID`),
   ADD CONSTRAINT `FK_MUCDO_CHUCNANG` FOREIGN KEY (`MUCDOID`) REFERENCES `mucdo` (`MUCDOID`),
-  ADD CONSTRAINT `FK_NHONCHUCNANG_CHUCNANG` FOREIGN KEY (`NHOMID`) REFERENCES `nhomchucnang` (`NHOMID`);
+  ADD CONSTRAINT `FK_NHONCHUCNANG_CHUCNANG` FOREIGN KEY (`NHOMID`) REFERENCES `nhomchucnang` (`NHOMID`),
+  ADD CONSTRAINT `FK_PROJECT_YEUCAU` FOREIGN KEY (`PROJECTID`) REFERENCES `project` (`PROJECTID`),
+  ADD CONSTRAINT `FK_USECASE_ChucNang` FOREIGN KEY (`USECASEID`) REFERENCES `usecase` (`USECASEID`);
 
 --
 -- Constraints for table `file`
 --
 ALTER TABLE `file`
-  ADD CONSTRAINT `FK_USECASE_FILE` FOREIGN KEY (`USECASEID`) REFERENCES `usecase` (`USECASEID`);
+  ADD CONSTRAINT `FK_FILE_USECASE` FOREIGN KEY (`USECASEID`) REFERENCES `usecase` (`USECASEID`);
+
+--
+-- Constraints for table `giatriluong`
+--
+ALTER TABLE `giatriluong`
+  ADD CONSTRAINT `FK_GIATRI_LUONG` FOREIGN KEY (`LUONGID`) REFERENCES `luong` (`LUONGID`),
+  ADD CONSTRAINT `FK_GIATRI_PROJECT` FOREIGN KEY (`PROJECTID`) REFERENCES `project` (`PROJECTID`);
 
 --
 -- Constraints for table `phanloai`
 --
 ALTER TABLE `phanloai`
-  ADD CONSTRAINT `FK_USECASE_PHANLOAI` FOREIGN KEY (`USECASEID`) REFERENCES `usecase` (`USECASEID`),
-  ADD CONSTRAINT `FK_ACTOR_PHANLOAI` FOREIGN KEY (`ACTORID`) REFERENCES `actor` (`ACTORID`);
+  ADD CONSTRAINT `FK_ACTOR_PHANLOAI` FOREIGN KEY (`ACTORID`) REFERENCES `actor` (`ACTORID`),
+  ADD CONSTRAINT `FK_PHANLOAI_USECASE` FOREIGN KEY (`USECASEID`) REFERENCES `usecase` (`USECASEID`);
 
 --
 -- Constraints for table `phichucnang`
@@ -406,18 +686,15 @@ ALTER TABLE `phichucnang`
 -- Constraints for table `project`
 --
 ALTER TABLE `project`
-  ADD CONSTRAINT `FK_CREATE` FOREIGN KEY (`USERNAME`) REFERENCES `user` (`USERNAME`),
-  ADD CONSTRAINT `FK_PROJECT_LUONG` FOREIGN KEY (`LUONGID`) REFERENCES `luong` (`LUONGID`);
+  ADD CONSTRAINT `FK_CREATE` FOREIGN KEY (`USERNAME`) REFERENCES `user` (`USERNAME`);
 
 --
 -- Constraints for table `usecase`
 --
 ALTER TABLE `usecase`
-  ADD CONSTRAINT `FK_USECASE_NHOMUC` FOREIGN KEY (`NHOMUCID`) REFERENCES `nhomuc` (`NHOMUCID`),
-  ADD CONSTRAINT `FK_CANTHIET_USECASE` FOREIGN KEY (`MUCDOCANTHIETID`) REFERENCES `mucdocanthiet` (`MUCDOCANTHIETID`),
-  ADD CONSTRAINT `FK_MUCDO_USECASE` FOREIGN KEY (`MUCDOID`) REFERENCES `mucdo` (`MUCDOID`),
   ADD CONSTRAINT `FK_PROJECT_USECASE` FOREIGN KEY (`PROJECTID`) REFERENCES `project` (`PROJECTID`),
-  ADD CONSTRAINT `FK_USECASE_BMT` FOREIGN KEY (`BMTID`) REFERENCES `bmt` (`BMTID`);
+  ADD CONSTRAINT `FK_USECASE_BMT` FOREIGN KEY (`BMTID`) REFERENCES `bmt` (`BMTID`),
+  ADD CONSTRAINT `FK_USECASE_NHOMUC` FOREIGN KEY (`NHOMUCID`) REFERENCES `nhomuc` (`NHOMUCID`);
 
 --
 -- Constraints for table `userrole`
@@ -429,15 +706,15 @@ ALTER TABLE `userrole`
 -- Constraints for table `xephangkythuat`
 --
 ALTER TABLE `xephangkythuat`
-  ADD CONSTRAINT `FK_XEPHANG_HESO` FOREIGN KEY (`HESOKYTHUATID`) REFERENCES `hesokythuat` (`HESOKYTHUATID`),
-  ADD CONSTRAINT `FK_PROJECT_XEPHANG` FOREIGN KEY (`PROJECTID`) REFERENCES `project` (`PROJECTID`);
+  ADD CONSTRAINT `FK_PROJECT_XEPHANG` FOREIGN KEY (`PROJECTID`) REFERENCES `project` (`PROJECTID`),
+  ADD CONSTRAINT `FK_XEPHANG_HESO` FOREIGN KEY (`HESOKYTHUATID`) REFERENCES `hesokythuat` (`HESOKYTHUATID`);
 
 --
--- Constraints for table `xephangnhom`
+-- Constraints for table `xephangmoitruong`
 --
-ALTER TABLE `xephangnhom`
-  ADD CONSTRAINT `FK_PROJECT_NHOM` FOREIGN KEY (`PROJECTID`) REFERENCES `project` (`PROJECTID`),
-  ADD CONSTRAINT `FK_PROJECT_DSNHOM` FOREIGN KEY (`HESOMOITRUONGID`) REFERENCES `hesomoitruong` (`HESOMOITRUONGID`);
+ALTER TABLE `xephangmoitruong`
+  ADD CONSTRAINT `FK_PROJECT_DSNHOM` FOREIGN KEY (`HESOMOITRUONGID`) REFERENCES `hesomoitruong` (`HESOMOITRUONGID`),
+  ADD CONSTRAINT `FK_PROJECT_NHOM` FOREIGN KEY (`PROJECTID`) REFERENCES `project` (`PROJECTID`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

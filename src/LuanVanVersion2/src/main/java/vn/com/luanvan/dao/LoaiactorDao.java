@@ -6,5 +6,6 @@ import vn.com.luanvan.model.Loaiactor;
 
 public interface LoaiactorDao {
 	Loaiactor getLoaiactorById(int loaiActorID);
+	
 	List<Loaiactor> getAll();
 }

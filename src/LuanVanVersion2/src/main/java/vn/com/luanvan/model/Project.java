@@ -30,7 +30,6 @@ import javax.persistence.TemporalType;
 public class Project implements java.io.Serializable {
 
 	private Integer projectid;
-	private Luong luong;
 	private User user;
 	private int trangthai;
 	private Date ngaytao;
@@ -38,30 +37,33 @@ public class Project implements java.io.Serializable {
 	private String motaproject;
 	private String sodo;
 	private int luongcoban;
+	private double trongsonoluc;
+	private int bacluong;
 	private Set<Phichucnang> phichucnangs = new HashSet<Phichucnang>(0);
 	private Set<Xephangmoitruong> xephangnhoms = new HashSet<Xephangmoitruong>(0);
 	private Set<Chucnang> chucnangs = new HashSet<Chucnang>(0);
 	private Set<Nhomchucnang> nhomchucnangs = new HashSet<Nhomchucnang>(0);
 	private Set<Usecase> usecases = new HashSet<Usecase>(0);
 	private Set<Xephangkythuat> xephangkythuats = new HashSet<Xephangkythuat>(0);
+	private Set<Giatriluong> giatriluongs = new HashSet<Giatriluong>(0);
 
 	public Project() {
 	}
 
-	public Project(Luong luong, User user, int trangthai, Date ngaytao,
-			String tenproject, int luongcoban) {
-		this.luong = luong;
+	public Project( User user, int trangthai, Date ngaytao,
+			String tenproject, int luongcoban, float trongsonoluc, int bacluong) {
 		this.user = user;
 		this.trangthai = trangthai;
 		this.ngaytao = ngaytao;
 		this.tenproject = tenproject;
 		this.luongcoban = luongcoban;
+		this.trongsonoluc = trongsonoluc;
+		this.bacluong = bacluong;
 	}
 
-	public Project(Luong luong, User user, int trangthai, Date ngaytao, int luongcoban,
+	public Project( User user, int trangthai, Date ngaytao, int luongcoban, float trongsonoluc, int bacluong,
 			String tenproject, Set<Phichucnang> phichucnangs, Set<Xephangmoitruong> xephangnhoms,
 			Set<Chucnang> chucnangs, Set<Usecase> usecases, Set<Xephangkythuat> xephangkythuats) {
-		this.luong = luong;
 		this.user = user;
 		this.trangthai = trangthai;
 		this.ngaytao = ngaytao;
@@ -72,6 +74,8 @@ public class Project implements java.io.Serializable {
 		this.usecases = usecases;
 		this.xephangkythuats = xephangkythuats;
 		this.luongcoban = luongcoban;
+		this.trongsonoluc = trongsonoluc;
+		this.bacluong = bacluong;
 	}
 
 	@Id
@@ -83,16 +87,6 @@ public class Project implements java.io.Serializable {
 
 	public void setProjectid(Integer projectid) {
 		this.projectid = projectid;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "LUONGID")
-	public Luong getLuong() {
-		return this.luong;
-	}
-
-	public void setLuong(Luong luong) {
-		this.luong = luong;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -186,6 +180,15 @@ public class Project implements java.io.Serializable {
 	public void setXephangkythuats(Set<Xephangkythuat> xephangkythuats) {
 		this.xephangkythuats = xephangkythuats;
 	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
+	public Set<Giatriluong> getGiatriluongs() {
+		return this.giatriluongs;
+	}
+
+	public void setGiatriluongs(Set<Giatriluong> giatriluongs) {
+		this.giatriluongs = giatriluongs;
+	}
 
 	@Column(name = "MOTAPROJECT")
 	public String getMotaproject() {
@@ -212,5 +215,23 @@ public class Project implements java.io.Serializable {
 
 	public void setLuongcoban(int luong) {
 		this.luongcoban = luong;
+	}
+	
+	@Column(name = "TRONGSONOLUC")
+	public double getTrongsonoluc() {
+		return this.trongsonoluc;
+	}
+
+	public void setTrongsonoluc(double trongso) {
+		this.trongsonoluc = trongso;
+	}
+	
+	@Column(name = "BACLUONG")
+	public int getBacluong() {
+		return this.bacluong;
+	}
+
+	public void setBacluong(int bacluong) {
+		this.bacluong = bacluong;
 	}
 }

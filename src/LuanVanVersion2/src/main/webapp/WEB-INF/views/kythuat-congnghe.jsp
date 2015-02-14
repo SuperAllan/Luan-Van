@@ -2,7 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 
-	<div class="text-center"><h2>BẢNG TÍNH TOÁN HỆ SỐ PHỨC TẠP KỸ THUẬT-CÔNG NGHỆ</h2></div>
+	<div class="text-center"><h3>BẢNG TÍNH TOÁN HỆ SỐ PHỨC TẠP KỸ THUẬT-CÔNG NGHỆ</h3></div>
 <form action="/luanvan/updateHeSoKyThuat" method="GET" role="form">
 	<input type="hidden" name="projectNameForKyThuat" value="${project.tenproject}">
 	<table class="table table-bordered " >

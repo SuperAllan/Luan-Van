@@ -24,10 +24,10 @@
     <div id="sodo" style="display:none;">${ project.sodo }</div>
     <div class="tabs-left">
 		<ul class="nav nav-stacked tab-left">
-			<li class="classLi" id="thuThap"><a href="#tabThongTin" data-toggle="tab">Thông tin dự án</a></li>
 	        <li class="classLi active" id="UC"><a href="#tabUC" data-toggle="tab">Sơ đô Use Case</a></li>
 	        <li class="classLi" id="uocLuong"><a href="#tabUocLuong" data-toggle="tab">Ước lượng chi phí</a></li>
 	        <li class="classLi" id="giaoDien"><a href="#tabGiaoDien" data-toggle="tab">Thiết kế giao diện</a></li>
+	        <li class="classLi" id="thuThap"><a href="#tabThongTin" data-toggle="tab">Thông tin dự án</a></li>
 	    </ul>
 	</div>
 </div>
@@ -52,10 +52,11 @@
 <%@ include file="/WEB-INF/views/footer.jsp" %>  
 </div>
 <script src="<c:url value="/resources/js/joint.js" />" ></script>
-<script src="<c:url value="/resources/js/jointshapesumlcustom.js" />" ></script>
-<script src="<c:url value="/resources/js/xml2json.js" />" ></script>
 <script src="<c:url value="/resources/js/diagram.js" />" ></script>
-<script src="<c:url value="/resources/js/detail-project.js" />" ></script>
+<script src="<c:url value="/resources/js/xml2json.js" />" ></script>
+<script src="<c:url value="/resources/js/jointshapesumlcustom.js"/>"></script>
+<script src="<c:url value="/resources/js/detail-project.js" />"></script>
+
 </body>
 
 </html>

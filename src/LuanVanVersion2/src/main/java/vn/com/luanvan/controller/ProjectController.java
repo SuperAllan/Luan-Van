@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import vn.com.luanvan.dao.ActorDao;
 import vn.com.luanvan.dao.BmtDao;
 import vn.com.luanvan.dao.ChucNangDao;
+import vn.com.luanvan.dao.GiaTriLuongDao;
 import vn.com.luanvan.dao.HeSoKyThuatDao;
 import vn.com.luanvan.dao.HeSoMoiTruongDao;
 import vn.com.luanvan.dao.LoaiactorDao;
@@ -31,12 +33,16 @@ import vn.com.luanvan.dao.MucLuongNhaNuocDao;
 import vn.com.luanvan.dao.NhomChucNangDao;
 import vn.com.luanvan.dao.PhanLoaiChucNangDao;
 import vn.com.luanvan.dao.ProjectDao;
+import vn.com.luanvan.dao.TrongsonolucDao;
+import vn.com.luanvan.dao.UsecaseDao;
 import vn.com.luanvan.dao.UserDao;
 import vn.com.luanvan.dao.UserRoleDao;
 import vn.com.luanvan.dao.XepHangKyThuatDao;
 import vn.com.luanvan.dao.XepHangMoiTruongDao;
 import vn.com.luanvan.form.FormChucNang;
 import vn.com.luanvan.model.Chucnang;
+import vn.com.luanvan.model.Giatriluong;
+import vn.com.luanvan.model.Luong;
 import vn.com.luanvan.model.Nhomchucnang;
 import vn.com.luanvan.model.Phanloaichucnang;
 import vn.com.luanvan.model.Project;
@@ -67,6 +73,10 @@ public class ProjectController {
 	@Autowired
 	private LoaiactorDao loaiactorDao;
 	@Autowired
+	private ActorDao actorDao;
+	@Autowired
+	private UsecaseDao usecaseDao;
+	@Autowired
 	private HeSoKyThuatDao heSoKyThuatDao;
 	@Autowired
 	private XepHangKyThuatDao xepHangKyThuatDao;
@@ -76,6 +86,10 @@ public class ProjectController {
 	private XepHangMoiTruongDao xepHangMoiTruongDao;
 	@Autowired
 	private MucLuongNhaNuocDao mucLuongNhaNuocDao;
+	@Autowired
+	private GiaTriLuongDao giaTriLuongDao;
+	@Autowired
+	private TrongsonolucDao trongsonolucDao;
 	
 	@RequestMapping(value = "/formCreateProject", method = RequestMethod.GET)
 	public String formCreateProject(Model model) {
@@ -119,6 +133,7 @@ public class ProjectController {
 		if(listNhomChucNangFromData != null){
 			model.addAttribute("listNhomChucNangFromData", listNhomChucNangFromData);
 		}
+		model.addAttribute("listTrongSoNoLuc", trongsonolucDao.getAll());
 		model.addAttribute("listPhanLoai", listPhanLoai);
 		model.addAttribute("listMucDo", listMucDo);
 		model.addAttribute("project", project);
@@ -128,6 +143,7 @@ public class ProjectController {
 		model.addAttribute("listHeSoMoiTruong", heSoMoiTruongDao.getListHeSoMoiTruong());
 		model.addAttribute("listXepHangKyThuat", xepHangKyThuatDao.getListXepHangKyThuat(projectid));
 		model.addAttribute("listXepHangMoiTruong", xepHangMoiTruongDao.getListXepHangMoiTruong(projectid));
+		model.addAttribute("listGiatriluong", giaTriLuongDao.getListGiaTriLuong(projectid));
 		model.addAttribute("bmts", bmtDao.getAll());
 		model.addAttribute("mucLuongNhaNuoc", mucLuongNhaNuocDao.getList());
 		model.addAttribute("listLuong", luongDao.getListLuong());
@@ -140,8 +156,24 @@ public class ProjectController {
 		model.addAttribute("tongKetQuaFromKyThuat", xepHangKyThuatDao.TongKetqua(projectid));
 		model.addAttribute("tongOnDinh", df.format(xepHangMoiTruongDao.TongOnDinh(projectid)));
 		model.addAttribute("tinhNoiSuy", xepHangMoiTruongDao.tinhNoiSuyLaoDong(projectid));
-		model.addAttribute("ketQuaLuongCoBan", luongDao.TinhLuongCoBan(project.getLuongcoban(), luongDao.getListLuong()));
-		
+		List<Luong> listLuong = luongDao.getListLuong();
+		model.addAttribute("ketQuaLuongCoBan", luongDao.TinhLuongCoBan(project.getLuongcoban(), listLuong));
+		model.addAttribute("ketQuaLuongPhu", luongDao.TinhLuongPhu(project.getLuongcoban(), listLuong));
+		model.addAttribute("ketQuaCPKG", luongDao.TinhCPKG(project.getLuongcoban(), listLuong));
+		if(!giaTriLuongDao.getListGiaTriLuong(projectid).isEmpty()){
+			List<Giatriluong> listGiaTri = giaTriLuongDao.getListGiaTriLuong(projectid);
+			model.addAttribute("ketQuaBaoHiem", luongDao.TinhBaoHiem(project.getLuongcoban(), luongDao.getListLuong(), listGiaTri));
+			model.addAttribute("ketQuaTong", luongDao.TinhTong(project.getLuongcoban(), luongDao.getListLuong(), listGiaTri));
+			model.addAttribute("ketQuaCP1Ngay", luongDao.TinhCP1Ngay(project.getLuongcoban(), luongDao.getListLuong(), listGiaTri));
+			model.addAttribute("ketQuaCP1Gio", luongDao.TinhCP1Gio(project.getLuongcoban(), luongDao.getListLuong(), listGiaTri));
+		}
+		model.addAttribute("countActor", actorDao.countActor(projectid));
+		model.addAttribute("diemActor", actorDao.tinhDiemTungActor(projectid, loaiactorDao.getAll()));
+		model.addAttribute("tongDiemActor", actorDao.tinhTongDiem(projectid, loaiactorDao.getAll()));
+		model.addAttribute("soTruongHopSudung", usecaseDao.countBMT(projectid));
+		model.addAttribute("diemTungUsecase", usecaseDao.tinhDiemTungUsecase(projectid, bmtDao.getAll()));
+		model.addAttribute("tongDiemTungUsecase", usecaseDao.tongDiemTungUsecase(projectid, bmtDao.getAll()));
+		model.addAttribute("tongSoTruongHopSudung", usecaseDao.tongBMT(projectid));
 		return "detail-project";	
 	}
 	

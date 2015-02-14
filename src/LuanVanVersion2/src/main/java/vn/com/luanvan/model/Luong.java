@@ -5,11 +5,14 @@ package vn.com.luanvan.model;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+
 import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,8 +27,8 @@ public class Luong implements java.io.Serializable {
 	private Integer luongid;
 	private int bac;
 	private float heso;
-	private Set<Project> projects = new HashSet<Project>(0);
-
+	private Set<Giatriluong> giatriluongs = new HashSet<Giatriluong>(0);
+	
 	public Luong() {
 	}
 
@@ -33,11 +36,10 @@ public class Luong implements java.io.Serializable {
 		this.bac = bac;
 		this.heso = heso;
 	}
-
-	public Luong(int bac, float heso, Set<Project> projects) {
+	public Luong(int bac, float heso, Set<Giatriluong> giatriluongs) {
 		this.bac = bac;
 		this.heso = heso;
-		this.projects = projects;
+		this.giatriluongs = giatriluongs;
 	}
 
 	@Id
@@ -70,12 +72,11 @@ public class Luong implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "luong")
-	public Set<Project> getProjects() {
-		return this.projects;
+	public Set<Giatriluong> getGiatriluongs() {
+		return this.giatriluongs;
 	}
-
-	public void setProjects(Set<Project> projects) {
-		this.projects = projects;
+	public void setGiatriluongs(Set<Giatriluong> giatriluongs) {
+		this.giatriluongs = giatriluongs;
 	}
 
 }

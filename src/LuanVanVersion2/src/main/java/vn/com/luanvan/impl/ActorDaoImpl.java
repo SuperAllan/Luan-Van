@@ -1,5 +1,6 @@
 package vn.com.luanvan.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import vn.com.luanvan.dao.ActorDao;
 import vn.com.luanvan.model.Actor;
+import vn.com.luanvan.model.Loaiactor;
 
 @Repository
 public class ActorDaoImpl implements ActorDao {
@@ -49,6 +51,44 @@ public class ActorDaoImpl implements ActorDao {
 		query.setParameter("id", id);
 		return (List<Actor>)query.list();
 
+	}
+
+	@Transactional
+	public List<Integer> countActor(Integer projectid) {
+		List<Integer> count = new ArrayList<Integer>();
+		String hql = "select count(a) FROM Actor as a where a.project.projectid = :id and a.loaiactor.loaiactorid= :loaiid";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("id", projectid);
+		query.setParameter("loaiid", 1);
+		count.addAll(query.list());
+		query.setParameter("loaiid", 2);
+		count.addAll(query.list());
+		query.setParameter("loaiid", 3);
+		count.addAll(query.list());
+		return count;
+	}
+
+	@Transactional
+	public List<Integer> tinhDiemTungActor(Integer projectid,
+			List<Loaiactor> loaiActor) {
+		List<Integer> countActor = countActor(projectid);
+		List<Integer> ketQua = new ArrayList<Integer>();
+		int temp = 0;
+		for(int i = 0; i < loaiActor.size(); i++){
+			temp = Integer.parseInt(String.valueOf(countActor.get(i)))*loaiActor.get(i).getTrongso();
+			ketQua.add(temp);
+		}
+		return ketQua;
+	}
+
+	@Transactional
+	public Integer tinhTongDiem(Integer projectid, List<Loaiactor> loaiActor) {
+		List<Integer> diemActor = tinhDiemTungActor(projectid, loaiActor);
+		int temp= 0;
+		for(Integer inte : diemActor){
+			temp += inte;
+		}
+		return temp;
 	}
 
 }

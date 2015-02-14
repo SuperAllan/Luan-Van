@@ -273,6 +273,7 @@ $("#saveDiagram").on('click', function() {
 			$("#icon-not-save").html("<i class=\"glyphicon glyphicon-floppy-remove\"></i> Chưa lưu");
 			setIconSave('none', 'block');
 			$(".div-loading").hide();
+			location.reload();
 		},
 		error: function() {
 			alert("error");

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.mysql.fabric.xmlrpc.base.Array;
 
 import vn.com.luanvan.dao.ChucNangDao;
+import vn.com.luanvan.dao.GiaTriLuongDao;
 import vn.com.luanvan.dao.LuongDao;
 import vn.com.luanvan.dao.MucDoDao;
 import vn.com.luanvan.dao.NhomChucNangDao;
@@ -27,6 +28,8 @@ import vn.com.luanvan.dao.XepHangKyThuatDao;
 import vn.com.luanvan.dao.XepHangMoiTruongDao;
 import vn.com.luanvan.form.FormChucNang;
 import vn.com.luanvan.model.Chucnang;
+import vn.com.luanvan.model.Giatriluong;
+import vn.com.luanvan.model.GiatriluongId;
 import vn.com.luanvan.model.Hesokythuat;
 import vn.com.luanvan.model.Luong;
 import vn.com.luanvan.model.Nhomchucnang;
@@ -54,6 +57,8 @@ public class UocLuongController {
 	private XepHangMoiTruongDao xepHangMoiTruongDao;
 	@Autowired
 	private LuongDao luongDao;
+	@Autowired
+	private GiaTriLuongDao giaTriLuongDao;
 	
 	
 	@RequestMapping(value="/updateFeatures", method = RequestMethod.GET)
@@ -135,17 +140,41 @@ public class UocLuongController {
 		return "redirect:/detailProject/name="+project.getTenproject()+"";
 	}
 	@RequestMapping(value="/updateBangLuong", method = RequestMethod.GET)
-	public String updateBangLuong(HttpServletRequest request, RedirectAttributes redirectAttributes, Principal principal){
+	public String updateBangLuong(HttpServletRequest request, RedirectAttributes redirectAttributes, Principal principal,
+			@RequestParam("luongTangThem") String[] luongTangThem, @RequestParam("pcKhuVuc") String[] pcKhuVuc, @RequestParam("pcLuuDong") String[] pcLuuDong,
+			@RequestParam("luongIdForBangLuong") String[] luongIdForBangLuong){
 		String projectName = request.getParameter("projectNameForLuong");
 		Project project = projectDao.findProjectByName(principal.getName(), projectName);
 		int luongNhaNuoc = Integer.parseInt(request.getParameter("mucLuongNhaNuoc"));
 		project.setLuongcoban(luongNhaNuoc);
+		String bacLuong = request.getParameter("chooseLuong");
+		project.setBacluong(Integer.parseInt(bacLuong));
+		giaTriLuongDao.delete(project.getProjectid());
+		for(int i = 0; i < luongTangThem.length; i++){
+			GiatriluongId giaTriId = new GiatriluongId();
+			giaTriId.setLuongId(Integer.parseInt(luongIdForBangLuong[i]));
+			giaTriId.setProjectid(project.getProjectid());
+			Giatriluong giaTri = new Giatriluong();
+			giaTri.setId(giaTriId);
+			giaTri.setLuongtangthem(Integer.parseInt(luongTangThem[i]));
+			giaTri.setPckhuvuc(Integer.parseInt(pcKhuVuc[i]));
+			giaTri.setPcluudong(Integer.parseInt(pcLuuDong[i]));
+			giaTriLuongDao.save(giaTri);
+		}
 		projectDao.save(project);
 		
 		return "redirect:/detailProject/name="+project.getTenproject()+"";
 		
 	}
 	
-	
+	@RequestMapping(value="/updateGiaTriPhanMem", method = RequestMethod.GET)
+	public String updateGiaTriPhanMem(HttpServletRequest request, Principal principal){
+		String projectName = request.getParameter("projectNameForGiaTriPhanMem");
+		Project project = projectDao.findProjectByName(principal.getName(), projectName);
+		String trongso = request.getParameter("selectNoLuc");
+		project.setTrongsonoluc(Double.parseDouble(trongso));
+		projectDao.save(project);
+		return "redirect:/detailProject/name="+project.getTenproject()+"";
+	}
 	
 }
