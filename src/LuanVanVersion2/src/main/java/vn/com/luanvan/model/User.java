@@ -27,20 +27,22 @@ public class User implements java.io.Serializable {
 	private String address;
 	private String image;
 	private String fullname;
+	private String idconfirm;
 	private Set<Project> projects = new HashSet<Project>(0);
 	private Set<UserRole> userroles = new HashSet<UserRole>(0);
 
 	public User() {
 	}
 
-	public User(String username, String password, boolean enabled, String email) {
+	public User(String username, String password, boolean enabled, String email, String idconfirm) {
 		this.username = username;
 		this.password = password;
 		this.enabled = enabled;
 		this.email = email;
+		this.idconfirm = idconfirm;
 	}
 
-	public User(String username, String password, boolean enabled,
+	public User(String username, String password, boolean enabled, String idconfirm,
 			String email, String phone, String address, String image,
 			String fullname, Set<Project> projects, Set<UserRole> userroles) {
 		this.username = username;
@@ -53,10 +55,11 @@ public class User implements java.io.Serializable {
 		this.fullname = fullname;
 		this.projects = projects;
 		this.userroles = userroles;
+		this.idconfirm = idconfirm;
 	}
 
 	@Id
-	@Column(name = "USERNAME", unique = true, nullable = false, length = 45)
+	@Column(name = "USERNAME", unique = true, nullable = false, length = 255)
 	public String getUsername() {
 		return this.username;
 	}
@@ -65,7 +68,7 @@ public class User implements java.io.Serializable {
 		this.username = username;
 	}
 
-	@Column(name = "PASSWORD", nullable = false, length = 45)
+	@Column(name = "PASSWORD", nullable = false, length = 255)
 	public String getPassword() {
 		return this.password;
 	}
@@ -126,6 +129,15 @@ public class User implements java.io.Serializable {
 
 	public void setFullname(String fullname) {
 		this.fullname = fullname;
+	}
+	
+	@Column(name = "IDCONFIRM")
+	public String getIdconfirm() {
+		return this.idconfirm;
+	}
+
+	public void setIdconfirm(String id) {
+		this.idconfirm = id;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")

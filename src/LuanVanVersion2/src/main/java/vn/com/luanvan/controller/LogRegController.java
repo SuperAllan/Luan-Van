@@ -8,7 +8,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.UUID;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +19,10 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -105,8 +110,7 @@ public class LogRegController {
 		
 		@RequestMapping(value = "/dangky", method = RequestMethod.POST ,produces = "text/plain;charset=UTF-8")
 		public String dangKy(HttpServletRequest http, User user, Model model) {
-			SecureRandom random = new SecureRandom();
-			String pass = new BigInteger(80,random).toString(32);
+			String pass = http.getParameter("password");
 			String username = http.getParameter("username");
 			String email = http.getParameter("email");
 			String strUser = "Tài khoản đã được sử dụng.";
@@ -115,15 +119,19 @@ public class LogRegController {
 				model.addAttribute("strUser",strUser);
 				return "home";
 			}
-			else if(userDao.checkEmail(email) == true){
+			else if(userDao.checkEmailInDatabase(email) == true){
 				model.addAttribute("strEmail",strEmail);
 				return "home";
 			}
 			else{
+				UUID id = UUID.randomUUID();
 				user.setUsername(username);
-				user.setPassword(pass);
+				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+				String hashedpass = passwordEncoder.encode(pass);
+				user.setPassword(hashedpass);
 				user.setEmail(email);
-				user.setEnabled(true);
+				user.setIdconfirm(id.toString());
+				user.setEnabled(false);
 				userDao.add(user);
 				UserRole userRole = new UserRole();
 				userRole.setUser(user);
@@ -137,7 +145,9 @@ public class LogRegController {
 		public String changePassword(HttpServletRequest http, User user,RedirectAttributes redirectAttributes) {
 			user = userDao.findUserbyUserName(http.getParameter("username"));
 			if(userDao.checkOldPassword(user, http.getParameter("oldPassword"))){
-				user.setPassword(http.getParameter("newPassword"));
+				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+				String hashPass = passwordEncoder.encode(http.getParameter("newPassword"));
+				user.setPassword(hashPass);
 				userDao.save(user);
 				redirectAttributes.addFlashAttribute("successChangePassword", "Bạn đã thay đổi mật khẩu thành công");
 			}
@@ -187,6 +197,14 @@ public class LogRegController {
 			userDao.save(user);
 			redirectAttributes.addFlashAttribute("updateSuccess", "Cập nhật thông tin  thành công");
 			return "redirect:/background";
+		}
+		
+		@RequestMapping(value="/confirm/id={idconfirm}", method = RequestMethod.GET)
+		public String confirmEmail(@PathVariable("idconfirm")String idconfirm, User user){
+			user = userDao.findUserByIdConfirm(idconfirm);
+			user.setEnabled(true);
+			userDao.save(user);
+			return "confirm-mail";
 			
 		}
 }

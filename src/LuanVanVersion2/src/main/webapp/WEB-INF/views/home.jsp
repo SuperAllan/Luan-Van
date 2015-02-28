@@ -41,6 +41,32 @@
 				
 				<div class="form-group">
 					<div class="input-group">
+					  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+					  <input type="password" name="password" id="password" class="form-control input-lg"  placeholder="Mật khẩu" 
+					  	data-bv-notempty="true"
+               			data-bv-notempty-message="Mật khẩu phải khác rỗng"
+					  	data-bv-stringlength="true"
+               			data-bv-stringlength-min="6"
+               			data-bv-stringlength-max="30"
+               			data-bv-stringlength-message="Mật khẩu phải ít nhất là 6 ký tự và nhiều nhất là 30 ký tự">
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<div class="input-group">
+					  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+					  <input type="password" name="confirmPassword" id="confirmPassword" class="form-control input-lg"  placeholder="Nhập lại mật khẩu" 
+					  	data-bv-notempty="true"
+               			data-bv-notempty-message="Mật khẩu phải khác rỗng"
+					  	data-bv-identical="true" 
+             			data-bv-identical-field="password" 
+             			data-bv-identical-message="Nhập lại mật khẩu chưa chính xác.">
+					</div>
+				</div>
+				
+				
+				<div class="form-group">
+					<div class="input-group">
 					 <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
 					 <input type="email" name="email" id="email" class="form-control input-lg" required="required" placeholder="Email" 
 					  data-bv-notempty="true"

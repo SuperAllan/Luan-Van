@@ -8,7 +8,7 @@
 <head>
 <title>Chi tiết dự án</title>
 <link href="<c:url value="/resources/css/detail-project.css" />" rel="stylesheet">
-<link href="<c:url value="/resources/css/joint.css" />" rel="stylesheet">
+<link href="<c:url value="/resources/css/joint.nojquery.min.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/diagram.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/jointshapesumlcustom.css" />" rel="stylesheet">
 </head>
@@ -51,7 +51,7 @@
 </div>  
 <%@ include file="/WEB-INF/views/footer.jsp" %>  
 </div>
-<script src="<c:url value="/resources/js/joint.js" />" ></script>
+<script src="<c:url value="/resources/js/joint.nojquery.min.js" />" ></script>
 <script src="<c:url value="/resources/js/diagram.js" />" ></script>
 <script src="<c:url value="/resources/js/xml2json.js" />" ></script>
 <script src="<c:url value="/resources/js/jointshapesumlcustom.js"/>"></script>

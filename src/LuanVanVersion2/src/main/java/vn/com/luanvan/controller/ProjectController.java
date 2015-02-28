@@ -97,14 +97,14 @@ public class ProjectController {
 	}
 	
 	@RequestMapping(value = "/createProject", method = RequestMethod.GET)
-	public String createProject(Model model, HttpServletRequest request, Project project,Principal principal) throws ParseException {
+	public String createProject(Model model, HttpServletRequest request, Project project,Principal principal, RedirectAttributes redirectAttributes) throws ParseException {
 		String projectName = request.getParameter("projectName");
 		String description = request.getParameter("description");
 		String username = principal.getName();
 		Date date = new Date();
 		if(projectDao.checkProjectName(username ,projectName) == true){
-			model.addAttribute("errorName", "Tên của dự án đã tồn tại.");
-			return "create-project";
+			redirectAttributes.addFlashAttribute("errorName", "Tên của dự án đã tồn tại.");
+			return "redirect:/background";
 		}else{
 			project.setTenproject(projectName);
 			project.setMotaproject(description);
@@ -114,8 +114,8 @@ public class ProjectController {
 			project.setUser(user);
 			project.setNgaytao(date);
 			projectDao.add(project);
-			model.addAttribute("success", "Bạn đã tạo dự án thành công.");
-			return "create-project";
+			redirectAttributes.addFlashAttribute("success", "Bạn đã tạo dự án thành công.");
+			return "redirect:/background";
 		}
 		
 	}

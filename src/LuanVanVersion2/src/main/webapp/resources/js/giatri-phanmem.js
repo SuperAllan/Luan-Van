@@ -1,9 +1,10 @@
 $(document).ready(function(){
 	$('#noLucE').text( $('#selectNoLuc').val() * parseFloat($('#AUCP').text()) );
 	
-	$('#chooseLuongFromBangLuong').text($('input[name=chooseLuong]:checked').val());
-	$('input[name=chooseLuong]').change(function(){
-		$('#chooseLuongFromBangLuong').text($('input[name=chooseLuong]:checked').val());
+	$('#chooseLuongFromBangLuong').text($("#CP1GioForBacLuong"+$('input[name=chooseBacLuong]:checked').val()).val());
+	
+	$('input[name=chooseBacLuong]').change(function(){
+		$('#chooseLuongFromBangLuong').text($("#CP1GioForBacLuong"+$('input[name=chooseBacLuong]:checked').val()).val());
 		var binhQuan = $('#chooseLuongFromBangLuong').text();
 		binhQuan = binhQuan.replace(",","");
 		$('#dinhGiaG').text(parseInt(parseFloat($('#noiSuyP').text()) * parseFloat($('#noLucE').text()) * parseInt(binhQuan) * 1.4));

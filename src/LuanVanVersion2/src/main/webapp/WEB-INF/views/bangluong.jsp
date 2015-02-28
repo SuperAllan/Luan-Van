@@ -17,7 +17,6 @@
 	<table class="table table-bordered">
 		<thead>
 			<tr class="text-center" style="font-weight: bold;">
-				<td>STT</td>
 				<td>Bậc</td>
 				<td>Hệ số</td>
 				<td>Lương cơ bản</td>
@@ -42,20 +41,22 @@
 			<tr class="text-center">
 				<td>
 					<c:choose>
-					<c:when test="${project.bacluong == 0 && status.index == 0}">
-						<input type="radio" name="chooseLuong" value="${ketQuaCP1Gio[status.index]}" checked>
-					</c:when>
-					<c:when test="${project.bacluong == ketQuaCP1Gio[status.index]}">
-						<input type="radio" name="chooseLuong" value="${ketQuaCP1Gio[status.index]}" checked>
-					</c:when>
-					<c:otherwise>
-						<input type="radio" name="chooseLuong" value="${ketQuaCP1Gio[status.index]}">
-					</c:otherwise>
-					</c:choose>		
-				${show.luongid}
+						<c:when test="${project.bacluong == 0 && status.index == 0}">
+							<input type="radio" name="chooseBacLuong" value="${show.bac}" checked>
+							<input type="hidden" value="${ketQuaCP1Gio[status.index]}" id="CP1GioForBacLuong${show.bac}">
+						</c:when>
+						<c:when test="${project.bacluong == show.bac}">
+							<input type="radio" name="chooseBacLuong" value="${show.bac}" checked>
+							<input type="hidden" value="${ketQuaCP1Gio[status.index]}" id="CP1GioForBacLuong${show.bac}">
+						</c:when>
+						<c:otherwise>
+							<input type="radio" name="chooseBacLuong" value="${show.bac}">
+							<input type="hidden" value="${ketQuaCP1Gio[status.index]}" id="CP1GioForBacLuong${show.bac}">
+						</c:otherwise>
+					</c:choose>	
+				${show.bac}
 				<input type="hidden" name="luongIdForBangLuong" value="${show.luongid}">
 				</td>
-				<td>${show.bac}</td>
 				<td>${show.heso}</td>
 				<td class="formatKetQua ketQuaLuongCoBan">${ketQuaLuongCoBan[status.index]}</td>
 				<td><input type="number" class="form-control luongTangThem" name="luongTangThem" min="0" value="${listGiatriluong[status.index].luongtangthem}" style="width: 100px;" step="50000"></td>

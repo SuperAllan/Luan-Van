@@ -147,7 +147,7 @@ public class UocLuongController {
 		Project project = projectDao.findProjectByName(principal.getName(), projectName);
 		int luongNhaNuoc = Integer.parseInt(request.getParameter("mucLuongNhaNuoc"));
 		project.setLuongcoban(luongNhaNuoc);
-		String bacLuong = request.getParameter("chooseLuong");
+		String bacLuong = request.getParameter("chooseBacLuong");
 		project.setBacluong(Integer.parseInt(bacLuong));
 		giaTriLuongDao.delete(project.getProjectid());
 		for(int i = 0; i < luongTangThem.length; i++){

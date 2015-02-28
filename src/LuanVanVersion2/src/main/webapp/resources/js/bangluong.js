@@ -27,7 +27,8 @@ $(document).ready(function(){
 //		var baoHiem = $(this).parent().parent().find('tr'+as).find('.ketQuaBaoHiem').text();
 //		$(this).text((parseInt(luongCoBan)+parseInt(luongTangThem)+parseInt(luongPhu)+parseInt(pcKhuVuc)+parseInt(pcLuuDong)+parseInt(CPKG)+parseInt(baoHiem))*1);
 //	});
-
+	
+	//function format number
 	$('.formatKetQua').each(function(){
 		var string = numeral($(this).text()).format('0,0');
 		$(this).text(string);
@@ -35,6 +36,8 @@ $(document).ready(function(){
 	
 	
 });
+	// kiểm tra lương tăng thêm, lưu động và khu vực 
+	// nếu rỗng thì ráng bằng 0
 	function checkBangLuong(){
 		$('.luongTangThem').each(function(){
 			if($(this).val() == "" || $(this).val() == null){

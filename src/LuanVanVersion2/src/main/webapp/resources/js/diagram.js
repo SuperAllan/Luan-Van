@@ -219,7 +219,8 @@ $("#saveInfoUC").on('click', function(){
 	UC.attributes.description = $("#description-modal-usecase").val();
 	UC.attributes.level = $("#level-modal-usecase").val();
 	UC.attributes.payMoney = $("#pay-money-modal-usecase").prop("checked");
-//	$("#saveDiagram").trigger('click');
+	$('#modal-usecase').modal('hide');
+	//$("#saveDiagram").trigger('click');
 });
 
 //Save information of usecase
@@ -233,7 +234,8 @@ $("#saveInfoActor").on('click', function(){
 		var role = $("#"+ this.id).val() + "_" + this.id + "/";
 		actor.attributes.role += role;
 	});
-//	$("#saveDiagram").trigger('click');
+	$('#modal-actor').modal('hide');
+	//$("#saveDiagram").trigger('click');
 });
 
 $("#saveDiagram").on('click', function() {

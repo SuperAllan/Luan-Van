@@ -52,7 +52,7 @@
             <div class="panel panel-default">
 			  <div class="panel-heading" >
 			  		<span style="font-size: 20px">Các dự án</span>
-			 	 <a type="button" class="btn btn-primary pull-right"  href="${contextPath}/formCreateProject">
+			 	 <a type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#myModal" >
 			 	 	<i class="glyphicon glyphicon-plus"></i> Tạo dự án</a>
 			  </div>
 			  <div class="panel-body">
@@ -160,7 +160,66 @@
 			</div><!-- End panel -->
         </div>
     </div>
+    <c:if test="${not empty success}">
+	  	<div class="alert alert-success text-center" style="margin-top: 10px;">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			${success}
+		</div>
+	 </c:if>
+	 
+	 <c:if test="${not empty errorName}">
+	  	<div class="alert alert-success text-center" style="margin-top: 10px;">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			${errorName}
+		</div>
+	 </c:if>
+	 
 </div>
+		
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<form action="/luanvan/createProject" method="GET" role="form" id="form-tao-du-an">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Tạo dự án</h4>
+		      </div>
+		      <div class="modal-body">
+	      		
+					<div class="form-group">
+						<span class="index">Tên dự án</span>
+						<input type="text" class="form-control input-lg" placeholder="Tên dự án" name="projectName"  maxlength="200"
+						data-bv-notempty="true"
+			          	data-bv-notempty-message="Tên dự án phải khác rỗng."
+			          	data-bv-stringlength="true">
+					</div>
+					<c:if test="${empty errorName}">
+						<p>Hãy tạo tên dự án một cách ngắn gọn và dễ nhớ</p>
+					</c:if>
+						<span class="text-danger">${errorName}</span>
+					
+					<div class="form-group">
+						<span class="index">Mô tả dự án (Tùy chọn)</span>
+						<input type="text" class="form-control input-lg" placeholder="Mô tả dự án" name="description">
+						<p>Hãy giới thiệu hoặc mô tả ngắn gọn mục tiêu 	mà dự án bạn hướng tới. Bạn có thể để trống mục này.</p>
+					</div>
+					
+					<c:if test="${not empty success}">
+					  	<div class="alert alert-success" style="margin-top: 10px;">
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+							${success}
+						</div>
+				  	</c:if>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+		        <button type="submit" class="btn btn-primary">Đồng ý</button>
+		      </div>
+		    </div>
+		  </div>
+		  </form>
+		</div>
 
 </div>
 <%@ include file="/WEB-INF/views/footer.jsp" %>

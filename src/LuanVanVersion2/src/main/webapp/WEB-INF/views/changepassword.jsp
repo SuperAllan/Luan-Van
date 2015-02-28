@@ -16,16 +16,20 @@
 	<div class="form-group">
 		<div class="input-group">
 		  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-		  <input type="password" name="newPassword" class="form-control" placeholder="Mật khẩu mới"
+		  <input type="password" name="newPassword" id="newPassword" class="form-control" placeholder="Mật khẩu mới"
 		  	data-bv-notempty="true" 
-          	data-bv-notempty-message="Mật khẩu phải khác rỗng.">
+          	data-bv-notempty-message="Mật khẩu phải khác rỗng."
+          	data-bv-stringlength="true"
+       		data-bv-stringlength-min="6"
+          	data-bv-stringlength-max="30"
+         	data-bv-stringlength-message="Mật khẩu phải ít nhất là 6 ký tự và nhiều nhất là 30 ký tự">
 		</div>
 	</div>
 	
 	<div class="form-group">
 		<div class="input-group">
 		  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-		  <input type="password" name="confirmPassword" class="form-control" placeholder="Nhập lại mật khẩu"
+		  <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" placeholder="Nhập lại mật khẩu"
 		 	 data-bv-notempty="true" 
              data-bv-notempty-message="Mật khẩu phải khác rỗng." 
 		 	 data-bv-identical="true" 

@@ -226,7 +226,7 @@ public class Project implements java.io.Serializable {
 		this.trongsonoluc = trongso;
 	}
 	
-	@Column(name = "BACLUONG")
+	@Column(name = "BACLUONG",columnDefinition = "int default 1")
 	public int getBacluong() {
 		return this.bacluong;
 	}

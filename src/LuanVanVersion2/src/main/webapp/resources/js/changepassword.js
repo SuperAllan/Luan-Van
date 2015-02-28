@@ -3,6 +3,9 @@ $(document).ready(function() {
     $('#form-doi-mat-khau').bootstrapValidator();
     
     window.setTimeout(function() { $(".alert-update-success").alert('close'); }, 2000);
+    $('#newPassword').change(function(){
+    	$('#confirmPassword').val("");
+    });
 });
 
 $(document).ready(function(){

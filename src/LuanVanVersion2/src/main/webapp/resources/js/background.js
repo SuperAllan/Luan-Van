@@ -1,8 +1,13 @@
+//show dialog upload file image
 function showDialog() {
 		$("#uploadImageId").click();
 	}
 
 $(document).ready(function(){
+	window.setTimeout(function() { $(".alert-success").alert('close'); }, 2000);
+
+    $('#form-tao-du-an').bootstrapValidator();
+    
 	$(".logoImg").hover(function(){
 		$(".hoverImg").css('background', 'rgba(34, 85, 85, 0.8)');
 	},function(){
@@ -24,7 +29,7 @@ $(document).ready(function(){
 	});
 });
 
-
+// convert image to base64
 $("#uploadImageId").change(function(evt) {
 	var file = evt.target.files[0];
 	if (file) {
@@ -37,6 +42,10 @@ $("#uploadImageId").change(function(evt) {
 		}
 	}
 });
+
+function showMyModal(){
+	$('#myModal').modal('show');   
+}
 
 
 

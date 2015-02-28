@@ -3,10 +3,18 @@ package vn.com.luanvan.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMessage.RecipientType;
+
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +63,7 @@ public class UserDaoImpl implements UserDao {
 	
 
 	/**
-	 * @author lonel_000
+	 * @author phuong
 	 */
 	@Transactional
 	public void save(User user) {
@@ -63,7 +71,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	/**
-	 * @author lonel_000
+	 * @author phuong
 	 */
 	@Transactional
 	public void add(User user) {
@@ -73,27 +81,31 @@ public class UserDaoImpl implements UserDao {
 	
 	@Transactional
 	public void sendMail(User user){
-		SimpleMailMessage email = new SimpleMailMessage();
-        email.setTo(user.getEmail());
-        email.setSubject("Đăng ký tài khoản");
-        email.setText("Xin chào bạn đã đăng ký thành công tài khoản \n\n"
-        		+ "Tài khoản: "+user.getUsername() +"\n\n"
-        		+"Mật khẩu: "+user.getPassword()+ "\n"
-        		);
+		MimeMessage msg = mailSender.createMimeMessage();
+		try {
+			msg.addRecipients(RecipientType.TO, user.getEmail());
+			msg.setSubject("Đăng ký tài khoản", "UTF-8");
+			msg.setContent("Xin chào bạn đã đăng ký thành công tài khoản <br>"
+	        		+ "Tài khoản: "+user.getUsername() +"<br>"
+	        		+"<a href=\"http://localhost:8080/luanvan/confirm/id="+user.getIdconfirm()+"\">Nhấn vào đây để kích hoạt</a>", "text/html; charset=UTF-8");
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
         // sends the e-mail
-        mailSender.send(email);
+        mailSender.send(msg);
 	}
 	
 	@Transactional
 	public boolean checkOldPassword (User user, String oldPass){
-		if(oldPass.equals(user.getPassword())){
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		if(encoder.matches(oldPass, user.getPassword())){
 			return true;
 		}
 		return false;
 	}
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public boolean checkEmail(String email) {
+	public boolean checkEmailInDatabase(String email) {
 		List<User> users = new ArrayList<User>();
 		users = sessionFactory.getCurrentSession().createQuery("from User where email=?").setParameter(0, email).list();
 		if (users.size() > 0) {
@@ -103,9 +115,14 @@ public class UserDaoImpl implements UserDao {
 		}
 	}
 
-	
-	
-	
+	@Transactional
+	public User findUserByIdConfirm(String idconfirm) {
+		List<User> user = new ArrayList<User>();
+		String hql = "FROM User WHERE idconfirm= :id";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("id", idconfirm);
+		user = query.list();
+		return user.get(0);
+	}
 
-	
 }

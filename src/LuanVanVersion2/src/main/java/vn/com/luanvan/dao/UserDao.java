@@ -21,7 +21,9 @@ public interface UserDao {
 
 	boolean checkOldPassword (User user, String oldPass);
 	
-	boolean checkEmail(String email);
+	boolean checkEmailInDatabase(String email);
+	
+	User findUserByIdConfirm(String idconfirm);
 	
 	
 }
