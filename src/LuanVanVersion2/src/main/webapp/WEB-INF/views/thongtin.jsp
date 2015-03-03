@@ -3,36 +3,23 @@
 
 <link href="<c:url value="/resources/css/thongtin.css" />" rel="stylesheet">
 
-<ul class="nav nav-tabs">
-  <li role="presentation" class="active"><a href="#tabSuaDoi" data-toggle="tab">Sửa đổi dự án</a></li>
-  <li role="presentation"><a href="#tabTrangThai" data-toggle="tab">Trạng thái dự án</a></li>
-</ul>
+
 
 <div class="tab-content">
-        <div class="tab-pane fade in active" id="tabSuaDoi">
 			<form role="form" action="/luanvan/updateProject" method="GET">
 				<div class="form-group">
 					<span>Tên dự án:</span>
 					<input type="text" class="form-control" name="tenProject" value="${project.tenproject}" maxlength="200" required="required">
-					<div class="text-warning">${errorName}</div>
+					<div class="text-warning">${errorNameThietLap}</div>
 					<input type="hidden" class="form-control" name="tenProjectOld" value="${project.tenproject}">
 				</div>
 				
 				<div class="form-group">
 					<span>Mô tả dự án:</span>
-					<input type="text" class="form-control" name="motaProject" value="${project.motaproject}">
+					<textarea class="form-control" name="motaProject" rows="4">${project.motaproject}</textarea>
 				</div>
 				
-				<button type="submit" class="btn btn-primary">Cập nhật</button>
-				<div class="text-success">${successTenProject}</div>
-				<div class="text-success">${successMotaProject}</div>
-			</form>
-        </div>
-        
-        <div class="tab-pane fade" id="tabTrangThai">
-           <form role="form" action="/luanvan/updateTrangThai" method="POST">
-           <input type="hidden" name="tenProjectForTrangThai" value="${project.tenproject}" >
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
            	<div id="radioList">
            		<ul>
            			<c:choose>
@@ -72,9 +59,7 @@
 	           		</c:choose>
            		</ul>
         	</div>
-        	<button type="submit" class="btn btn-primary" style="margin-top: 10px;">Cập nhật</button>
-        	<div>${updateTrangThaiSuccess}</div>
-           </form>
-        </div>
-        
+        	
+				<button type="submit" class="btn btn-primary">Cập nhật</button>
+			</form>
 </div>

@@ -40,12 +40,7 @@
 	
    	 <button type="reset" class="btn btn-default" >Nhập lại</button>
      <button type="submit" class="btn btn-primary">Chấp nhận</button>
-  	 <c:if test="${not empty successChangePassword}">	
-		<div id="successChangePassword" class="alert alert-success text-center alert-update-success" style="margin-top: 10px;">
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-			${successChangePassword}
-		</div>
-	</c:if>
+  	 
 </form>
 
 

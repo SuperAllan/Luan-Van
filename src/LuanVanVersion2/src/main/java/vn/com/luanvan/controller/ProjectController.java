@@ -181,47 +181,34 @@ public class ProjectController {
 	
 	@RequestMapping(value = "/updateProject", method = RequestMethod.GET)
 	public String updateProject( HttpServletRequest request, Project project,Principal principal,RedirectAttributes redirectAttributes) {
-		String str1 = "";
-		String str2 = "";
 		String projectName = request.getParameter("tenProject");
 		String projectNameOld = request.getParameter("tenProjectOld");
 		String description = request.getParameter("motaProject");
 		String username = principal.getName();
-		project = projectDao.findProjectByName(username, projectNameOld);
-		if(project.getMotaproject().equals(description) == false){
-			project.setMotaproject(description);
-			str2 += "mô tả dự án";
-		}
+		String trangthai = request.getParameter("radioTrangThai");
+		project = projectDao.findProjectByName(principal.getName(), projectNameOld);
+		project.setTrangthai(Integer.parseInt(trangthai));
+		project.setMotaproject(description);
 		if(projectName.equals(projectNameOld) == false){
 			if(projectDao.checkProjectName(username, projectName) == false){
 				project.setTenproject(projectName);
-				str1 += "tên dự án ";
 			}else{
-				redirectAttributes.addFlashAttribute("errorName", "Tên dự án đã tồn tại.");
+				redirectAttributes.addFlashAttribute("errorNameThietLap", "Tên dự án đã tồn tại.");
 			}
 		}
+		redirectAttributes.addFlashAttribute("updateTrangThaiSuccess", "Cập nhật thành công!");
 		projectDao.save(project);
-		
-		if(!str1.equals("")){
-			redirectAttributes.addFlashAttribute("successTenProject", "Bạn đã cập nhật "+str1+" thành công.");
-		}
-		if(!str2.equals("")){
-			redirectAttributes.addFlashAttribute("successMotaProject", "Bạn đã cập nhật "+str2+" thành công.");
-		}
-		
 		return "redirect:/detailProject/name="+project.getTenproject()+"";
 	}
 	
-	@RequestMapping(value = "/updateTrangThai", method = RequestMethod.POST)
-	public String updateTrangThai(Project project, RedirectAttributes redirectAttributes, Principal principal, HttpServletRequest request){
-		String trangthai = request.getParameter("radioTrangThai");
-		String nameProject = request.getParameter("tenProjectForTrangThai");
-		project = projectDao.findProjectByName(principal.getName(), nameProject);
-		project.setTrangthai(Integer.parseInt(trangthai));
-		projectDao.save(project);
-		redirectAttributes.addFlashAttribute("updateTrangThaiSuccess", "Cập nhật trạng thái thành công!");
-		return "redirect:/detailProject/name="+project.getTenproject()+"";
+	@RequestMapping(value = "/xoaDuAn", method = RequestMethod.GET)
+	public String deleteProject( HttpServletRequest request, Project project,Principal principal, RedirectAttributes redirectAttributes){
+		String nameProject = request.getParameter("nameProjectForDelete");
+		String username = principal.getName();
+		project = projectDao.findProjectByName(username, nameProject);
+		projectDao.delete(project);
+		redirectAttributes.addFlashAttribute("deleteProjectSuccess", "Xóa dự an thành công!");
+		return "redirect:/background";
 	}
-	
 	
 }

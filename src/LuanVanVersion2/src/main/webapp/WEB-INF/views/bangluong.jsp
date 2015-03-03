@@ -16,7 +16,7 @@
 	<div class="pull-right">Đơn vị tính: đồng</div>
 	<table class="table table-bordered">
 		<thead>
-			<tr class="text-center" style="font-weight: bold;">
+			<tr class="text-center" style="font-weight: bold; vertical-align: middle;">
 				<td>Bậc</td>
 				<td>Hệ số</td>
 				<td>Lương cơ bản</td>
@@ -38,7 +38,7 @@
 		</thead>
 		<tbody>
 		<c:forEach items="${listLuong}" var="show" varStatus="status">
-			<tr class="text-center">
+			<tr class="text-center" style="vertical-align: middle;">
 				<td>
 					<c:choose>
 						<c:when test="${project.bacluong == 0 && status.index == 0}">

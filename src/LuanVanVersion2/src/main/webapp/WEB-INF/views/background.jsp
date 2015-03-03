@@ -149,30 +149,12 @@
 					  		<textarea name="address"  class="form-control" rows="3" >${user.address}</textarea>
 					  	</div>
 					  	<button type="submit" class="btn btn-default btn-primary">Cập nhật</button>
-					  	<c:if test="${not empty updateSuccess}">
-						  	<div id="updateSuccess" class="alert alert-success text-center alert-update-success" style="margin-top: 10px;">
-								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-								${updateSuccess}
-							</div>
-					  	</c:if>
 				  </form>
 			  </div>
 			</div><!-- End panel -->
         </div>
     </div>
-    <c:if test="${not empty success}">
-	  	<div class="alert alert-success text-center" style="margin-top: 10px;">
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-			${success}
-		</div>
-	 </c:if>
-	 
-	 <c:if test="${not empty errorName}">
-	  	<div class="alert alert-success text-center" style="margin-top: 10px;">
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-			${errorName}
-		</div>
-	 </c:if>
+    
 	 
 </div>
 		
@@ -204,13 +186,6 @@
 						<input type="text" class="form-control input-lg" placeholder="Mô tả dự án" name="description">
 						<p>Hãy giới thiệu hoặc mô tả ngắn gọn mục tiêu 	mà dự án bạn hướng tới. Bạn có thể để trống mục này.</p>
 					</div>
-					
-					<c:if test="${not empty success}">
-					  	<div class="alert alert-success" style="margin-top: 10px;">
-							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-							${success}
-						</div>
-				  	</c:if>
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>

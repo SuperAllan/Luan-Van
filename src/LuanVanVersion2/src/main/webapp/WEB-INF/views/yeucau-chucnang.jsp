@@ -95,11 +95,6 @@ CHỨC NĂNG CỦA PHẦN MỀM</h3>
 		</table>
 	</div>
 		<button type="submit" class="btn btn-primary" style="margin-top: 10px;" id="buttonChucNang" onclick="return checkData()">Cập nhật</button>
-		<c:if test="${not empty UpdateChucNangSuccess}">
-		  	<div class="alert alert-success alert-chucnang-success" style="margin-top: 10px;">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-				${UpdateChucNangSuccess}
-			</div>
-	  	</c:if>
+		
 </form>
 <script src="<c:url value="/resources/js/yeucau-chucnang.js" />" ></script>

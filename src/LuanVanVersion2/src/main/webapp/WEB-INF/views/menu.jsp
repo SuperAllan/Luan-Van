@@ -2,24 +2,24 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+
 <!-- Bootstrap vs iquery -->
 <script src="<c:url value="/resources/js/jquery-1.11.2.min.js" />" ></script>
 <script src="<c:url value="/resources/js/bootstrap.min.js" />" ></script>
 <link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
+
 <!-- BootstraoValidator -->
 <script src="<c:url value="/resources/js/bootstrapValidator.min.js" />" ></script>
 <link href="<c:url value="/resources/css/bootstrapValidator.min.css" />" rel="stylesheet">
+
 <!-- Perfect scroll -->
 <script src="<c:url value="/resources/js/perfect-scrollbar.min.js" />" ></script>
 <link href="<c:url value="/resources/css/perfect-scrollbar.min.css" />" rel="stylesheet">
-<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900,200italic,300italic,400italic,600italic,700italic,900italic&subset=latin,vietnamese,latin-ext' rel='stylesheet' type='text/css'>
-<style>
- .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus{
- background-color: transparent;
- color: #337ab7;
- }
-</style>
 
+<!-- menu -->
+<script src="<c:url value="/resources/js/menu.js" />" ></script>
+<link href="<c:url value="/resources/css/menu.css" />" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900,200italic,300italic,400italic,600italic,700italic,900italic&subset=latin,vietnamese,latin-ext' rel='stylesheet' type='text/css'>
 
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
@@ -41,10 +41,97 @@
 		 </div>
     </div>
 	
+	
+	
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      
-   
+    <!-- alert tao du an -->
+    <c:if test="${not empty success}">
+	  	<div class="alert alert-success text-center alert-menu" >
+			<button type="button" class="close pull-right" data-dismiss="alert" aria-hidden="true">&times;</button>
+			${success}
+		</div>
+	 </c:if>
+	 
+	 <c:if test="${not empty errorName}">
+	  	<div class="alert alert-danger text-center alert-menu">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			${errorName}
+		</div>
+	 </c:if>
+   	<!-- alert change password -->
+	  <c:if test="${not empty successChangePassword}">	
+		<div id="successChangePassword" class="alert alert-success text-center alert-menu">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			${successChangePassword}
+		</div>
+	  </c:if>
+	  <!-- alert update information -->
+	  <c:if test="${not empty updateInforSuccess}">
+		  	<div id="updateInforSuccess" class="alert alert-success text-center alert-menu">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				${updateInforSuccess}
+			</div>
+	  	</c:if>
+	  	<!-- alert thanh cong thiet lap du an -->
+	  	<c:if test="${not empty updateTrangThaiSuccess}">
+		  	<div id="updateTrangThaiSuccess" class="alert alert-success text-center alert-menu">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				${updateTrangThaiSuccess}
+			</div>
+	  	</c:if>
+	  	<!-- alert error thiet lap du an -->
+	  	<c:if test="${not empty errorNameThietLap}">
+		  	<div id="errorNameThietLap" class="alert alert-danger text-center alert-menu">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				${errorNameThietLap}
+			</div>
+	  	</c:if>
+	  	<!-- alert yeu cau chuc nang -->
+	  	<c:if test="${not empty UpdateChucNangSuccess}">
+		  	<div id="UpdateChucNangSuccess" class="alert alert-success alert-menu">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				${UpdateChucNangSuccess}
+			</div>
+	  	</c:if>
+	  	<!-- alert ky thuat cong nghe -->
+	  	<c:if test="${not empty updateKyThuatSuccess}">
+		  	<div id="updateKyThuatSuccess" class="alert alert-success alert-menu">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				${updateKyThuatSuccess}
+			</div>
+	  	</c:if>
+  		<!-- alert moi truong -->
+	  	<c:if test="${not empty updateMoiTruongSuccess}">
+		  	<div id="updateMoiTruongSuccess" class="alert alert-success alert-menu">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				${updateMoiTruongSuccess}
+			</div>
+	  	</c:if>
+	  	
+	  	<!-- alert bang luong -->
+	  	<c:if test="${not empty updateBangLuongSuccess}">
+		  	<div id="updateBangLuongSuccess" class="alert alert-success alert-menu">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				${updateBangLuongSuccess}
+			</div>
+	  	</c:if>
+	  	
+	  	<!-- alert gia tri phan mem -->
+	  	<c:if test="${not empty updateGiaTriPhanMemSuccess}">
+		  	<div id="updateGiaTriPhanMemSuccess" class="alert alert-success alert-menu">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				${updateGiaTriPhanMemSuccess}
+			</div>
+	  	</c:if>
+	  	
+	  	<!-- alert gia tri phan mem -->
+	  	<c:if test="${not empty deleteProjectSuccess}">
+		  	<div id="deleteProjectSuccess" class="alert alert-success alert-menu">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				${deleteProjectSuccess}
+			</div>
+	  	</c:if>
       <ul class="nav navbar-nav navbar-right">
        
         	<sec:authorize access="isAnonymous()">

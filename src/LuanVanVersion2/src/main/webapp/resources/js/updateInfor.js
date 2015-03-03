@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	if ($("#updateSuccess").text() != "") {
+	if ($("#updateInforSuccess").text() != "") {
 		$(".classLi").each(function(){
 			$(this).removeClass("active");
 		});

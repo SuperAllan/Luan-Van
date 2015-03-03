@@ -162,18 +162,19 @@ public class UocLuongController {
 			giaTriLuongDao.save(giaTri);
 		}
 		projectDao.save(project);
-		
+		redirectAttributes.addFlashAttribute("updateBangLuongSuccess","Cập nhật thành công!");
 		return "redirect:/detailProject/name="+project.getTenproject()+"";
 		
 	}
 	
 	@RequestMapping(value="/updateGiaTriPhanMem", method = RequestMethod.GET)
-	public String updateGiaTriPhanMem(HttpServletRequest request, Principal principal){
+	public String updateGiaTriPhanMem(HttpServletRequest request, Principal principal, RedirectAttributes redirectAttributes){
 		String projectName = request.getParameter("projectNameForGiaTriPhanMem");
 		Project project = projectDao.findProjectByName(principal.getName(), projectName);
 		String trongso = request.getParameter("selectNoLuc");
 		project.setTrongsonoluc(Double.parseDouble(trongso));
 		projectDao.save(project);
+		redirectAttributes.addFlashAttribute("updateGiaTriPhanMemSuccess","Cập nhật thành công!");
 		return "redirect:/detailProject/name="+project.getTenproject()+"";
 	}
 	

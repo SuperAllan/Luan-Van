@@ -37,3 +37,6 @@
   *border-right-color: #ffffff;
   color:black;
 }
+td{
+	vertical-align: middle !important;
+}

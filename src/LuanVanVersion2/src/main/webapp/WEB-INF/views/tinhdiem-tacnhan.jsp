@@ -39,5 +39,4 @@
 		</tr>
 		</tbody>
 	</table>
-	<button style="submit" class="btn btn-primary" onclick="checkBangLuong();">Cập nhật</button>
 </form>

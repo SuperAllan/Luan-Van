@@ -4,7 +4,7 @@ function showDialog() {
 	}
 
 $(document).ready(function(){
-	window.setTimeout(function() { $(".alert-success").alert('close'); }, 2000);
+	
 
     $('#form-tao-du-an').bootstrapValidator();
     

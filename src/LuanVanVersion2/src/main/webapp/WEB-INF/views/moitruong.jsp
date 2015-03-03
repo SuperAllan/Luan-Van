@@ -77,6 +77,5 @@
 		</tbody>
 	</table>
 	<button type="submit" class="btn btn-primary text-center">Xác nhận</button>
-	<div>${updateMoiTruongSuccess }</div>
 </form>
 <script src="<c:url value="/resources/js/moitruong.js" />" ></script>

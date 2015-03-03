@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -99,7 +100,7 @@ public class Actor implements java.io.Serializable {
 		this.nameofactor = nameofactor;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actor")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actor", cascade = CascadeType.REMOVE)
 	public Set<Phanloai> getPhanloais() {
 		return this.phanloais;
 	}

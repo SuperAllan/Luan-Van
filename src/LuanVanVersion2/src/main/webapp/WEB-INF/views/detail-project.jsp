@@ -11,6 +11,7 @@
 <link href="<c:url value="/resources/css/joint.nojquery.min.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/diagram.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/jointshapesumlcustom.css" />" rel="stylesheet">
+
 </head>
 <body style="padding-top: 70px;" >
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
@@ -27,7 +28,8 @@
 	        <li class="classLi active" id="UC"><a href="#tabUC" data-toggle="tab">Sơ đô Use Case</a></li>
 	        <li class="classLi" id="uocLuong"><a href="#tabUocLuong" data-toggle="tab">Ước lượng chi phí</a></li>
 	        <li class="classLi" id="giaoDien"><a href="#tabGiaoDien" data-toggle="tab">Thiết kế giao diện</a></li>
-	        <li class="classLi" id="thuThap"><a href="#tabThongTin" data-toggle="tab">Thông tin dự án</a></li>
+	        <li class="classLi" id="thietLap"><a href="#tabThietLap" data-toggle="tab">Thiết lập dự án</a></li>
+	        <li class="classLi" id="xoaDuAn"><a href="#tabXoaDuAn" data-toggle="tab">Xóa dự án</a></li>
 	    </ul>
 	</div>
 </div>
@@ -39,12 +41,20 @@
         <div class="tab-pane fade" id="tabUocLuong">
             <%@ include file="/WEB-INF/views/formUocLuong.jsp" %>
         </div>
-        <div class="tab-pane fade" id="tabThongTin">
-        	<%@ include file="/WEB-INF/views/thongtin.jsp" %>             
-        </div>
         <div class="tab-pane fade" id="tabGiaoDien">
            c
         </div>
+        <div class="tab-pane fade" id="tabThietLap">
+        	<%@ include file="/WEB-INF/views/thongtin.jsp" %>             
+        </div>
+        <div class="tab-pane fade" id="tabXoaDuAn">
+           <form action="/luanvan/xoaDuAn" method="get" role="form">
+           		<input type="hidden" name="nameProjectForDelete" value="${project.tenproject}">
+           		<button class="btn btn-lg btn-danger text-center" style="margin-left: 300px; margin-top: 70px;" onclick="return confirmDelete()">Xóa dự án</button>
+           		<p class="help-block" style="margin-left: 300px;">Lưu ý: Mọi dữ liệu liên quan sẽ mất hết!</p>
+           </form>
+        </div>
+        
     </div>
 </div>
 

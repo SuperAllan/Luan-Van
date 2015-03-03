@@ -85,8 +85,8 @@ public class UserDaoImpl implements UserDao {
 		try {
 			msg.addRecipients(RecipientType.TO, user.getEmail());
 			msg.setSubject("Đăng ký tài khoản", "UTF-8");
-			msg.setContent("Xin chào bạn đã đăng ký thành công tài khoản <br>"
-	        		+ "Tài khoản: "+user.getUsername() +"<br>"
+			msg.setContent("<h3>Xin chào bạn đã đăng ký thành công tài khoản</h3> <br>"
+	        		+ "<h3>Tài khoản: "+user.getUsername() +"</h3><br>"
 	        		+"<a href=\"http://localhost:8080/luanvan/confirm/id="+user.getIdconfirm()+"\">Nhấn vào đây để kích hoạt</a>", "text/html; charset=UTF-8");
 		} catch (MessagingException e) {
 			e.printStackTrace();

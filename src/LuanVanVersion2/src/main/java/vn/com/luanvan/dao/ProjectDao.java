@@ -12,6 +12,8 @@ public interface ProjectDao{
 	
 	void save(Project project);
 	
+	void delete(Project project);
+	
 	boolean checkProjectName(String username, String projectName);
 	
 	List<Project> getListProject(String username,int status);

@@ -5,11 +5,15 @@ package vn.com.luanvan.model;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+
 import static javax.persistence.GenerationType.IDENTITY;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -149,7 +153,7 @@ public class Usecase implements java.io.Serializable {
 		this.files = files;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usecase")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usecase", cascade = CascadeType.REMOVE)
 	public Set<Phanloai> getPhanloais() {
 		return this.phanloais;
 	}

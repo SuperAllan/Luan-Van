@@ -48,6 +48,5 @@
 		</tbody>
 	</table>
 	<button type="submit" class="btn btn-primary text-center">Xác nhận</button>
-	<div>${updateKyThuatSuccess }</div>
 </form>
 <script src="<c:url value="/resources/js/kythuat-congnghe.js" />" ></script>

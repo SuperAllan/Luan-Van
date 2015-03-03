@@ -195,7 +195,7 @@ public class LogRegController {
 				user.setEmail(email);
 			}
 			userDao.save(user);
-			redirectAttributes.addFlashAttribute("updateSuccess", "Cập nhật thông tin  thành công");
+			redirectAttributes.addFlashAttribute("updateInforSuccess", "Cập nhật thông tin  thành công");
 			return "redirect:/background";
 		}
 		
