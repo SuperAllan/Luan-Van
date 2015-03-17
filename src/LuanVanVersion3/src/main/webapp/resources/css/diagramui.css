@@ -1,0 +1,52 @@
+#paperUI {
+	border: 1px solid #ddd;
+	background: url('../img/grid.gif');
+	position: relative;
+	height: 872px;
+	width: 872px;
+	overflow: none;
+}
+
+#tool-UI {
+	position: fixed !important;
+	z-index: 100;
+	top: 20vh;
+	right:0;
+}
+
+#element-design-ui button {
+	background: white;
+	font-size: 26px;
+}
+
+#properties-design-ui {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 9999;
+	background:white;
+	padding: 10px 20px 10px 20px;
+	display: none;
+}
+
+#properties-design-ui .properties-child {
+	float: left;
+	margin-left: 6px;
+}
+
+#exportSVGUI,
+#exportXMLUI {
+	width:100%;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	height: 56px;
+}
+
+#nameFileSVGUI,
+#nameFileXMLUI {
+	border:none;
+	box-shadow: none !important;
+	height:56px;
+	font-size:16px;
+}
