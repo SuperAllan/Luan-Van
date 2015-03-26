@@ -1,0 +1,246 @@
+body {
+	background-color: #0769AD;
+}
+input {
+	color: black;
+}
+
+#listChucNang .form-control {
+	font-size: 16px;
+}
+
+a {
+	text-decoration: none !important;
+	cursor: pointer;
+	color: #0769AD;
+}
+
+a:focus {
+	color: #0769AD;
+}
+
+.message-custom {
+	position: fixed;
+	top: 30vh;
+	left: 25vw;
+	z-index: 9999;
+}
+
+.message-custom-error {
+	position: fixed;
+	top: 23vh;
+	left: 25vw;
+	z-index: 9999;
+}
+
+.toggle-menu-detail-project {
+	position: relative;
+	left: -15px;
+	width: 20px;
+	height: 21px;
+	padding: 2px;
+	border: 1px dashed #0769AD;
+	color: #0769AD;
+}
+
+footer {
+	background: url('/luanvan/resources/img/bg-footer.jpg');
+	color: #aaa;
+	height: 200px;
+	padding-top: 60px;
+}
+
+.list-project {
+	padding: 10px;
+}
+
+#anhdaidien {
+	height: 150px;
+	width: 150px;
+}
+
+.hoverImg {
+	z-index: 10;
+	color: white;
+	background: black;
+	opacity:0.4;
+	position: relative;
+	width: 150px;
+	height: 50px;
+	top: -50px;
+	line-height: 50px;
+}
+
+.hoverImg:hover {
+	opacity: 0.8;
+}
+
+.content-home {
+	margin-bottom: -20px;
+	position: relative;
+	border-radius: 10px;
+}
+
+.content-home .panel-heading {
+	background: url('/luanvan/resources/img/dark-grey-tile.png');
+	font-size: 20px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	box-shadow: 0 0 5px rgba(1, 1, 1, 0.7);
+}
+
+.header-paragraph-home {
+	background: url('/luanvan/resources/img/gauze.png');
+	padding: 10px 10px;
+	font-size: 18px;
+	color: black;
+	font-weight: bold;
+}
+
+.list-feature-home {
+	font-size: 20px;
+}
+
+.list-feature-home .icon-feature-home {
+	border-radius: 20px;
+	background: #0769AD;
+	float: left;
+	padding: 5px;
+	color: white;
+	margin-right: 5px;
+}
+
+.content-paragraph-home {
+	padding: 10px;
+	font-size: 16px;
+	text-align: justify;
+}
+
+.header-in-content-home {
+	background: url('/luanvan/resources/img/dark-grey-tile.png');
+	font-size: 20px;
+	color: #aaa;
+	padding: 10px;
+	left: -30px;
+	position: relative;
+	margin-right: -60px;
+	margin-bottom: 20px;
+}
+
+.text-icon-home {
+	background: url('/luanvan/resources/img/dark-grey-tile.png');
+	color: white;
+	padding: 20px;
+	font-size: 18px;
+	height: 335px;
+}
+
+.logo-home {
+	color: white;
+	font-size: 28px;
+	height: 150px;
+	margin-bottom: 20px;
+}
+
+.logo-home .img-logo-home {
+	float: left;
+}
+
+.logo-home .text-logo-home {
+	padding-top: 37px;
+	float: left;
+}
+.logo-home .btn-download-home {
+	padding-top: 45px;
+	float: right;
+}
+.logo-home .btn-download-home a{
+	font-size: 20px;
+}
+
+.alert-menu{
+	display: inline-block; 
+	margin-top: 4px; 
+	margin-left: 200px; 
+	margin-bottom: 2px; 
+	padding: 10px 15px;
+}
+.alert-menu:nth-child(2){
+	margin-left: 20px;
+}
+
+.radio lable {
+	display: inline !important;
+}
+
+ #dropdownMenu1 {
+	font-size: 16px;
+	color: white;
+}
+
+.loginInput {
+	color: white;
+	border: none;
+	background: none;
+}
+
+.tabs-left .active {
+	opacity: 1;
+}
+.tabs-left ul li:hover {
+	background: transparent;
+}
+.classLi a:focus, .classLi a:hover {
+	background: transparent !important;
+}
+.classLi {
+	margin-top: 5px;
+	width: 169px;
+	border: 1px dashed #0769AD;
+	margin-bottom: 10px;
+	opacity: 0.5;
+	border-radius: 4px;
+	
+	/* Firefox */
+	-moz-transition: all 0.7s ease;
+	/* WebKit */
+	-webkit-transition: all 0.7s ease;
+	/* Opera */
+	-o-transition: all 0.7s ease;
+	/* Standard */
+	transition: all 0.7s ease;
+}
+.classLi:hover {
+	background: transparent !important;
+	opacity: 1;
+	/* Firefox */
+	-moz-transform: scale(1) rotate(7deg) translate(7px);
+	/* WebKit */
+	-webkit-transform: scale(0.2) rotate(7deg) translate(7px);
+	/* Opera */
+	-o-transform: scale(1) rotate(7deg) translate(7px);
+	/* Standard */
+	transform: scale(1) rotate(7deg) translate(7px);
+	z-index: 1000;
+}
+
+#menu {
+	padding-top: 10px;
+	position: relative;
+  	overflow: hidden;
+  	cursor: pointer;
+}
+#menu img {
+	position: relative;
+	float: left;
+	margin-top: -5px;
+}
+
+.list-menu-uoc-luong .active{
+	background: #004d40;
+	margin-bottom: -1px;
+}
+
+.nav-tabs>li {
+	margin-bottom: 0;
+}

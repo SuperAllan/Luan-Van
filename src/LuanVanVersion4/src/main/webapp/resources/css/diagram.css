@@ -1,0 +1,131 @@
+#wrapper-diagram {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+#properties-diagram {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	height: 50px;
+	padding: 7px;
+	box-shadow: 0 1px 5px #888;
+	border: 1px solid #0769AD;
+	background: -webkit-linear-gradient(top,#4787ed 0,#0769AD 100%);
+}
+#content-diagram {
+	position: absolute;
+	top: 52px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+#list-element-diagram {
+	position: absolute;
+	width: 200px;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	background: #f2f2f2;
+	overflow: auto;
+	border-right: 1px solid #bbb;
+}
+#right-content-diagram {
+	position: absolute;
+	top: 0;
+	left: 200px;
+	bottom: 0;
+	right: 0;
+}
+#paper-diagram {
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 90%;
+	position: absolute;
+	overflow: auto;
+}
+#name-diagram {
+	height: 40px;
+	padding: 10px;
+	font-weight: bold;
+}
+#paper {
+	width: 1500px !important;
+	height: 1000px !important;
+	background: url('/luanvan/resources/img/grid.gif') !important;
+	position: relative;
+}
+#tool-diagram {
+	top: 0;
+	left: 90%;
+	bottom: 0;
+	right: 0;
+	position: absolute;
+	background: white;
+	overflow: auto;
+}
+#tool-diagram div {
+	padding: 20px 0 20px 40px;
+	border-bottom: 1px solid #eee;
+}
+#tool-diagram div img {
+	height: 30px;
+	width: 30px;
+}
+#toggle-actor-view, #toggle-usecase-view {
+	background: url('/luanvan/resources/img/gauze.png');
+	padding: 0 20px 0 20px;
+}
+#children-actor-view div, #children-usecase-view div {
+	padding: 5px 20px 5px 30px;
+	border-bottom: 1px solid #eee;
+	background: white;
+	cursor: move;
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+	-moz-user-select: none;     /* Firefox all */
+	-ms-user-select: none;      /* IE 10+ */
+	
+	/* No support for these yet, use at own risk */
+	-o-user-select: none;
+	user-select: none;
+}
+
+#children-actor-view div:hover, #children-usecase-view div:hover {
+	background: #eee;
+}
+
+textarea {
+	overflow: hidden;
+}
+
+.paper-scroll {
+	overflow: auto !important;
+	width: 870px !important;
+	height: 800px !important;
+	-moz-transition: all 0.7s ease;
+	-webkit-transition: all 0.7s ease;
+	-o-transition: all 0.7s ease;
+	transition: all 0.7s ease;
+}
+
+.paper-no-scroll {
+	overflow: hidden !important;
+	width: 1050px !important;
+	height: 1000px !important;
+	-moz-transition: all 0.7s ease;
+	-webkit-transition: all 0.7s ease;
+	-o-transition: all 0.7s ease;
+	transition: all 0.7s ease;
+}
+
+.role-actor {
+	border-bottom: 1px solid #e5e5e5;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	padding-left: 12px;
+}

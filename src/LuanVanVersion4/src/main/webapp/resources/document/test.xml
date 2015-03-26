@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report caption="Reporting">  
+    <block   caption="Staff Memeber Report"   
+        userIdLabel="User Id"   
+        accountNameLabel="Account Name"  
+        createDateLabel="Date Created"  
+        emailLabel="Email">  
+  
+        <staffMember id="00000"   
+            accountName="accountName1"  
+            createDate="2009-01-02"   
+            accountEmail="someone1@domain.com"/>  
+        <staffMember id="00001"  
+            accountName="accountName2"  
+            createDate="2009-02-17"   
+            accountEmail="someone2@domain.com"/>  
+        <staffMember id="00002"  
+            accountName="accountName3"  
+            createDate="2009-03-14"   
+            accountEmail="someone3@domain.com"/>  
+  
+    </block>  
+</Report>  
