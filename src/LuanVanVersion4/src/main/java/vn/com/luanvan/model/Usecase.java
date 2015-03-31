@@ -3,7 +3,9 @@ package vn.com.luanvan.model;
 // default package
 // Generated Jan 31, 2015 7:09:10 PM by Hibernate Tools 4.3.1
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -35,7 +37,7 @@ public class Usecase implements java.io.Serializable {
 	private String motauc;
 	private String cauhoi;
 	private int tinhtien;
-	private Set<File> files = new HashSet<File>(0);
+	private List<FileUC> files = new ArrayList<FileUC>();
 	private Set<Phanloai> phanloais = new HashSet<Phanloai>(0);
 	private Set<Chucnang> chucnangs = new HashSet<Chucnang>(0);
 
@@ -52,7 +54,7 @@ public class Usecase implements java.io.Serializable {
 	}
 
 	public Usecase(Bmt bmt, Nhomuc nhomuc, Project project, String nameofuc, String motauc,
-			String cauhoi, int tinhtien, Set<File> files, Set<Phanloai> phanloais, Set<Chucnang> chucnangs) {
+			String cauhoi, int tinhtien, List<FileUC> files, Set<Phanloai> phanloais, Set<Chucnang> chucnangs) {
 		this.bmt = bmt;
 //		this.mucdo = mucdo;
 //		this.mucdocanthiet = mucdocanthiet;
@@ -68,7 +70,7 @@ public class Usecase implements java.io.Serializable {
 	}
 
 	@Id
-//	@GeneratedValue(strategy = IDENTITY)
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "USECASEID", unique = true, nullable = false)
 	public int getUsecaseid() {
 		return this.usecaseid;
@@ -144,12 +146,12 @@ public class Usecase implements java.io.Serializable {
 		this.tinhtien = tinhtien;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usecase")
-	public Set<File> getFiles() {
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "usecase")
+	public List<FileUC> getFiles() {
 		return this.files;
 	}
 
-	public void setFiles(Set<File> files) {
+	public void setFiles(List<FileUC> files) {
 		this.files = files;
 	}
 

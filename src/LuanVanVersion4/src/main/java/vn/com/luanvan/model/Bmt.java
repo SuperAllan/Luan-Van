@@ -87,7 +87,7 @@ public class Bmt implements java.io.Serializable {
 		this.motabmt = motabmt;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bmt")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "bmt")
 	public Set<Usecase> getUsecases() {
 		return this.usecases;
 	}

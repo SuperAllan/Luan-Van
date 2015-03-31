@@ -15,11 +15,11 @@
 <!-- Perfect scroll -->
 <script src="<c:url value="/resources/js/perfect-scrollbar.min.js" />" ></script>
 <link href="<c:url value="/resources/css/perfect-scrollbar.min.css" />" rel="stylesheet">
+<!-- material -->
 <link href="<c:url value="/resources/css/ripples.min.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/material-wfont.min.css" />" rel="stylesheet">
 <script src="<c:url value="/resources/js/ripples.min.js" />" ></script>
 <script src="<c:url value="/resources/js/material.min.js" />" ></script>
-
 <!-- menu -->
 <script src="<c:url value="/resources/js/menu.js" />" ></script>
 <link href="<c:url value="/resources/css/menu.css" />" rel="stylesheet">
@@ -185,10 +185,10 @@
 				<li>
 					<form  action="<c:url value='j_spring_security_check' />" method="POST" role="form" style="margin-bottom: 0; padding: 10px; width: 200px;">
 						<div class="form-group">
-							<input type="text" id="username" class="form-control" name='username' placeholder="Tên tài khoản">
+							<input type="text" id="username" class="form-control-bs" name='username' placeholder="Tên tài khoản">
 						</div>
 						<div class="form-group">
-							<input type="password" class="form-control" name='password' placeholder="Mật khẩu">
+							<input type="password" class="form-control-bs" name='password' placeholder="Mật khẩu">
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 						</div>
 						<button type="submit" class="btn btn-info btn-block"><i class="glyphicon glyphicon-log-in"></i> Đăng nhập</button>

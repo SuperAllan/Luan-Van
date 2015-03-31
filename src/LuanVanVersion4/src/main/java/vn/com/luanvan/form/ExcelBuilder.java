@@ -1,5 +1,6 @@
 package vn.com.luanvan.form;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +47,7 @@ public class ExcelBuilder extends AbstractExcelView{
 			HSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		// TODO Auto-generated method stub
+		@SuppressWarnings("unchecked")
 		List<DocumentExcel> lists = (List<DocumentExcel>) model.get("listSheep");
 		String fileName = lists.get(0).getNameOfProject();
 		response.setHeader("Content-Disposition", "inline; filename="+fileName+".xls");

@@ -3,11 +3,14 @@ package vn.com.luanvan.model;
 // default package
 // Generated Jan 31, 2015 7:09:10 PM by Hibernate Tools 4.3.1
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+
 import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -43,7 +46,7 @@ public class UserRole implements java.io.Serializable {
 		this.userroleid = userroleid;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "USERNAME", nullable = false)
 	public User getUser() {
 		return this.user;

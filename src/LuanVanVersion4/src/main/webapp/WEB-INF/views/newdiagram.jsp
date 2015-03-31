@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
 <meta charset="utf-8">
@@ -23,7 +24,7 @@
 <div id="wrapper-diagram">
 	<div id="properties-diagram">
 		<div class="btn-group">
-			<a class="btn btn-default" href="/luanvan"><i class="glyphicon glyphicon-home"></i> Trang chủ</a>
+			<a class="btn btn-default" href="${contextPath}/detailProject?name=${project.tenproject}"><i class="glyphicon glyphicon-home"></i> Thông tin chi tiết</a>
 		</div>
 		<div class="btn-group">
 			<a class="btn btn-default" data-toggle="modal" href="#modal-new-diagram"><i class="glyphicon glyphicon-plus-sign"></i> Tạo mới</a>
@@ -38,25 +39,49 @@
 			<a class="btn btn-default" data-toggle="modal" href='#modal-scoreUsecase' id="scoreUsecase">
 				TBF
 			</a>
+			
+		</div>
+		<div class="btn-group pull-right" >
+			<sec:authorize access="isAuthenticated()">
+				<c:if test="${pageContext.request.userPrincipal.name != null}">
+						<div class="dropdown pull-right">			  
+							<a type="button" id="dropdownMenu1" data-toggle="dropdown" class="btn btn-default" aria-expanded="true" style="cursor: pointer; color: #333; margin-right: 100px;">
+						    <c:if test="${not empty user.image}">
+						    	<img src="<c:url value="${user.image}" />" class="img-rounded" style="width: 20px; height: 20px;">
+						    </c:if>
+						    ${pageContext.request.userPrincipal.name}
+						    <span class="caret"></span>
+						  </a>
+						  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+						    <li role="presentation"><a role="menuitem" tabindex="-1" href="/luanvan/background" ><i class="mdi-action-assignment-ind"></i> Thông tin chung</a></li>
+						    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:formSubmit()"><i class="mdi-action-settings-power"></i> Đăng xuất</a></li>
+						  </ul>
+						</div>
+					</c:if>
+			</sec:authorize>
 		</div>
 	</div>
 	<div id="content-diagram">
 		<div id="list-element-diagram">
-			<div id="toggle-actor-view">
-				<strong>Actors</strong> <i class="glyphicon glyphicon-chevron-up pull-right"></i>
+			<div>
+				<div class="toggle-element-view">
+					<strong>Actors</strong> <i class="glyphicon glyphicon-chevron-up pull-right"></i>
+				</div>
+				<div class="children-element-view" id="children-actor-view">
+					<c:forEach items="${actors}" var="actor">
+						<div draggable="true" ondragstart="drag(event)" id="${actor.actorid}">${actor.nameofactor}</div>
+					</c:forEach>
+				</div>
 			</div>
-			<div id="children-actor-view">
-				<c:forEach items="${actors}" var="actor">
-					<div draggable="true" ondragstart="drag(event)" id="${actor.actorid}">${actor.nameofactor}</div>
-				</c:forEach>
-			</div>
-			<div id="toggle-usecase-view">
-				<strong>Use-cases</strong> <i class="glyphicon glyphicon-chevron-up pull-right"></i>
-			</div>
-			<div id="children-usecase-view">
-				<c:forEach items="${usecases}" var="usecase">
-					<div draggable="true" ondragstart="drag(event)" id="${usecase.usecaseid}">${usecase.nameofuc}</div>
-				</c:forEach>
+			<div>
+				<div class="toggle-element-view">
+					<strong>Use-cases</strong> <i class="glyphicon glyphicon-chevron-up pull-right"></i>
+				</div>
+				<div class="children-element-view" id="children-usecase-view">
+					<c:forEach items="${usecases}" var="usecase">
+						<div draggable="true" ondragstart="drag(event)" id="${usecase.usecaseid}">${usecase.nameofuc}</div>
+					</c:forEach>
+				</div>
 			</div>
 		</div>
 		<div id="right-content-diagram">
@@ -70,11 +95,13 @@
 				<div id="paper" ondrop="drop(event);" ondragover="allowDrop(event)"></div>
 			</div>
 			<div id="tool-diagram">
-				<div id="create-new-actor" draggable="true" ondragstart="drag(event)">
-					<img src="<c:url value="/resources/img/actor.svg" />" alt="actor"/>
+				<div class="text-center">
+					<img id="create-new-actor" draggable="true" ondragstart="drag(event)" width="40" height="40"
+						src="<c:url value="/resources/img/actor.svg" />" alt="actor"/>
 				</div>
-				<div id="create-new-usecase" draggable="true" ondragstart="drag(event)">
-					<img src="<c:url value="/resources/img/usecase.png" />" alt="usecase"/>
+				<div class="text-center">
+					<img id="create-new-usecase" draggable="true" ondragstart="drag(event)" width="40" height="40"
+						src="<c:url value="/resources/img/usecase.svg" />" alt="usecase"/>
 				</div>
 			</div>
 		</div>
@@ -153,6 +180,11 @@
 					<input type="text" id="input-group-modal-usecase">
 					<label for="select-group-modal-usecase">Nhóm đã có</label>
 					<select id="select-group-modal-usecase"></select>
+				</div>
+				<div class="form-group">
+					<label for="listUIOfUC">Gắn trên các giao diện</label>
+					<div id="listUIOfUC">
+					</div>
 				</div>
 				<div class="form-group">
 					<label for="listActorOfUC">Tác nhân sử dụng</label>
@@ -472,7 +504,21 @@
 <script src="<c:url value="/resources/js/xml2json.js" />" ></script>
 <script src="<c:url value="/resources/js/jointshapesumlcustom.js"/>"></script>
 <script src="<c:url value="/resources/js/detail-project.js" />"></script>
-<script src="<c:url value="/resources/js/diagramui.js" />"></script>
+<%-- <script src="<c:url value="/resources/js/diagramui.js" />"></script> --%>
 <script src="<c:url value="/resources/js/joint.shapes.ui.custom.js" />"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	// Begin loading diagram
+	if ($("#path").html() && $("#path").html() != "") {
+		graph.fromJSON(JSON.parse(decodeURIComponent(window.atob($("#path").html()))));
+	}
+	if ($("#name-diagram-show").html() != "") {
+		$("#a-rename-diagram").show("fade");
+	} else {
+		$("#a-rename-diagram").hide("fade");
+	}
+	// End loading diagram
+});
+</script>
 </body>
 </html>

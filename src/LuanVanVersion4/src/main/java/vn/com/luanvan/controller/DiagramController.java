@@ -22,7 +22,9 @@ import vn.com.luanvan.dao.LoaiactorDao;
 import vn.com.luanvan.dao.NhomucDao;
 import vn.com.luanvan.dao.PhanloaiDao;
 import vn.com.luanvan.dao.ProjectDao;
+import vn.com.luanvan.dao.UIUsecaseDao;
 import vn.com.luanvan.dao.UsecaseDao;
+import vn.com.luanvan.dao.UserDao;
 import vn.com.luanvan.model.Actor;
 import vn.com.luanvan.model.Diagram;
 import vn.com.luanvan.model.DiagramActor;
@@ -33,7 +35,9 @@ import vn.com.luanvan.model.Nhomuc;
 import vn.com.luanvan.model.Phanloai;
 import vn.com.luanvan.model.PhanloaiId;
 import vn.com.luanvan.model.Project;
+import vn.com.luanvan.model.UIUsecase;
 import vn.com.luanvan.model.Usecase;
+import vn.com.luanvan.model.User;
 
 @Controller
 public class DiagramController {
@@ -72,7 +76,13 @@ public class DiagramController {
 	BmtDao bmtDao;
 	
 	@Autowired
+	UIUsecaseDao uiUsecaseDao;
+	
+	@Autowired
 	private HttpServletRequest request;
+	
+	@Autowired
+	UserDao userDao;
 	
 	@RequestMapping(value = "/diagram/newdiagram")
 	public String newDiagram(Principal principal, Model model) {
@@ -81,6 +91,8 @@ public class DiagramController {
 		Project project = projectDao.findProjectByName(username, projectName);
 		List<Actor> actors = actorDao.getActorByProject(project.getProjectid());
 		List<Usecase> usecases = usecaseDao.getUsecaseByProject(project.getProjectid());
+		User user = userDao.findUserbyUserName(username);
+		model.addAttribute("user", user);
 		model.addAttribute("project", project);
 		model.addAttribute("actors", actors);
 		model.addAttribute("usecases", usecases);
@@ -105,6 +117,8 @@ public class DiagramController {
 			model.addAttribute("path", "");
 			model.addAttribute("nameDiagram", "");
 		}
+		User user = userDao.findUserbyUserName(username);
+		model.addAttribute("user", user);
 		model.addAttribute("project", project);
 		model.addAttribute("actors", actors);
 		model.addAttribute("usecases", usecases);
@@ -146,14 +160,16 @@ public class DiagramController {
 		result += "{\"mota\": \"" + actor.getMotaactor() + "\",";
 		result += "\"mucdo\": \"" + actor.getLoaiactor().getLoaiactorid() + "\",";
 		result += "\"phanloai\": [";
-		for (int i = 0; i < phanLoais.size() - 1; i++) {
-			result += "{\"id\": \"" + phanLoais.get(i).getUsecase().getUsecaseid() + "\",";
-			result += "\"name\": \"" + phanLoais.get(i).getUsecase().getNameofuc() + "\",";
-			result += "\"vaitro\": \"" + phanLoais.get(i).getVaitro() + "\"},";
+		if (phanLoais.size() > 0) {
+			for (int i = 0; i < phanLoais.size() - 1; i++) {
+				result += "{\"id\": \"" + phanLoais.get(i).getUsecase().getUsecaseid() + "\",";
+				result += "\"name\": \"" + phanLoais.get(i).getUsecase().getNameofuc() + "\",";
+				result += "\"vaitro\": \"" + phanLoais.get(i).getVaitro() + "\"},";
+			}
+			result += "{\"id\": \"" + phanLoais.get(phanLoais.size() - 1).getUsecase().getUsecaseid() + "\",";
+			result += "\"name\": \"" + phanLoais.get(phanLoais.size() - 1).getUsecase().getNameofuc() + "\",";
+			result += "\"vaitro\": \"" + phanLoais.get(phanLoais.size() - 1).getVaitro() + "\"}";
 		}
-		result += "{\"id\": \"" + phanLoais.get(phanLoais.size() - 1).getUsecase().getUsecaseid() + "\",";
-		result += "\"name\": \"" + phanLoais.get(phanLoais.size() - 1).getUsecase().getNameofuc() + "\",";
-		result += "\"vaitro\": \"" + phanLoais.get(phanLoais.size() - 1).getVaitro() + "\"}";
 		result += "]}}";
 		return result;
 	}
@@ -163,12 +179,38 @@ public class DiagramController {
 			@RequestParam(value="nameProject") String nameProject,
 			@RequestParam(value="id") String id,
 			Principal principal) {
-
+		
+		// Get project
+		Project project = projectDao.findProjectByName(principal.getName(), nameProject);
+		deleteNhomucNoChild(project.getProjectid());
+		List<Nhomuc> nhomucs = nhomucDao.getNhomucByProject(project.getProjectid());
 		Usecase usecase = usecaseDao.getUsecaseByID(Integer.parseInt(id));
+		List<UIUsecase> uiUsecases = uiUsecaseDao.getUIUsecaseByUsecaseID(usecase.getUsecaseid());
 		String result = "{\"usecase\":";
 		result += "{\"mota\": \"" + usecase.getMotauc() + "\",";
 		result += "\"tinhtien\": \"" + usecase.getTinhtien() + "\",";
-		result += "\"mucdo\": \"" + usecase.getBmt().getBmtid() + "\"}}";
+		result += "\"mucdo\": \"" + usecase.getBmt().getBmtid() + "\",";
+		result += "\"nhomid\": \"" + usecase.getNhomuc().getNhomucid() + "\",";
+		result += "\"dsnhom\": [";
+		if (nhomucs.size() > 0) {
+			for (int i = 0; i < nhomucs.size() - 1; i++) {
+				result += "{\"id\": \"" + nhomucs.get(i).getNhomucid() + "\",";
+				result += "\"name\": \"" + nhomucs.get(i).getTennhom() + "\"},";
+			}
+			result += "{\"id\": \"" + nhomucs.get(nhomucs.size() - 1).getNhomucid() + "\",";
+			result += "\"name\": \"" + nhomucs.get(nhomucs.size() - 1).getTennhom() + "\"}";
+		}
+		result += "],";
+		result += "\"dsui\": [";
+		if (uiUsecases.size() > 0) {
+			for (int i = 0; i < uiUsecases.size() - 1; i++) {
+				result += "{\"id\": \"" + uiUsecases.get(i).getUi().getUiid() + "\",";
+				result += "\"name\": \"" + uiUsecases.get(i).getUi().getNameui() + "\"},";
+			}
+			result += "{\"id\": \"" + uiUsecases.get(uiUsecases.size() - 1).getUi().getUiid() + "\",";
+			result += "\"name\": \"" + uiUsecases.get(uiUsecases.size() - 1).getUi().getNameui() + "\"}";
+		}
+		result += "]}}";
 		return result;
 	}
 	
@@ -258,25 +300,7 @@ public class DiagramController {
 		
 		// Lay du an hien tai
 		Project project = projectDao.findProjectByName(principal.getName(), nameProject);
-		
-		List<Actor> actors = actorDao.getActorNameDefault(project.getProjectid());
-		int max = 0;
-		if (actors.size() > 0) {
-			for (int i = 0; i < actors.size(); i++) {
-				String[] str = actors.get(i).getNameofactor().split(":");
-				if (Integer.parseInt(str[1]) > max) {
-					max = Integer.parseInt(str[1]);
-				}
-			}
-		}
 		Actor actor = new Actor();
-		if (max > 0) {
-			nameActor = nameActor + ":" + (max + 1) ;
-		} else {
-			if (actorDao.getActorByName(nameActor, project.getProjectid()) != null) {
-				nameActor += ":1";
-			}
-		}
 		actor.setNameofactor(nameActor);
 		actor.setProject(project);
 		actor.setLoaiactor(loaiactorDao.getLoaiactorById(1));
@@ -294,7 +318,7 @@ public class DiagramController {
 		da.setId(dai);
 		diagramActorDao.save(da);
 
-		return "{\"actor\": {\"id\": \"" + actor.getActorid() + "\", \"name\": \"" + actor.getNameofactor() + "\"}}";
+		return actor.getActorid()+ "";
 	}
 	
 	@RequestMapping(value = "/diagram/savediagramactor", method = RequestMethod.POST, produces="text/plain; charset=utf-8")
@@ -360,30 +384,21 @@ public class DiagramController {
 		// Lay du an hien tai
 		Project project = projectDao.findProjectByName(principal.getName(), nameProject);
 		
-		List<Usecase> usecases = usecaseDao.getUsecaseNameDefault(project.getProjectid());
-		int max = 0;
-		if (usecases.size() > 0) {
-			for (int i = 0; i < usecases.size(); i++) {
-				String[] str = usecases.get(i).getNameofuc().split(":");
-				if (Integer.parseInt(str[1]) > max) {
-					max = Integer.parseInt(str[1]);
-				}
-			}
-		}
 		Usecase usecase = new Usecase();
 		usecase.setBmt(bmtDao.getBmtById(1));
 		usecase.setTinhtien(0);
-		if (max > 0) {
-			nameUsecase = nameUsecase + ":" + (max + 1) ;
-		} else {
-			if (usecaseDao.getUsecaseByName(nameUsecase, project.getProjectid()) != null) {
-				nameUsecase += ":1";
-			}
-		}
 		usecase.setNameofuc(nameUsecase);
 		usecase.setProject(project);
+		if (!nhomucDao.hasNhomuc(nameDiagram, project.getProjectid())) {
+			Nhomuc nhomuc = new Nhomuc();
+			nhomuc.setProject(project);
+			nhomuc.setTennhom(nameDiagram);
+			nhomucDao.add(nhomuc);
+			usecase.setNhomuc(nhomuc);
+		} else {
+			usecase.setNhomuc(nhomucDao.getNhomucByName(nameDiagram, project.getProjectid()));
+		}
 		usecaseDao.add(usecase);
-		
 		Diagram diagram = diagramDao.getDiagramByName(nameDiagram, project.getProjectid());
 		
 		DiagramUsecaseId dui = new DiagramUsecaseId(); 
@@ -396,7 +411,7 @@ public class DiagramController {
 		du.setId(dui);
 		diagramUsecaseDao.save(du);
 
-		return "{\"usecase\": {\"id\": \"" + usecase.getUsecaseid() + "\", \"name\": \"" + usecase.getNameofuc() + "\"}}";
+		return "" + usecase.getUsecaseid();
 	}
 	@RequestMapping(value = "/diagram/saveinfoactor", method = RequestMethod.POST)
 	public @ResponseBody String saveInfoActor (@RequestParam(value="nameProject") String nameProject, 
@@ -449,7 +464,7 @@ public class DiagramController {
 		} else {
 			uc.setTinhtien(0);
 		}
-		if (group.equals("")) {
+		if (!group.equals("")) {
 			if (!nhomucDao.hasNhomuc(group, project.getProjectid())) {
 				Nhomuc nhomuc = new Nhomuc();
 				nhomuc.setProject(project);
@@ -459,19 +474,20 @@ public class DiagramController {
 			} else {
 				uc.setNhomuc(nhomucDao.getNhomucByName(group, project.getProjectid()));
 			}
-		} else {
-			if (!nhomucDao.hasNhomuc("Không có", project.getProjectid())) {
-				Nhomuc nhomuc = new Nhomuc();
-				nhomuc.setProject(project);
-				nhomuc.setTennhom("Không có");
-				nhomucDao.add(nhomuc);
-				uc.setNhomuc(nhomuc);
-			} else {
-				uc.setNhomuc(nhomucDao.getNhomucByName("Không có", project.getProjectid()));
-			}
 		}
 		usecaseDao.update(uc);
 		return "";
+	}
+	
+	private void deleteNhomucNoChild(int projectId) {
+		List<Nhomuc> nhomucs = nhomucDao.getNhomucByProject(projectId);
+		if (nhomucs.size() > 0) {
+			for (int i = 0; i < nhomucs.size(); i++) {
+				if (nhomucs.get(i).getUsecases().size() < 1) {
+					nhomucDao.delete(nhomucs.get(i));
+				}
+			}
+ 		}
 	}
 	
 	@RequestMapping(value = "/diagram/savediagram", method = RequestMethod.POST, produces="text/plain; charset=utf-8")

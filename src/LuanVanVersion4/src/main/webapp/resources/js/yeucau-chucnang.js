@@ -41,7 +41,7 @@ function checkNameNhomChucNang(bienThis){
 	var dem = 0;
 	var value = $(bienThis).val();
 	 $('.nhomChucNang').each(function(){
-		 if(value != null && value == $(this).val()){
+		 if(value != "" && value == $(this).val()){
 			 dem++;
 			 if(dem > 1){
 				alert('Tên nhóm chức năng đã tồn tại.');
@@ -55,7 +55,7 @@ function checkNameChucNang(bienThis){
 	var dem = 0;
 	var value = $(bienThis).val();
 	 $('.chucNang').each(function(){
-		 if(value != null && value == $(this).val()){
+		 if(value != "" && value == $(this).val()){
 			 dem++;
 			 if(dem > 1){
 				alert('Tên chức năng đã tồn tại.');
@@ -113,7 +113,7 @@ function themChucNang(id) {
 			"</td>"+
 			"<td><a class='btn btn-link btn-block removeFunction' onclick='xoaChucNang(\""+id+"\",this)' title='Xóa chức năng'>x</a></td>"+
 		"</tr>";
-	$("#"+id).append(tr);
+	$("#"+id).after(tr);
 	$("#soLuong"+id).val(parseInt($("#soLuong"+id).val())+1);
 }
 

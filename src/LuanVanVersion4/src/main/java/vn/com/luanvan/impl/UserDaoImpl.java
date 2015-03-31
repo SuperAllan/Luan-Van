@@ -56,9 +56,11 @@ public class UserDaoImpl implements UserDao {
 	}
 	
 	@Transactional
-	public final User findUserbyUserName(String username) {
-		return (User) sessionFactory.getCurrentSession()
-				.get(User.class, username);
+	public User findUserbyUserName(String username) {
+		String hql = "FROM User WHERE username= :username";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("username", username);
+		return (User) query.list().get(0);
 	}
 	
 
@@ -123,6 +125,11 @@ public class UserDaoImpl implements UserDao {
 		query.setParameter("id", idconfirm);
 		user = query.list();
 		return user.get(0);
+	}
+
+	@Transactional
+	public void delete(User user) {
+		sessionFactory.getCurrentSession().delete(user);
 	}
 
 }

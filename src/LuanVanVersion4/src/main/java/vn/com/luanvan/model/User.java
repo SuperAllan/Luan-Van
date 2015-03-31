@@ -5,6 +5,8 @@ package vn.com.luanvan.model;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -149,7 +151,7 @@ public class User implements java.io.Serializable {
 		this.projects = projects;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
 	public Set<UserRole> getUserroles() {
 		return this.userroles;
 	}

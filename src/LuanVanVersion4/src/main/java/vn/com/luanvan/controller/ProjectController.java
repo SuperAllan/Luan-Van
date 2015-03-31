@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.com.luanvan.dao.ActorDao;
 import vn.com.luanvan.dao.BmtDao;
 import vn.com.luanvan.dao.ChucNangDao;
+import vn.com.luanvan.dao.DiagramDao;
 import vn.com.luanvan.dao.GiaTriLuongDao;
 import vn.com.luanvan.dao.HeSoKyThuatDao;
 import vn.com.luanvan.dao.HeSoMoiTruongDao;
@@ -39,6 +43,7 @@ import vn.com.luanvan.dao.UserDao;
 import vn.com.luanvan.dao.UserRoleDao;
 import vn.com.luanvan.dao.XepHangKyThuatDao;
 import vn.com.luanvan.dao.XepHangMoiTruongDao;
+import vn.com.luanvan.model.Chucnang;
 import vn.com.luanvan.model.Giatriluong;
 import vn.com.luanvan.model.Luong;
 import vn.com.luanvan.model.Nhomchucnang;
@@ -94,6 +99,8 @@ public class ProjectController {
 	private TrongsonolucDao trongsonolucDao;
 	@Autowired
 	private NhomucDao nhomucDao;
+	@Autowired
+	private DiagramDao diagramDao;
 	
 	/**
 	 * 
@@ -116,6 +123,7 @@ public class ProjectController {
 			project.setTenproject(projectName);
 			project.setMotaproject(description);
 			project.setTrangthai(0);
+			project.setTrongsonoluc(1);
 			User user = new User();
 			user.setUsername(username);
 			project.setUser(user);
@@ -143,6 +151,8 @@ public class ProjectController {
 		Project project = projectDao.findProjectByName(username, projectName);
 		int projectid = project.getProjectid();
 		User user = userDao.findUserbyUserName(username);
+		
+		model.addAttribute("diagrams", diagramDao.getDiagramByProject(project.getProjectid()));
 		
 		//Biến cho trang yêu cầu chức năng
 		List<Phanloaichucnang> listPhanLoai = phanLoaiChucNangDao.getListTenLoai();

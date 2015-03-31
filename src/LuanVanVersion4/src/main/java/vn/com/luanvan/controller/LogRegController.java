@@ -12,8 +12,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Role;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -113,6 +115,7 @@ public class LogRegController {
 		 * @throws MessagingException 
 		 * @throws IOException 
 		 */
+		//@Transactional(rollbackOn = Exception.class)
 		@RequestMapping(value = "/dangky", method = RequestMethod.POST)
 		public String dangKy(HttpServletRequest request, User user, Model model, HttpServletResponse response, Principal principal) {
 			String pass = request.getParameter("password");
@@ -152,13 +155,17 @@ public class LogRegController {
 				message.setRecipient(Message.RecipientType.TO,new InternetAddress(user.getEmail())); 		
 				message.setSubject(subject, "UTF-8");
 				message.setContent(content, "text/html; charset=UTF-8"); 
+				model.addAttribute("successRegister","Đăng ký thành công");
+				model.addAttribute("userInActive", user);
 			    //sending message  
 				mailSender.send(message);
 				} catch (Exception e) {
-					return "403";
+					userroleDao.delete(userRole);
+					userDao.delete(user);
+					System.err.print("asdasdasd");
+					e.printStackTrace();
 				} 
-				model.addAttribute("successRegister","Đăng ký thành công");
-				model.addAttribute("userInActive", user);
+				
 		        return "home";
 			}
 		}
@@ -255,6 +262,7 @@ public class LogRegController {
 		@RequestMapping(value="/sendMailAgain", method = RequestMethod.POST)
 		public String sendMailAgain(HttpServletRequest request, Model model){
 			String username = request.getParameter("userInActiveForSendMail");
+			System.out.print(username);
 			if(username != null || username != ""){
 				User user = userDao.findUserbyUserName(username);
 				if(user.isEnabled() == false){

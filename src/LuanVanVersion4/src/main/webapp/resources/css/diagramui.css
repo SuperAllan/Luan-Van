@@ -1,8 +1,8 @@
 #paperUI {
 	background: url('../img/grid.gif');
 	position: relative;
-	height: 800px;
-	width: 870px;
+	height: 1000px;
+	width: 1500px;
 	overflow: auto;
 }
 
@@ -13,36 +13,9 @@
 	right:0;
 }
 
-#element-design-ui button {
-	font-size: 20px;
-	margin-top: 0;
-}
-
-/* #element-design-ui .tooltip-arrow {
-	display: none !important;
-} */
-
-#element-design-ui button {
-	background: white;
-	font-size: 20px;
-	margin-top: 0;
-}
-
-#properties-design-ui {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	z-index: 9999;
-	background:white;
-	padding: 10px 20px 10px 20px;
-	display: none;
-	color: black;
-}
-
-#properties-design-ui .properties-child {
-	float: left;
-	margin-left: 6px;
+#element-design-ui div {
+	text-align: center;
+	padding-top: 10px;
 }
 
 #exportSVGUI,

@@ -67,16 +67,11 @@ public class PDFBuilder extends AbstractPdfView{
 		Font font13 = new Font(bf, 13);
 		Font font12 = new Font(bf, 12);
 		
-		HeaderFooter header = new HeaderFooter(new Phrase("Header"), false);
-		HeaderFooter footer = new HeaderFooter(new Phrase("My Footer"+ writer.getPageNumber()), false);
-		
 		List<Object> lists = (List<Object>) model.get("lists");
 		Project project = (Project) lists.get(0);
 		// document open
 		document.open();
 		document.setPageSize(PageSize.A4);
-		document.setHeader(header);;
-		document.setFooter(footer);
 		Chunk title = new Chunk("Đặc tả yêu cầu phần mềm \n\n\n\n");
 		Chunk cho = new Chunk("cho \n\n\n\n");
 		Chunk nameOfProject = new Chunk(project.getTenproject()+"\n\n\n\n");

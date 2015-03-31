@@ -2,7 +2,15 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
+<style>
+.nav-tabs>li.active>a,.nav-tabs>li.active>a:hover,.nav-tabs>li.active>a:focus{
+	color: #fff !important;
+	opacity: 1;
+}
+.nav-tabs>li>a, .nav-tabs>li>a:hover, .nav-tabs>li>a:focus{
+	opacity: 0.7;
+}
+</style>
 <h3 style="text-align: center;">BẢNG SẮP XẾP THỨ TỰ ƯU TIÊN CÁC YÊU CẦU 
 CHỨC NĂNG CỦA PHẦN MỀM</h3>
 

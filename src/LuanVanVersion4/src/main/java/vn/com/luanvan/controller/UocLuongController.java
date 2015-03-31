@@ -234,7 +234,7 @@ public class UocLuongController {
 		String bacLuong = request.getParameter("chooseBacLuong");
 		project.setBacluong(Integer.parseInt(bacLuong));
 		giaTriLuongDao.delete(project.getProjectid());
-		for(int i = 0; i < luongTangThem.length; i++){
+		for(int i = 0; i < luongIdForBangLuong.length; i++){
 			GiatriluongId giaTriId = new GiatriluongId();
 			giaTriId.setLuongId(Integer.parseInt(luongIdForBangLuong[i]));
 			giaTriId.setProjectid(project.getProjectid());

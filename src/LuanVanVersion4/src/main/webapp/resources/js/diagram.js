@@ -17,18 +17,18 @@ var link = null;
 var hasDragDropTool = false;
 // End declare variable
 
-$(document).ready(function() {
-	// Begin loading diagram
-	if ($("#path").html() && $("#path").html() != "") {
-		graph.fromJSON(JSON.parse(decodeURIComponent(window.atob($("#path").html()))));
-	}
-	if ($("#name-diagram-show").html() != "") {
-		$("#a-rename-diagram").show("fade");
-	} else {
-		$("#a-rename-diagram").hide("fade");
-	}
-	// End loading diagram
-});
+//$(document).ready(function() {
+//	// Begin loading diagram
+//	if ($("#path").html() && $("#path").html() != "") {
+//		graph.fromJSON(JSON.parse(decodeURIComponent(window.atob($("#path").html()))));
+//	}
+//	if ($("#name-diagram-show").html() != "") {
+//		$("#a-rename-diagram").show("fade");
+//	} else {
+//		$("#a-rename-diagram").hide("fade");
+//	}
+//	// End loading diagram
+//});
 
 // Begin set icon save
 function setIconSave(value) {
@@ -237,11 +237,17 @@ $("#view-list-diagram").on("click", function() {
 							if (allElement[i].attributes.type == "uml.Actor") {
 								if (!hasIDActor(allElement[i].attributes.created)) {
 									allElement[i].remove();
+								} else {
+									allElement[i].attributes.name = setAgainIDActor(allElement[i].attributes.created);
+									allElement[i].attr(".name/text", setAgainIDActor(allElement[i].attributes.created));
 								}
 							}
 							if (allElement[i].attributes.type == "uml.Usecase") {
 								if (!hasIDUsecase(allElement[i].attributes.created)) {
 									allElement[i].remove();
+								} else {
+									allElement[i].attributes.name = setAgainIDUsecase(allElement[i].attributes.created);
+									allElement[i].attr(".name/text", setAgainIDUsecase(allElement[i].attributes.created));
 								}
 							}
 						}
@@ -278,6 +284,20 @@ function hasIDActor(id) {
 }
 // End test name actor
 
+//Begin set again actor
+function setAgainIDActor(id) {
+	var arrayTest = [];
+	$("#children-actor-view div").each(function() {
+		arrayTest.push(this.id);
+	});
+	for (var i = 0; i < arrayTest.length; i++) {
+		if (id == arrayTest[i]) {
+			return $("#" + arrayTest[i]).html();
+		}
+	}
+}
+// End set again actor
+
 //Begin test name usecase
 function hasIDUsecase(id) {
 	var arrayTest = [];
@@ -293,22 +313,25 @@ function hasIDUsecase(id) {
 }
 // End test name usecase
 
-// Begin toggle list actors left slide bar
-$("#toggle-actor-view").on('click', function() {
-	$("#children-actor-view").toggle('fade');
-	if ($(this).find('i').hasClass("glyphicon-chevron-up")) {
-		$(this).find('i').removeClass("glyphicon-chevron-up");
-		$(this).find('i').addClass("glyphicon-chevron-down");
-	} else {
-		$(this).find('i').removeClass("glyphicon-chevron-down");
-		$(this).find('i').addClass("glyphicon-chevron-up");
+//Begin set again name usecase
+function setAgainIDUsecase(id) {
+	var arrayTest = [];
+	$("#children-usecase-view div").each(function() {
+		arrayTest.push(this.id);
+	});
+	for (var i = 0; i < arrayTest.length; i++) {
+		if (id == arrayTest[i]) {
+			return $("#" + arrayTest[i]).html();
+		}
 	}
-});
-// End toggle list actors left slide bar
+}
+// End set again name usecase
 
-// Begin toggle list usecase left slide bar
-$("#toggle-usecase-view").on('click', function() {
-	$("#children-usecase-view").toggle('fade');
+/*
+ * Toggle element left side bar
+ */
+$(".toggle-element-view").on('click', function() {
+	$(this).parent().find('div.children-element-view').toggle('fade');
 	if ($(this).find('i').hasClass("glyphicon-chevron-up")) {
 		$(this).find('i').removeClass("glyphicon-chevron-up");
 		$(this).find('i').addClass("glyphicon-chevron-down");
@@ -317,7 +340,6 @@ $("#toggle-usecase-view").on('click', function() {
 		$(this).find('i').addClass("glyphicon-chevron-up");
 	}
 });
-// End toggle list usecase left slide bar
 
 // Begin toggle menu left details project
 $(".toggle-menu-detail-project").on('click', function() {
@@ -411,7 +433,6 @@ paper.on('cell:pointerdblclick ', function(cellView, evt, x, y) {
 			data: "nameProject=" + $("#nameProject").val() + "&id=" + cellView.model.attributes.created,
 			success: function(result) {
 				var object = $.parseJSON(result);
-				console.log(object);
 				$("#name-modal-actor").html(cellView.model.attributes.name);
 				$("#id-modal-actor").val(cellView.model.attributes.created);
 				$("#description-modal-actor").val(object.actor.mota);
@@ -453,7 +474,22 @@ paper.on('cell:pointerdblclick ', function(cellView, evt, x, y) {
 				} else {
 					$("#pay-money-modal-usecase").prop("checked", true);
 				}
+				var nhomuc = "";
+				for (var i = 0; i < object.usecase.dsnhom.length; i++) {
+					if (object.usecase.dsnhom[i].id == object.usecase.nhomid ) {
+						$("#input-group-modal-usecase").val(object.usecase.dsnhom[i].name);
+						nhomuc += '<option value="' + object.usecase.dsnhom[i].name  + '" selected>' + object.usecase.dsnhom[i].name + '</option>';
+					} else {
+						nhomuc += '<option value="' + object.usecase.dsnhom[i].name  + '">' + object.usecase.dsnhom[i].name + '</option>';
+					}
+				}
+				$("#select-group-modal-usecase").html(nhomuc);
 				getRelationshipUsecase(cellView.model);
+				var dsui = "";
+				for (var i = 0; i < object.usecase.dsui.length; i++) {
+					dsui += '<a target="_blank" href="/luanvan/diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + object.usecase.dsui[i].name + '">' + object.usecase.dsui[i].name + '</a><br>';
+				}
+				$("#listUIOfUC").html(dsui);
 				$("#modal-usecase").modal('show');
 			},
 			error: function() {
@@ -557,20 +593,6 @@ function getRelationshipUsecase(model) {
 	var linkConnectOut = graph.getConnectedLinks(model, { outbound: true });
 	var linkConnectIn = graph.getConnectedLinks(model, { inbound: true });
 	
-	var nhomucs = getNhomuc();
-	$("#select-group-modal-usecase").html("");
-	$("#select-group-modal-usecase").append("<option selected value=\"\">- - - - - - - - -</option>");
-	for (var i = 0; i < nhomucs.length; i++) {
-		if (nhomucs[i]) {
-			if (model.attributes.group == nhomucs[i]) {
-				$("#input-group-modal-usecase").val(model.attributes.group);
-				$("#select-group-modal-usecase").append("<option selected value=\"" + nhomucs[i] + "\">" + nhomucs[i] + "</option>");
-			} else {
-				$("#select-group-modal-usecase").append("<option value=\"" + nhomucs[i] + "\">" + nhomucs[i] + "</option>");
-			}
-		}
-	}
-	
 	$("#listActorOfUC").html("");
 	var actorLists = "";
 	for (var i = 0; i < linkConnectOut.length; i++) {
@@ -598,6 +620,10 @@ $("#saveInfoUC").on('click', function(){
 //	UC.attributes.group = $("#input-group-modal-usecase").val();
 //	$("#modal-usecase").modal('hide');
 //	//$("#saveDiagram").trigger('click');
+	var group = $("#name-diagram-show").html();
+	if ($("#input-group-modal-usecase").val() != "") {
+		group = $("#input-group-modal-usecase").val();
+	}
 	$.ajax({
 		url: "/luanvan/diagram/saveinfousecase",
 		type: "post",
@@ -759,8 +785,17 @@ paper.on('cell:pointerdown', function(cellView, evt, px, py) {
 
 });
 
-graph.on('change:position', function() {
+graph.on('change:position', function(cell) {
 	setIconSave('notsaved');
+	var paperW = paper.options.width;
+    var paperH = paper.options.height;
+    var cellBbox = cell.getBBox();
+
+    if (cellBbox.origin().x <= 0 || cellBbox.origin().y <= 0
+    	|| cellBbox.origin().x >= paperW - cell.attributes.size.width 
+    	|| cellBbox.origin().y >= paperW - cell.attributes.size.height) {
+    	cell.set('position', cell.previous('position'));
+    }
 });
 
 // Khi chuot di chuyen tren paper
@@ -1276,38 +1311,63 @@ function drop(ev) {
 		chooseElement = "";
 		if (id == "create-new-actor") {
 			var actor = new joint.shapes.uml.Actor({position: { x: posMouse.x, y: posMouse.y }});
-			$.ajax({
-				url: "/luanvan/diagram/createactor",
-				type: "post",
-				data: "nameProject=" + $("#nameProject").val() + "&nameDiagram=" + $("#name-diagram-show").html()
-					+ "&nameActor=" + actor.attributes.name,
-				success: function(result) {
-					var object = $.parseJSON(result);
-					actor.attributes.created = object.actor.id;
-					actor.attributes.name = object.actor.name;
-					actor.attr(".name/text", object.actor.name);
-					graph.addCell(actor);
-					setIconSave("saved");
-					listActor();
-					setPathDiagram();
-				},
-				error: function() {
-					alert("Không thể tạo tác nhân. Xin vui lòng liên hệ ADMIN để giải quyết.");
+			var max = 0;
+			$("#children-actor-view div").each(function() {
+				var str = $(this).html().split(":");
+				if (str[1]) {
+					if (parseInt(str[1]) > max) {
+						max = parseInt(str[1]);
+					}
 				}
 			});
+			var nameActor = "Actor";
+			if (max > 0) {
+				nameActor += ":" + (max + 1);
+			}
+			$.ajax({
+			url: "/luanvan/diagram/createactor",
+			type: "post",
+			data: "nameProject=" + $("#nameProject").val() + "&nameDiagram=" + $("#name-diagram-show").html()
+				+ "&nameActor=" + nameActor,
+			success: function(result) {
+				actor.attributes.created = result;
+				actor.attributes.name = nameActor;
+				actor.attr(".name/text", nameActor);
+				graph.addCell(actor);
+				setIconSave("saved");
+				listActor();
+				setPathDiagram();
+			},
+			error: function() {
+				alert("Không thể tạo tác nhân. Xin vui lòng liên hệ ADMIN để giải quyết.");
+			}
+		});
 		}
 		if (id == "create-new-usecase") {
 			var usecase = new joint.shapes.uml.Usecase({position: { x: posMouse.x, y: posMouse.y }});
+			var max = 0;
+			$("#children-actor-view div").each(function() {
+				var str = $(this).html().split(":");
+				if (str[1]) {
+					if (parseInt(str[1]) > max) {
+						max = parseInt(str[1]);
+					}
+				}
+			});
+			var nameUsecase = "Usecase";
+			if (max > 0) {
+				nameUsecase += ":" + (max + 1);
+			}
 			$.ajax({
 				url: "/luanvan/diagram/createusecase",
 				type: "post",
 				data: "nameProject=" + $("#nameProject").val() + "&nameDiagram=" + $("#name-diagram-show").html()
-					+ "&nameUsecase=" + usecase.attributes.name,
+					+ "&nameUsecase=" + nameUsecase,
 				success: function(result) {
 					var object = $.parseJSON(result);
-					usecase.attributes.created = object.usecase.id;
-					usecase.attributes.name = object.usecase.name;
-					usecase.attr(".name/text", object.usecase.name);
+					usecase.attributes.created = result;
+					usecase.attributes.name = nameUsecase;
+					usecase.attr(".name/text", nameUsecase);
 					graph.addCell(usecase);
 					setIconSave("saved");
 					listUsecase();

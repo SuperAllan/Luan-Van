@@ -45,7 +45,7 @@
 	top: 0;
 	left: 0;
 	bottom: 0;
-	width: 90%;
+	width: 85%;
 	position: absolute;
 	overflow: auto;
 }
@@ -62,30 +62,22 @@
 }
 #tool-diagram {
 	top: 0;
-	left: 90%;
+	left: 85%;
 	bottom: 0;
 	right: 0;
 	position: absolute;
 	background: white;
 	overflow: auto;
 }
-#tool-diagram div {
-	padding: 20px 0 20px 40px;
-	border-bottom: 1px solid #eee;
-}
-#tool-diagram div img {
-	height: 30px;
-	width: 30px;
-}
-#toggle-actor-view, #toggle-usecase-view {
+.toggle-element-view {
 	background: url('/luanvan/resources/img/gauze.png');
 	padding: 0 20px 0 20px;
 }
-#children-actor-view div, #children-usecase-view div {
-	padding: 5px 20px 5px 30px;
+.children-element-view div {
 	border-bottom: 1px solid #eee;
+	padding: 5px 20px 5px 30px;
 	background: white;
-	cursor: move;
+	/* cursor: move; */
 	-webkit-user-select: none;  /* Chrome all / Safari all */
 	-moz-user-select: none;     /* Firefox all */
 	-ms-user-select: none;      /* IE 10+ */
@@ -95,7 +87,7 @@
 	user-select: none;
 }
 
-#children-actor-view div:hover, #children-usecase-view div:hover {
+.children-element-view div:hover {
 	background: #eee;
 }
 

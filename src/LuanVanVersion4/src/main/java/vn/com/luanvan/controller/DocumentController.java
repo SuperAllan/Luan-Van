@@ -1,5 +1,6 @@
 package vn.com.luanvan.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -36,7 +37,9 @@ import vn.com.luanvan.model.Giatriluong;
 import vn.com.luanvan.model.Luong;
 import vn.com.luanvan.model.Project;
 
-import org.apache.fop.apps.FOPException;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -111,8 +114,12 @@ public class DocumentController{
 	
 	@RequestMapping(value="/downloadDoc/project={projectName}", method = RequestMethod.GET)
 	@ResponseStatus(value=HttpStatus.OK)
-	public void downloadDoc(@PathVariable("projectName")String projectName, HttpServletRequest request, HttpServletResponse response){
-
+	public void downloadDoc(@PathVariable("projectName")String projectName, HttpServletRequest request, HttpServletResponse response, Principal principal){
+		XWPFDocument document = new XWPFDocument();
+		XWPFParagraph paragraph = document.createParagraph();
+		XWPFRun tempRun = paragraph.createRun();
+	//	FileOutputStream fos = new FileOutputStream(new File());
+		
 		
 	}
 	

@@ -21,5 +21,5 @@ public interface UserDao {
 	
 	User findUserByIdConfirm(String idconfirm);
 	
-	
+	void delete(User user);
 }

@@ -23,6 +23,7 @@ import vn.com.luanvan.dao.NhomucDao;
 import vn.com.luanvan.dao.ProjectDao;
 import vn.com.luanvan.dao.UsecaseDao;
 import vn.com.luanvan.dao.UserDao;
+import vn.com.luanvan.model.FileUC;
 import vn.com.luanvan.model.Nhomuc;
 import vn.com.luanvan.model.Project;
 import vn.com.luanvan.model.Usecase;
@@ -103,13 +104,10 @@ public class UsecaseController{
 	}
 
 	@RequestMapping(value ="/updateCauHoi", produces="text/plain; charset=utf-8")
-	public @ResponseBody String updateCauHoi(@RequestParam("usecaseID") String usecaseID, 
+	public @ResponseBody void updateCauHoi(@RequestParam("usecaseID") String usecaseID, 
 			@RequestParam("listCauHoi") String listCauHoi){
 		Usecase usecase = usecaseDao.getUsecaseByID(Integer.parseInt(usecaseID));
 		usecase.setCauhoi(listCauHoi);
 		usecaseDao.update(usecase);
-		String result = usecase.getCauhoi();
-		return result;
-		
 	}
 }

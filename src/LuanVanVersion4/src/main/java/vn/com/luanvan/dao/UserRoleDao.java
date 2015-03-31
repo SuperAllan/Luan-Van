@@ -16,4 +16,8 @@ public class UserRoleDao {
 	public void add(UserRole userrole) {
 		sessionFactory.getCurrentSession().save(userrole);
 	}
+	@Transactional
+	public void delete(UserRole userrole){
+		sessionFactory.getCurrentSession().delete(userrole);
+	}
 }

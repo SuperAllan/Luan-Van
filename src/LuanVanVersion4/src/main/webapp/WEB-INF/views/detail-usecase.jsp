@@ -20,9 +20,9 @@
 <title>Chi tiết Use-case</title>
 </head>
 <body style="height: 100%; width: 100%;" onload="searchUsecase('', ${project.projectid})">
-<div class="fruit-container" >
+<div class="container-fluid" style="background: #fff;">
 	<div class="col-md-3">
-		<div style="margin-left: -15px; margin-right: -15px;">
+		<div style="margin-left: -15px; margin-right: -15px; padding-top: 20px;">
 			<div class="panel panel-default" style="margin-bottom: 0px;">
 			    <div class="panel-heading">
 			    <h3 class="panel-title text-center">Danh sách các Use-case</h3>
@@ -34,18 +34,21 @@
 					<input style="border-radius: 4px; height: 34px;" type="search" id="input" class="form-control text-center"  title="Search" onkeyup="searchUsecase(this.value, ${project.projectid})" placeholder="Nhập nội dung tìm kiếm">
 				</div> 
 			</div>
-			<div id="danhSachUsecase" style="posibtion: relative; overflow: hidden; height: 400px; width: 100%;">
+			<div id="danhSachUsecase" style="posibtion: relative; overflow: hidden; height: 500px; width: 100%;">
 					<!-- Danh sach cac use case  -->
 					
 			</div>
 		</div>
 	</div>
 	<div class="col-md-9">
-		<div id="resultDetail" style="background: write !important;">
-					<h1>Chọn một thành viên để xem chi tiết</h1>		
+		<div id="resultDetail" style="background: write !important; padding-top: 20px;">
+					<h1>Chọn một Use-case để xem chi tiết</h1>		
 		</div>
 	</div>
 </div>
+<!-- Insert footer.jsp -->
+<%@ include file="/WEB-INF/views/footer.jsp" %>
 <script src="<c:url value="/resources/js/detail-usecase.js" />"></script>
 </body>
+
 </html>

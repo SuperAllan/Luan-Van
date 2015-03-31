@@ -78,13 +78,25 @@
 			<version>1.2.2</version>
 		</dependency>
 		
-		<!-- Apache Commons Upload --> 
+	
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
 		</dependency>
 		
+        <dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.12</version>
+		</dependency>
+		
+        <dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>1.9.12</version>
+		</dependency>
+		<!--End Apache Commons Upload --> 
 		<dependency>
 			<groupId>taglibs</groupId>
 			<artifactId>standard</artifactId>
@@ -188,6 +200,14 @@
 			<artifactId>geronimo-javamail_1.4_spec</artifactId>
 			<version>1.7.1</version>
 		</dependency>
+		<!-- convert object to json -->
+		<!--  Gson: Java to Json conversion -->
+	    <!-- Jackson JSON Mapper -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.13</version>
+		</dependency>
 
 		
 		
@@ -208,12 +228,21 @@
 		<artifactId>poi</artifactId>
 		<version>3.6</version>
 	   </dependency>
-		<!-- ho tro cho phan xuat tai lieu -->
+	   
+	   <dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.9</version>
+		</dependency>
+	   
+	   <!-- ho tro cho phan xuat tai lieu --> 
 	    <dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
 			<version>4.2.1</version>
 		</dependency>
+	   <!-- 		
+	   
 		
 	    <dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
@@ -242,6 +271,7 @@
 			<artifactId>avalon-framework-impl</artifactId>
 			<version>4.3.1</version>
 		</dependency>
+		 -->
 		
 		<dependency>
 			<groupId>org.slf4j</groupId>

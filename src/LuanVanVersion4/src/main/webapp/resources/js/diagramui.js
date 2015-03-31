@@ -1,7 +1,3 @@
-$(document).ready(function() {
-	divProperties(true, "#aaaaaa");
-});
-
 var hasResizeUI = false;
 var cellViewResizeUI = null;
 var cellViewPointerDown = null;
@@ -18,7 +14,7 @@ var graphUI = new joint.dia.Graph;
 var paperUI = new joint.dia.Paper({
     el: $('#paperUI'),
     fill: 'white',
-    width: 1050,
+    width: 1500,
     height: 1000,
     model: graphUI,
     gridSize: 1
@@ -46,6 +42,20 @@ var lineV2 = new joint.shapes.basic.Rect({
 	size: { width: 1, height: 1000},
 	attrs: { rect: { fill: '#d43f3a', stroke: 'none'} }
 });
+
+//$(document).ready(function() {
+//	divProperties(true, "#aaaaaa");
+//	// Begin loading diagram
+//	if ($("#path").html() && $("#path").html() != "") {
+//		graphUI.fromJSON(JSON.parse(decodeURIComponent(window.atob($("#path").html()))));
+//	}
+//	if ($("#name-ui-show").html() != "") {
+//		$("#a-rename-ui").show("fade");
+//	} else {
+//		$("#a-rename-ui").hide("fade");
+//	}
+//	// End loading diagram
+//});
 
 paperUI.on('cell:pointerdblclick', function(cellView, x, y) {
 	enableInput(cellView);
@@ -222,38 +232,42 @@ $("#paperUI").on('mouseup', function(e) {
 		graphUI.addCell(cellNew);
 		moveIconResizeUI(cellNew.findView(paperUI), cellNew.attributes.size.width, cellNew.attributes.size.height);
 		changeInputUI(cellNew.findView(paperUI), cellNew.attributes.size.width, cellNew.attributes.size.height);
-		moveTextButton(cellNew.findView(paperUI), cellNew.attributes.size.width, cellNew.attributes.size.height);
+		if (cellViewCopyUI.model.attributes.type == "ui.Button" 
+			|| cellViewCopyUI.model.attributes.type == "ui.Textarea"
+			|| cellViewCopyUI.model.attributes.type == "ui.Textbox") {
+			moveTextButton(cellNew.findView(paperUI), cellNew.attributes.size.width, cellNew.attributes.size.height);
+		}
 		hasCopyUI = false;
 	}
 	if (dragDropElementUI) {
 		dragDropElementUI = false;
-		if (choosedElement == "div-design-ui") {
-			createDiv(pos.x, pos.y);
-		}
-		if (choosedElement == "button-design-ui") {
-			createButton(pos.x, pos.y);
-		}
-		if (choosedElement == "label-design-ui") {
-			createLabel(pos.x, pos.y);
-		}
-		if (choosedElement == "radio-design-ui") {
-			createRadio(pos.x, pos.y);
-		}
-		if (choosedElement == "radio-checked-design-ui") {
-			createRadioChecked(pos.x, pos.y);
-		}
-		if (choosedElement == "checkbox-design-ui") {
-			createCheckbox(pos.x, pos.y);
-		}
-		if (choosedElement == "checkbox-checked-design-ui") {
-			createCheckboxChecked(pos.x, pos.y);
-		}
-		if (choosedElement == "textarea-design-ui") {
-			createTextArea(pos.x, pos.y);
-		}
-		if (choosedElement == "textbox-design-ui") {
-			createTextBox(pos.x, pos.y);
-		}
+//		if (choosedElement == "div-design-ui") {
+//			createDiv(pos.x, pos.y);
+//		}
+//		if (choosedElement == "button-design-ui") {
+//			createButton(pos.x, pos.y);
+//		}
+//		if (choosedElement == "label-design-ui") {
+//			createLabel(pos.x, pos.y);
+//		}
+//		if (choosedElement == "radio-design-ui") {
+//			createRadio(pos.x, pos.y);
+//		}
+//		if (choosedElement == "radio-checked-design-ui") {
+//			createRadioChecked(pos.x, pos.y);
+//		}
+//		if (choosedElement == "checkbox-design-ui") {
+//			createCheckbox(pos.x, pos.y);
+//		}
+//		if (choosedElement == "checkbox-checked-design-ui") {
+//			createCheckboxChecked(pos.x, pos.y);
+//		}
+//		if (choosedElement == "textarea-design-ui") {
+//			createTextArea(pos.x, pos.y);
+//		}
+//		if (choosedElement == "textbox-design-ui") {
+//			createTextBox(pos.x, pos.y);
+//		}
 	}
 });
 
@@ -563,7 +577,7 @@ $("#exportXMLUI").on('click', function() {
 $("#exportSVGUI").on('click', function() {
 
 	// Khong hien thi cac view khong can thiet khi xuat hinh
-	toogleElementLinkView('none');
+//	toogleElementLinkView('none');
 
 	$("#modal-exportSVGUI").modal('hide');
 	
@@ -584,24 +598,24 @@ $("#exportSVGUI").on('click', function() {
     paperUI.setDimensions(w, h);
 });
 graphUI.on('change', function() {
-	setIconSaveUI('block', 'none');
+	setIconSaveUI('notsaved');
 });
 
 graphUI.on('add', function(cellView) {
-	setIconSaveUI('block', 'none');
+	setIconSaveUI('notsaved');
 });
 
 graphUI.on('remove', function(cellView) {
-	setIconSaveUI('block', 'none');
+	setIconSaveUI('notsaved');
 });
 
-function setIconSaveUI(notSave, saved) {
-	$("#icon-not-save-UI").css('display', notSave);
-	$("#icon-saved-UI").css('display', saved);
-	if (saved == 'none') {
-		$("#icon-saved-UI").parent().prop('disabled', false);
+function setIconSaveUI(value) {
+	if (value == "saved") {
+		$("#saveDiagramUI").prop('disabled', true);
+		$("#saveDiagramUI").html("<i class='glyphicon glyphicon-floppy-saved'></i> Đã lưu");
 	} else {
-		$("#icon-saved-UI").parent().prop('disabled', true);
+		$("#saveDiagramUI").prop('disabled', false);
+		$("#saveDiagramUI").html("<i class='glyphicon glyphicon-floppy-remove'></i> Chưa lưu");
 	}
 }
 
@@ -632,7 +646,7 @@ $("#saveDiagramUI").on('click', function() {
 				+ "&nameui=" + $("#name-ui-show").html() + "&image=" + image,
 			success: function() {
 				$("#icon-not-save-UI").html("<i class=\"mdi-notification-event-busy\"></i>");
-				setIconSaveUI('none', 'block');
+				setIconSaveUI('saved');
 				$(".div-loading").hide();
 			},
 			error: function() {
@@ -688,8 +702,8 @@ $("#viewListUI").on("click", function() {
 				str += '<img width="254" height="200" src="' + window.atob(object.ui[i].image) + '" /></div>';
 				str += '<div class="caption">';
 		        str+= '<h3>' + object.ui[i].name + '</h3>';
-		        str+= '<button class="btn btn-primary edit-details-ui" id="' + object.ui[i].name + '" style="font-size: 20px;"><i class="mdi-content-create"></i></button>';
-		        str+= '<button class="btn btn-danger delete-details-ui" id="' + object.ui[i].name + '" style="font-size: 20px;"><i class="mdi-action-delete"></i></button>';
+		        str+= '<button class="btn btn-primary edit-details-ui" id="' + object.ui[i].name + '" style="font-size: 20px;"><i class="glyphicon glyphicon-pencil"></i></button>';
+		        str+= '<button class="btn btn-danger delete-details-ui" id="' + object.ui[i].name + '" style="font-size: 20px;"><i class="glyphicon glyphicon-trash"></i></button>';
 		        str+= '</div></div></div>';
 			}
 			$("#body-listUI").html(str);
@@ -702,8 +716,12 @@ $("#viewListUI").on("click", function() {
 					url: "/luanvan/diagramui/deleteui",
 					data: "&nameProject=" + $("#nameProject").val() + "&nameui=" + nameui,
 					success: function(result) {
-						$("#name-ui-show").html("");
-						graphUI.clear();
+						if ($("#name-ui-show").html() == nameDiagram || $("#body-list-ui").html() == "") {
+							$("#name-ui-show").html("");
+							$("#a-rename-ui").hide('fade');
+							setIconSave("saved");
+							graphUI.clear();
+						}
 					},
 					error: function() {
 						alert("error");
@@ -816,7 +834,60 @@ $(document).keydown(function(event) {
 });
 
 $("#assign-usecase-design-ui").on('click', function() {
-	$("#modal-assignUI").modal("show");
+	if ($("#name-ui-show").html() != "") { 
+		$.ajax({
+			url: "/luanvan/diagramui/loaduiusecase",
+			data: {
+				nameProject : $("#nameProject").val(), nameui : $("#name-ui-show").html()
+			},
+			success: function(result){
+				var object = $.parseJSON(result);
+				var str = "";
+				for (var i = 0; i < object.usecase.length; i++) {
+					if (object.usecase[i].checked == "1") {
+						str += '<div class="form-group">';
+						str += '<label><input type="checkbox" class="checkbox-assignUI" checked="checked" value="' + object.usecase[i].id + '" /> ' 
+							+ object.usecase[i].name + '</label>';
+						str += '</div>';
+					} else {
+						str += '<div class="form-group">';
+						str += '<label><input type="checkbox" class="checkbox-assignUI" value="' + object.usecase[i].id + '" /> ' 
+							+ object.usecase[i].name + '</label>';
+						str += '</div>';
+					}	
+				}
+				$("#body-assignUI").html(str);
+				$("#modal-assignUI").modal("show");
+			},
+			error: function() {
+				alert("Không thể tải usecase để gán vào giao diện");
+			}
+		});
+	} else {
+		alert("Chưa lựa chọn giao diện để gán");
+	}
+});
+
+$("#btn-assignUI").on('click', function() {
+	var idArray = "";
+	$(".checkbox-assignUI").each(function() {
+		if ($(this).prop("checked") == true) {
+			idArray += $(this).val() + "_";
+		}
+	});
+	$.ajax({
+		url: "/luanvan/diagramui/assignuiusecase",
+		type: "post",
+		data: {
+			usecaseIDs : idArray, nameProject : $("#nameProject").val(), nameui : $("#name-ui-show").html()
+		},
+		success: function(){
+			$("#modal-assignUI").modal("hide");
+		},
+		error: function() {
+			alert("Không thể gán usecase cho giao diện");
+		}
+	});
 });
 
 $("#open-design-ui").on('click', function() {
@@ -834,3 +905,47 @@ $("#openFileUI").on('click', function(evt) {
 		}
 	}
 });
+
+
+//Begin drag drop element to paper
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("id", ev.target.id);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var pos = getClickPosition(ev);
+    var id = ev.dataTransfer.getData("id");
+    if (id == "div-design-ui") {
+		createDiv(pos.x, pos.y);
+	}
+	if (id == "button-design-ui") {
+		createButton(pos.x, pos.y);
+	}
+	if (id == "label-design-ui") {
+		createLabel(pos.x, pos.y);
+	}
+	if (id == "radio-design-ui") {
+		createRadio(pos.x, pos.y);
+	}
+	if (id == "radio-checked-design-ui") {
+		createRadioChecked(pos.x, pos.y);
+	}
+	if (id == "checkbox-design-ui") {
+		createCheckbox(pos.x, pos.y);
+	}
+	if (id == "checkbox-checked-design-ui") {
+		createCheckboxChecked(pos.x, pos.y);
+	}
+	if (id == "textarea-design-ui") {
+		createTextArea(pos.x, pos.y);
+	}
+	if (id == "textbox-design-ui") {
+		createTextBox(pos.x, pos.y);
+	}
+}
+// End drag drop element to paper
