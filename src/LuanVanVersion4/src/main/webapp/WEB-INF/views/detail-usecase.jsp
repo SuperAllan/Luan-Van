@@ -20,6 +20,7 @@
 <title>Chi tiết Use-case</title>
 </head>
 <body style="height: 100%; width: 100%;" onload="searchUsecase('', ${project.projectid})">
+<input type="hidden" id="usecaseFromDiagram" value="${usecaseid}"/>
 <div class="container-fluid" style="background: #fff;">
 	<div class="col-md-3">
 		<div style="margin-left: -15px; margin-right: -15px; padding-top: 20px;">

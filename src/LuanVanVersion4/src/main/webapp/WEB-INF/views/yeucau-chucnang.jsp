@@ -20,7 +20,7 @@ CHỨC NĂNG CỦA PHẦN MỀM</h3>
 		<table class="table " id="listChucNang">
 			<thead>
 				<tr>
-					<th></th>
+					<th>STT</th>
 					<th>Mô tả yêu cầu</th>
 					<th>Phân loại</th>
 					<th>Mức độ</th>
@@ -61,7 +61,7 @@ CHỨC NĂNG CỦA PHẦN MỀM</h3>
 					 </tr>
 					 	<c:forEach items="${listData.chucnangs}" var="listData2">
 						 <tr>
-						 	<td></td>
+						 	<td class="countSTT"></td>
 						 	<td><textarea name="listChucNang" rows="1" class="form-control chucNang" required onblur="checkNameChucNang(this)">${listData2.motayeucau}</textarea></td>
 						 	<td>
 								<select class="form-control" name="listPhanLoai">
@@ -92,7 +92,7 @@ CHỨC NĂNG CỦA PHẦN MỀM</h3>
 								</select>
 							</td>
 						 	<td>
-						 		<textarea class="form-control listGhiChu" rows="1" name="listGhiChu">${listData2.ghichu }</textarea>
+						 		<textarea class="form-control listGhiChu" rows="1" name="listGhiChu" placeholder="Ghi chú">${listData2.ghichu }</textarea>
 						 	</td>
 						 	<td><a class='btn btn-link btn-block removeFunctionFromData '  title='Xóa chức năng'>x</a></td>
 						 </tr>

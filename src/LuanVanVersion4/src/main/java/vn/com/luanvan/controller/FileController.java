@@ -2,15 +2,12 @@ package vn.com.luanvan.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -90,15 +86,17 @@ public class FileController{
 		try {
 			FileUC file = new FileUC();
 			File fileCheck = new File(locationSave+mpf.getOriginalFilename());
-			file.setName(mpf.getOriginalFilename());
-			file.setType(mpf.getContentType());
-			int size = mpf.getBytes().length;
+			String fileName = mpf.getOriginalFilename();
+			String type = fileName.substring(fileName.lastIndexOf(".")+1);
+			file.setName(fileName);
+			file.setType(type);
+			float size = mpf.getBytes().length;
 			if((size/1024) > 1024){
-				int temp = (size/1024)/1024;
-				file.setSize(String.valueOf(temp)+"Mb");
+				float temp = (size/1024)/1024;
+				file.setSize(String.format("%.2f",temp)+"Mb");
 			}else{
-				int temp = size/1024;
-				file.setSize(String.valueOf(temp)+"Kb");
+				float temp = size/1024;
+				file.setSize(String.format("%.2f",temp)+"Kb");
 			}
             if(fileCheck.exists()){
             	file.setLink(date.getTime()+"_"+mpf.getOriginalFilename());
@@ -153,8 +151,9 @@ public class FileController{
 		String locationSave = rootPath + File.separator + "fileUpload" + File.separator;
 		String fileid = request.getParameter("fileid");
 		FileUC fileUC = fileUCDao.findFileByID(Integer.parseInt(fileid));
-		File fileDelete = new File(locationSave+fileUC.getName());
-		if(fileDelete.delete()){
+		File fileDelete = new File(locationSave+fileUC.getLink());
+		if(fileDelete.exists()){
+			fileDelete.delete();
 			fileUCDao.delete(fileUC);
 			System.out.print("delete ok");
 		}

@@ -12,3 +12,15 @@
 	word-wrap: break-word; 
 	width: 250px;
 }
+
+#header-background span {
+	color: #eee !important;
+}
+#header-background a {
+	color: white !important;
+	text-decoration: none !important;
+	opacity: 0.7 !important;
+}
+#header-background a:hover {
+	opacity: 1 !important;
+}

@@ -3,23 +3,17 @@ package vn.com.luanvan.controller;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import vn.com.luanvan.dao.ActorDao;
@@ -38,19 +32,18 @@ import vn.com.luanvan.dao.NhomucDao;
 import vn.com.luanvan.dao.PhanLoaiChucNangDao;
 import vn.com.luanvan.dao.ProjectDao;
 import vn.com.luanvan.dao.TrongsonolucDao;
+import vn.com.luanvan.dao.UIDao;
 import vn.com.luanvan.dao.UsecaseDao;
 import vn.com.luanvan.dao.UserDao;
 import vn.com.luanvan.dao.UserRoleDao;
 import vn.com.luanvan.dao.XepHangKyThuatDao;
 import vn.com.luanvan.dao.XepHangMoiTruongDao;
-import vn.com.luanvan.model.Chucnang;
 import vn.com.luanvan.model.Giatriluong;
 import vn.com.luanvan.model.Luong;
 import vn.com.luanvan.model.Nhomchucnang;
-import vn.com.luanvan.model.Nhomuc;
 import vn.com.luanvan.model.Phanloaichucnang;
 import vn.com.luanvan.model.Project;
-import vn.com.luanvan.model.Usecase;
+import vn.com.luanvan.model.Trongsonoluc;
 import vn.com.luanvan.model.User;
 import vn.com.luanvan.model.Mucdo;
 
@@ -101,17 +94,18 @@ public class ProjectController {
 	private NhomucDao nhomucDao;
 	@Autowired
 	private DiagramDao diagramDao;
+	@Autowired
+	private UIDao uiDao;
 	
 	/**
 	 * 
-	 * @param model
 	 * @param project
 	 * @param principal				Dùng để lấy username của người dùng.
 	 * @param redirectAttributes	Truyên biến success tới trang redirect tới.
 	 * @return						redirect tới trang background.
 	 */
-	@RequestMapping(value = "/createProject", method = RequestMethod.GET)
-	public String createProject(Model model, Project project,Principal principal, RedirectAttributes redirectAttributes){
+	@RequestMapping(value = "/createProject", method = RequestMethod.GET, produces="text/plain; charset=utf-8")
+	public String createProject(Project project,Principal principal, RedirectAttributes redirectAttributes){
 		String projectName = request.getParameter("projectName");
 		String description = request.getParameter("description");
 		String username = principal.getName();
@@ -123,7 +117,8 @@ public class ProjectController {
 			project.setTenproject(projectName);
 			project.setMotaproject(description);
 			project.setTrangthai(0);
-			project.setTrongsonoluc(1);
+			Trongsonoluc trongSo = trongsonolucDao.findByGiaTri(1);
+			project.setTrongsonoluc(trongSo);
 			User user = new User();
 			user.setUsername(username);
 			project.setUser(user);
@@ -134,9 +129,6 @@ public class ProjectController {
 		}
 		
 	}
-	
-	
-	
 	/**
 	 * 
 	 * @param principal		Dùng để lấy biến username người dùng.
@@ -144,14 +136,15 @@ public class ProjectController {
 	 * @return				Trả về trang detail-project.
 	 */
 	@RequestMapping(value="/detailProject", method = RequestMethod.GET)
-	public String detailProject( Principal principal, Model model){
-		String projectName = (String) request.getParameter("name");
+	public String detailProject( Principal principal, Model model, @ModelAttribute("name") String projectName){
+		//String projectName = (String) request.getParameter("name");
 		DecimalFormat df = new DecimalFormat("#.#");
 		String username = principal.getName();
 		Project project = projectDao.findProjectByName(username, projectName);
 		int projectid = project.getProjectid();
 		User user = userDao.findUserbyUserName(username);
-		
+		//Biến cho trang thiết kế giao diện
+		model.addAttribute("uis", uiDao.getUIByProject(projectid));
 		model.addAttribute("diagrams", diagramDao.getDiagramByProject(project.getProjectid()));
 		
 		//Biến cho trang yêu cầu chức năng
@@ -220,39 +213,6 @@ public class ProjectController {
 		model.addAttribute("diemActor", actorDao.tinhDiemTungActor(projectid, loaiactorDao.getAll()));
 		model.addAttribute("tongDiemActor", actorDao.tinhTongDiem(projectid, loaiactorDao.getAll()));
 		
-		//Kiểm tra các biến mà các trang truyền biến redirectAttributes tới.
-		String updateTrangThaiSuccess = request.getParameter("updateTrangThaiSuccess");
-		if(updateTrangThaiSuccess != null){
-			model.addAttribute("updateTrangThaiSuccess", updateTrangThaiSuccess);
-		}
-		String errorNameThietLap = request.getParameter("errorNameThietLap");
-		if(errorNameThietLap != null){
-			model.addAttribute("errorNameThietLap", errorNameThietLap);
-		}
-		String UpdateChucNangSuccess = request.getParameter("UpdateChucNangSuccess");
-		if(UpdateChucNangSuccess != null){
-			model.addAttribute("UpdateChucNangSuccess", UpdateChucNangSuccess);
-		}
-		String UpdateChuyenDoiSuccess = request.getParameter("UpdateChuyenDoiSuccess");
-		if(UpdateChuyenDoiSuccess != null){
-			model.addAttribute("UpdateChuyenDoiSuccess", UpdateChuyenDoiSuccess);
-		}
-		String updateKyThuatSuccess = request.getParameter("updateKyThuatSuccess");
-		if(updateKyThuatSuccess != null){
-			model.addAttribute("updateKyThuatSuccess", updateKyThuatSuccess);
-		}
-		String updateMoiTruongSuccess = request.getParameter("updateMoiTruongSuccess");
-		if(updateMoiTruongSuccess != null){
-			model.addAttribute("updateMoiTruongSuccess", updateMoiTruongSuccess);
-		}
-		String updateBangLuongSuccess = request.getParameter("updateBangLuongSuccess");
-		if(updateBangLuongSuccess != null){
-			model.addAttribute("updateBangLuongSuccess", updateBangLuongSuccess);
-		}
-		String updateGiaTriPhanMemSuccess = request.getParameter("updateGiaTriPhanMemSuccess");
-		if(updateGiaTriPhanMemSuccess != null){
-			model.addAttribute("updateGiaTriPhanMemSuccess", updateGiaTriPhanMemSuccess);
-		}
 		return "detail-project";	
 	}
 	
@@ -263,9 +223,10 @@ public class ProjectController {
 	 * @param principal		
 	 * @param redirectAttributes	Truyền các biến (errorNameThietLap, updateTrangThaiSuccess) cho trang redirect tới.
 	 * @return						redirect tới trang detailProject
+	 * @throws UnsupportedEncodingException 
 	 */
 	@RequestMapping(value = "/updateProject", method = RequestMethod.GET)
-	public ModelAndView  updateProject(ModelAndView model, Project project, Principal principal, RedirectAttributes redirectAttributes) {
+	public String  updateProject(Project project, Principal principal, RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
 		String projectName = request.getParameter("tenProject");
 		String projectNameOld = request.getParameter("tenProjectOld");
 		String description = request.getParameter("motaProject");
@@ -282,10 +243,9 @@ public class ProjectController {
 			}
 		}
 		projectDao.save(project);
-		redirectAttributes.addAttribute("updateTrangThaiSuccess", "Cập nhật thành công!");
-		model.addObject("name", project.getTenproject());
-		model.setViewName("redirect:/detailProject");
-		return model;
+		redirectAttributes.addFlashAttribute("updateTrangThaiSuccess", "Cập nhật thành công!");
+		redirectAttributes.addFlashAttribute("name", project.getTenproject());
+		return "redirect:/detailProject";
 		
 	}
 	/**

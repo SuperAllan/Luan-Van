@@ -1,5 +1,6 @@
 package vn.com.luanvan.controller;
 
+import java.io.File;
 import java.security.Principal;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import vn.com.luanvan.dao.BmtDao;
 import vn.com.luanvan.dao.DiagramActorDao;
 import vn.com.luanvan.dao.DiagramDao;
 import vn.com.luanvan.dao.DiagramUsecaseDao;
+import vn.com.luanvan.dao.FileUCDao;
 import vn.com.luanvan.dao.LoaiactorDao;
 import vn.com.luanvan.dao.NhomucDao;
 import vn.com.luanvan.dao.PhanloaiDao;
@@ -31,6 +33,7 @@ import vn.com.luanvan.model.DiagramActor;
 import vn.com.luanvan.model.DiagramActorId;
 import vn.com.luanvan.model.DiagramUsecase;
 import vn.com.luanvan.model.DiagramUsecaseId;
+import vn.com.luanvan.model.FileUC;
 import vn.com.luanvan.model.Nhomuc;
 import vn.com.luanvan.model.Phanloai;
 import vn.com.luanvan.model.PhanloaiId;
@@ -83,6 +86,10 @@ public class DiagramController {
 	
 	@Autowired
 	UserDao userDao;
+	
+	@Autowired
+	private FileUCDao fileUCDao;
+	
 	
 	@RequestMapping(value = "/diagram/newdiagram")
 	public String newDiagram(Principal principal, Model model) {
@@ -386,7 +393,7 @@ public class DiagramController {
 		
 		Usecase usecase = new Usecase();
 		usecase.setBmt(bmtDao.getBmtById(1));
-		usecase.setTinhtien(0);
+		usecase.setTinhtien(1);
 		usecase.setNameofuc(nameUsecase);
 		usecase.setProject(project);
 		if (!nhomucDao.hasNhomuc(nameDiagram, project.getProjectid())) {
@@ -549,7 +556,7 @@ public class DiagramController {
 			pl.setId(plid);
 			pl.setActor(actor);
 			pl.setUsecase(uc);
-			pl.setVaitro(0);
+			pl.setVaitro(1);
 			phanLoaiDao.add(pl);
 		}
 		return "";
@@ -629,12 +636,22 @@ public class DiagramController {
 	@RequestMapping(value = "/diagram/deleteobject", produces="text/plain; charset=utf-8")
 	public @ResponseBody String editDiagramNew(@RequestParam(value="nameProject") String nameProject,
 			@RequestParam(value="type") String type, @RequestParam(value="id") String id, Principal principal) {
-	
+		String rootPath = System.getProperty("catalina.home");
+		String locationSave = rootPath + File.separator + "fileUpload" + File.separator;
 		// Lay du an hien tai
 		if (type.equals("uml.Actor")) {
 			actorDao.delete(actorDao.getActorByID(Integer.parseInt(id)));
 		} else if (type.equals("uml.Usecase")) {
-			usecaseDao.delete(usecaseDao.getUsecaseByID(Integer.parseInt(id)));
+			Usecase usecase = usecaseDao.getUsecaseByID(Integer.parseInt(id));
+			List<FileUC> listFile = usecase.getFiles();
+			for(FileUC file : listFile){
+				File Filedelete = new File(locationSave+file.getLink());
+				if(Filedelete.exists()){
+					Filedelete.delete();
+					fileUCDao.delete(file);
+				}
+			}
+			usecaseDao.delete(usecase);
 		}
 		return "";
 	}

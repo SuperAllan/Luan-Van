@@ -30,5 +30,13 @@ public class TrongsonolucDaoImpl implements TrongsonolucDao{
 		query.setParameter("giaTri", giaTri);
 		return (Trongsonoluc) query.list().get(0);
 	}
+
+	@Transactional
+	public Trongsonoluc findByID(int trongsoID) {
+		String hql = "FROM Trongsonoluc WHERE trongsoid= :giaTri";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("giaTri", trongsoID);
+		return (Trongsonoluc) query.list().get(0);
+	}
 	
 }

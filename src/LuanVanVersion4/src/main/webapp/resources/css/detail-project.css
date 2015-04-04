@@ -1,3 +1,15 @@
 td{
 	vertical-align: middle !important;
 }
+
+#header-detailProject span {
+	color: #eee !important;
+}
+#header-detailProject a {
+	color: white !important;
+	text-decoration: none !important;
+	opacity: 0.7 !important;
+}
+#header-detailProject a:hover {
+	opacity: 1 !important;
+}

@@ -1,3 +1,7 @@
+a {
+	text-decoration: none !important;
+	cursor: pointer;
+}
 #wrapper-diagram {
 	position: absolute;
 	top: 0;
@@ -5,20 +9,59 @@
 	right: 0;
 	bottom: 0;
 }
+#header-diagram {
+	position: absolute;
+	top: 0px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 50px;
+	background: url('/luanvan/resources/img/bg-footer.jpg');
+	padding-right: 6px;
+	padding-left: 6px;
+}
+#header-diagram div {
+	font-size: 14px;
+	color: white;
+	line-height: 50px;
+	padding-left: 4px;
+	/* padding-right: 6px;
+	border-right: 2px solid #337ab7;*/
+	float: left;
+}
+#header-diagram span {
+	color: #eee !important;
+}
+#header-diagram a {
+	color: white !important;
+	text-decoration: none !important;
+	opacity: 0.7 !important;
+}
+#header-diagram a:hover {
+	opacity: 1 !important;
+}
 #properties-diagram {
 	position: absolute;
-	top: 0;
+	top: 50px;
 	right: 0;
 	left: 0;
-	height: 50px;
-	padding: 7px;
-	box-shadow: 0 1px 5px #888;
-	border: 1px solid #0769AD;
-	background: -webkit-linear-gradient(top,#4787ed 0,#0769AD 100%);
+	background: #f2f2f2;
+}
+#properties-diagram a {
+	color: #333;
+	text-decoration: none;
+	line-height: 50px;
+	padding: 10px;
+	outline: none;
+	background: #f2f2f2;
+}
+#properties-diagram a:hover {
+	color: #333;
+	background: white;
 }
 #content-diagram {
 	position: absolute;
-	top: 52px;
+	top: 100px;
 	bottom: 0;
 	left: 0;
 	right: 0;
@@ -31,8 +74,8 @@
 	bottom: 0;
 	left: 0;
 	background: #f2f2f2;
+	/* border-right: 1px solid #f2f2f2; */
 	overflow: auto;
-	border-right: 1px solid #bbb;
 }
 #right-content-diagram {
 	position: absolute;
@@ -40,6 +83,7 @@
 	left: 200px;
 	bottom: 0;
 	right: 0;
+	overflow: auto;
 }
 #paper-diagram {
 	top: 0;

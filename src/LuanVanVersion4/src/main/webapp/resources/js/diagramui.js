@@ -56,7 +56,16 @@ var lineV2 = new joint.shapes.basic.Rect({
 //	}
 //	// End loading diagram
 //});
-
+$(document).ready(function(){
+	$(document).ready(function(){
+		$(".formatNameProject").each(function(){
+			if($(this).text().length > 70){
+			var formatTitle = $.trim($(this).text()).substring(0,70).split(" ").join(" ") + "...";
+			$(this).text(formatTitle);
+			}
+		});
+	});
+});
 paperUI.on('cell:pointerdblclick', function(cellView, x, y) {
 	enableInput(cellView);
 });
@@ -67,17 +76,19 @@ paperUI.on('blank:pointerdown', function(cellView, x, y) {
 	divProperties(true, '#aaaaaa');
 	cellViewPointerDown = null;
 	$("#properties-design-ui").hide("fade");
-	listSelectView = [];
-	hasBlankPointerDown = true;
-	selectView = new joint.shapes.basic.Rect({
-		type: 'selectView',
-		position: { x: x, y: y },
-		size: { width: 1, height: 1 },
-		attrs:{
-			rect: { 'stroke' : '#333333', 'stroke-width': 1, 'stroke-dasharray': 5, fill: 'none'}
-		}
-	});
-	graphUI.addCell(selectView);
+	if (!hasCopyUI) {
+		listSelectView = [];
+		hasBlankPointerDown = true;
+		selectView = new joint.shapes.basic.Rect({
+			type: 'selectView',
+			position: { x: x, y: y },
+			size: { width: 1, height: 1 },
+			attrs:{
+				rect: { 'stroke' : '#333333', 'stroke-width': 1, 'stroke-dasharray': 5, fill: 'none'}
+			}
+		});
+		graphUI.addCell(selectView);
+	}
 });
 
 paperUI.on('cell:pointerup', function(cellView, evt, x, y) {
@@ -611,11 +622,11 @@ graphUI.on('remove', function(cellView) {
 
 function setIconSaveUI(value) {
 	if (value == "saved") {
-		$("#saveDiagramUI").prop('disabled', true);
-		$("#saveDiagramUI").html("<i class='glyphicon glyphicon-floppy-saved'></i> Đã lưu");
+		$("#saveDiagramUI").attr("style", "background: #5cb85c; color: white;");
+		$("#saveDiagramUI").html("<i class='glyphicon glyphicon-floppy-saved'></i> Lưu");
 	} else {
-		$("#saveDiagramUI").prop('disabled', false);
-		$("#saveDiagramUI").html("<i class='glyphicon glyphicon-floppy-remove'></i> Chưa lưu");
+		$("#saveDiagramUI").attr("style", "background: #d9534f; color: white;");
+		$("#saveDiagramUI").html("<i class='glyphicon glyphicon-floppy-remove'></i> Lưu");
 	}
 }
 
@@ -642,7 +653,7 @@ $("#saveDiagramUI").on('click', function() {
 		$.ajax({
 			url : "/luanvan/diagramui/savediagramui",
 			method: "post",
-			data: "nameProject=" + $("#nameProject").val() + "&path=" + window.btoa(JSON.stringify(graphUI))
+			data: "nameProject=" + $("#nameProject").val() + "&path=" + window.btoa(encodeURIComponent(JSON.stringify(graphUI)))
 				+ "&nameui=" + $("#name-ui-show").html() + "&image=" + image,
 			success: function() {
 				$("#icon-not-save-UI").html("<i class=\"mdi-notification-event-busy\"></i>");
@@ -698,13 +709,13 @@ $("#viewListUI").on("click", function() {
 			var object = $.parseJSON(result);
 			var str = "";
 			for (var i = 0; i < object.ui.length; i++) {
-				str += '<div class="col-md-4"><div class="thumbnail"><div style="border: 1px solid #ddd;">';
+				str += '<div class="col-md-4"><div class="thumbnail" style="background: #f2f2f2;"><div style="border: 1px solid #ddd; background: white;">';
 				str += '<img width="254" height="200" src="' + window.atob(object.ui[i].image) + '" /></div>';
 				str += '<div class="caption">';
-		        str+= '<h3>' + object.ui[i].name + '</h3>';
-		        str+= '<button class="btn btn-primary edit-details-ui" id="' + object.ui[i].name + '" style="font-size: 20px;"><i class="glyphicon glyphicon-pencil"></i></button>';
-		        str+= '<button class="btn btn-danger delete-details-ui" id="' + object.ui[i].name + '" style="font-size: 20px;"><i class="glyphicon glyphicon-trash"></i></button>';
-		        str+= '</div></div></div>';
+		        str+= '<h3>' + object.ui[i].name + '</h3><div class="btn-group" style="width: 100%;">';
+		        str+= '<button class="btn btn-primary edit-details-ui" id="' + object.ui[i].name + '" style="font-size: 20px; width: 50%;"><i class="glyphicon glyphicon-pencil"></i> Sửa</button>';
+		        str+= ' <button class="btn btn-danger delete-details-ui" id="' + object.ui[i].name + '" style="font-size: 20px; width: 50%;"><i class="glyphicon glyphicon-trash"></i> Xóa</button>';
+		        str+= '</div></div></div></div>';
 			}
 			$("#body-listUI").html(str);
 			
@@ -742,7 +753,7 @@ $("#viewListUI").on("click", function() {
 					data: "&nameProject=" + $("#nameProject").val() + "&nameui=" + nameui,
 					success: function(result) {
 						graphUI.clear();
-						graphUI.fromJSON(JSON.parse(window.atob(result)));
+						graphUI.fromJSON(JSON.parse(decodeURIComponent(window.atob(result))));
 						$("#modal-listUI").modal('hide');
 						$("#name-ui-show").html(nameui);
 						divProperties(true, "#aaaaaa");
@@ -845,12 +856,12 @@ $("#assign-usecase-design-ui").on('click', function() {
 				var str = "";
 				for (var i = 0; i < object.usecase.length; i++) {
 					if (object.usecase[i].checked == "1") {
-						str += '<div class="form-group">';
+						str += '<div class="form-group" style="word-break: break-all;">';
 						str += '<label><input type="checkbox" class="checkbox-assignUI" checked="checked" value="' + object.usecase[i].id + '" /> ' 
 							+ object.usecase[i].name + '</label>';
 						str += '</div>';
 					} else {
-						str += '<div class="form-group">';
+						str += '<div class="form-group" style="word-break: break-all;">';
 						str += '<label><input type="checkbox" class="checkbox-assignUI" value="' + object.usecase[i].id + '" /> ' 
 							+ object.usecase[i].name + '</label>';
 						str += '</div>';

@@ -87,7 +87,7 @@
 	
 	<beans:bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <beans:property name="host" value="smtp.gmail.com" />
-        <beans:property name="port" value="465" />
+        <beans:property name="port" value="587" />
         <beans:property name="username" value="luanvan111327@gmail.com" />
         <beans:property name="password" value="21021993a" />
         <beans:property name="javaMailProperties">
@@ -95,7 +95,6 @@
                 <beans:prop key="mail.transport.protocol">smtp</beans:prop>
                 <beans:prop key="mail.smtp.auth">true</beans:prop>
                 <beans:prop key="mail.smtp.starttls.enable">true</beans:prop>
-                <beans:prop key="mail.smtp.timeout">1000</beans:prop>	
             </beans:props>
         </beans:property>
     </beans:bean>

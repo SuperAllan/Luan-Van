@@ -13,13 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import vn.com.luanvan.dao.NhomucDao;
 import vn.com.luanvan.dao.ProjectDao;
 import vn.com.luanvan.dao.UIDao;
 import vn.com.luanvan.dao.UIUsecaseDao;
 import vn.com.luanvan.dao.UsecaseDao;
 import vn.com.luanvan.dao.UserDao;
-import vn.com.luanvan.model.Actor;
-import vn.com.luanvan.model.Diagram;
 import vn.com.luanvan.model.Project;
 import vn.com.luanvan.model.UI;
 import vn.com.luanvan.model.UIUsecase;
@@ -41,6 +40,8 @@ public class DiagramUIController {
 	@Autowired
 	UserDao userDao;
 	@Autowired
+	NhomucDao nhomucDao;
+	@Autowired
 	private HttpServletRequest request;
 
 	@RequestMapping(value = "/diagram/newdiagramui")
@@ -51,7 +52,8 @@ public class DiagramUIController {
 		User user = userDao.findUserbyUserName(username);
 		model.addAttribute("user", user);
 		model.addAttribute("project", project);
-		model.addAttribute("usecases", usecaseDao.getUsecaseByProject(project.getProjectid()));
+		model.addAttribute("nhomUC", nhomucDao.getNhomucByProject(project.getProjectid()));
+		//model.addAttribute("usecases", usecaseDao.getUsecaseByProject(project.getProjectid()));
 		return "newui";
 	}
 	

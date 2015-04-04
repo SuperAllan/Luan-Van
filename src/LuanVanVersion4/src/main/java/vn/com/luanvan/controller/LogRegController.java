@@ -12,10 +12,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Role;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -162,7 +160,7 @@ public class LogRegController {
 				} catch (Exception e) {
 					userroleDao.delete(userRole);
 					userDao.delete(user);
-					System.err.print("asdasdasd");
+					model.addAttribute("errorRegister","Hệ thông đang bận xin thử lại lần sau.");
 					e.printStackTrace();
 				} 
 				

@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	$(".formatNameProject").each(function(){
-		if($(this).text().length > 15){
-		var formatTitle = $.trim($(this).text()).substring(0,15).split(" ").join(" ") + "...";
+		if($(this).text().length > 70){
+		var formatTitle = $.trim($(this).text()).substring(0,70).split(" ").join(" ") + "...";
 		$(this).text(formatTitle);
 		}
 	});

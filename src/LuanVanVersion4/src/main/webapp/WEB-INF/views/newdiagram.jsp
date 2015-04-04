@@ -17,35 +17,71 @@
 <link href="<c:url value="/resources/css/jointshapesumlcustom.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/diagramui.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/joint.shapes.ui.custom.css" />" rel="stylesheet">
+<!-- Perfect scroll -->
+<script src="<c:url value="/resources/js/perfect-scrollbar.min.js" />" ></script>
+<link href="<c:url value="/resources/css/perfect-scrollbar.min.css" />" rel="stylesheet">
+
+<script type="text/javascript">
+	//var dmp = new diff_match_patch();
+	function searchUsecaseActor(value){
+		if(value == '' || value == ' ' || value == null){
+			$('.forSearch').each(function(){
+				$(this).css("display", "");
+			});
+		}else{
+			value = $.trim(value.toUpperCase());
+			
+			$('.forSearch').each(function(){
+				var temp = $.trim($(this).text().toUpperCase());
+				//var match = dmp.match_main(temp, value, 1);
+				if(temp.indexOf(value) > -1){
+					$(this).css("display", "");
+				}else{
+					$(this).css("display", "none");
+				}
+			});
+		}
+	}
+$(document).ready(function(){
+	$('#scrollBar').perfectScrollbar();
+});	
+</script>
+<style type="text/css">
+	.ps-scrollbar-x-rail{
+		display: none;
+	}
+	.ps-scrollbar-y-rail{
+		display: none;
+	}
+</style>
 </head>
 <body>
 <input type="hidden" id="nameProject" value="${project.tenproject}" />
 <div id="path" style="display:none;">${path}</div>
 <div id="wrapper-diagram">
-	<div id="properties-diagram">
-		<div class="btn-group">
-			<a class="btn btn-default" href="${contextPath}/detailProject?name=${project.tenproject}"><i class="glyphicon glyphicon-home"></i> Thông tin chi tiết</a>
+	<div id="header-diagram">
+		<div>
+			<img src="${contextPath}/resources/img/logo.gif" width="20" height="20">
+			<a href="${contextPath}/">Ước lượng và thu thập yêu cầu </a>/<a href="${contextPath}/background"> Các dự án </a>/
+			<a href="${contextPath}/detailProject?name=${project.tenproject}"> Dự án: <strong class="formatNameProject">${project.tenproject}</strong></a>
+			<span> / Vẽ sơ đồ use-cases</span>
 		</div>
-		<div class="btn-group">
-			<a class="btn btn-default" data-toggle="modal" href="#modal-new-diagram"><i class="glyphicon glyphicon-plus-sign"></i> Tạo mới</a>
-			<a class="btn btn-default" data-toggle="modal" href="#modal-exportSVG"><i class="glyphicon glyphicon-picture"></i> Xuất ảnh</a>
-			<button class="btn btn-default" id="view-list-diagram"><i class="glyphicon glyphicon-th-large"></i> Sơ đồ</button>
-			<button class="btn btn-default" id="saveDiagram" disabled="disabled">
-				<i class="glyphicon glyphicon-floppy-saved"></i> Đã lưu
-			</button>
-			<a class="btn btn-default" data-toggle="modal" href='#modal-scoreActor' id="scoreActor">
-				TAW
-			</a>
-			<a class="btn btn-default" data-toggle="modal" href='#modal-scoreUsecase' id="scoreUsecase">
-				TBF
-			</a>
-			
-		</div>
-		<div class="btn-group pull-right" >
+		<div class="pull-right" >
 			<sec:authorize access="isAuthenticated()">
+				<!-- For login user -->
+				<c:url value="/j_spring_security_logout" var="logoutUrl" />
+				<form action="${logoutUrl}" method="POST" id="logoutForm" style="display: none;">
+					<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" />
+				</form>
+				<script>
+					function formSubmit() {
+						document.getElementById("logoutForm").submit();
+					}
+				</script>
 				<c:if test="${pageContext.request.userPrincipal.name != null}">
 						<div class="dropdown pull-right">			  
-							<a type="button" id="dropdownMenu1" data-toggle="dropdown" class="btn btn-default" aria-expanded="true" style="cursor: pointer; color: #333; margin-right: 100px;">
+							<a id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="cursor: pointer; color: white; text-decoration: none;">
 						    <c:if test="${not empty user.image}">
 						    	<img src="<c:url value="${user.image}" />" class="img-rounded" style="width: 20px; height: 20px;">
 						    </c:if>
@@ -53,33 +89,45 @@
 						    <span class="caret"></span>
 						  </a>
 						  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-						    <li role="presentation"><a role="menuitem" tabindex="-1" href="/luanvan/background" ><i class="mdi-action-assignment-ind"></i> Thông tin chung</a></li>
-						    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:formSubmit()"><i class="mdi-action-settings-power"></i> Đăng xuất</a></li>
+						    <li role="presentation"><a role="menuitem" tabindex="-1" href="/luanvan/background" style="color: #333;" ><i class="mdi-action-assignment-ind"></i> Thông tin chung</a></li>
+						    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:formSubmit()" style="color: #333;"><i class="mdi-action-settings-power"></i> Đăng xuất</a></li>
 						  </ul>
 						</div>
 					</c:if>
 			</sec:authorize>
 		</div>
 	</div>
+	<div id="properties-diagram">
+		<%-- <a href="${contextPath}/detailProject?name=${project.tenproject}"><i class="glyphicon glyphicon-home"></i> Thông tin chi tiết</a> --%>
+		<a class="btn-default" data-toggle="modal" href="#modal-new-diagram"><i class="glyphicon glyphicon-plus-sign"></i> Tạo mới sơ đồ</a>
+		<a class="btn-default" data-toggle="modal" href="#modal-exportSVG"><i class="glyphicon glyphicon-picture"></i> Xuất ảnh</a>
+		<a class="btn-default" id="view-list-diagram" data-toggle="modal" href="#modal-list-diagram"><i class="glyphicon glyphicon-th-large"></i> Xem danh sách sơ đồ</a>
+		<a class="btn-default" id="saveDiagram" style="background: #5cb85c; color: white;"><i class="glyphicon glyphicon-floppy-saved"></i> Lưu</a>
+		<!-- <a data-toggle="modal" href='#modal-scoreActor' id="scoreActor">TAW</a>
+		<a data-toggle="modal" href='#modal-scoreUsecase' id="scoreUsecase">TBF</a> -->
+	</div>
 	<div id="content-diagram">
 		<div id="list-element-diagram">
+			<!-- search -->
+			<input style="border: none; border-radius: 0; height: 40px; margin-top: -1px;" type="search" id="input" class="form-control text-center"  title="Search" onkeyup="searchUsecaseActor(this.value)" placeholder="Nhập thông tin tìm kiếm">
+			<!-- End search -->
 			<div>
 				<div class="toggle-element-view">
-					<strong>Actors</strong> <i class="glyphicon glyphicon-chevron-up pull-right"></i>
+					<strong>Actors đã có</strong> <i class="glyphicon glyphicon-chevron-up pull-right"></i>
 				</div>
 				<div class="children-element-view" id="children-actor-view">
 					<c:forEach items="${actors}" var="actor">
-						<div draggable="true" ondragstart="drag(event)" id="${actor.actorid}">${actor.nameofactor}</div>
+						<div style="word-break: break-word;" class="forSearch" draggable="true" ondragstart="drag(event)" id="${actor.actorid}">${actor.nameofactor}</div>
 					</c:forEach>
 				</div>
 			</div>
 			<div>
 				<div class="toggle-element-view">
-					<strong>Use-cases</strong> <i class="glyphicon glyphicon-chevron-up pull-right"></i>
+					<strong>Use-cases đã có</strong> <i class="glyphicon glyphicon-chevron-up pull-right"></i>
 				</div>
 				<div class="children-element-view" id="children-usecase-view">
 					<c:forEach items="${usecases}" var="usecase">
-						<div draggable="true" ondragstart="drag(event)" id="${usecase.usecaseid}">${usecase.nameofuc}</div>
+						<div style="word-break: break-word;" class="forSearch" draggable="true" ondragstart="drag(event)" id="${usecase.usecaseid}">${usecase.nameofuc}</div>
 					</c:forEach>
 				</div>
 			</div>
@@ -89,12 +137,13 @@
 				<div id="name-diagram">
 					<span id="name-diagram-show">${nameDiagram}</span>
 					<a href="#modal-rename-diagram" data-toggle="modal" id="a-rename-diagram" style="display: none;">
-						<i class="glyphicon glyphicon-pencil"></i>
+						<i class="glyphicon glyphicon-pencil"></i> Đổi tên
 					</a>
 				</div>
 				<div id="paper" ondrop="drop(event);" ondragover="allowDrop(event)"></div>
 			</div>
 			<div id="tool-diagram">
+				<div style="background: url('/luanvan/resources/img/gauze.png'); padding: 0 20px 0 20px; margin-bottom: 10px;"><strong>Tạo mới đối tượng</strong></div>
 				<div class="text-center">
 					<img id="create-new-actor" draggable="true" ondragstart="drag(event)" width="40" height="40"
 						src="<c:url value="/resources/img/actor.svg" />" alt="actor"/>
@@ -138,7 +187,7 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button id="saveInfoActor" type="button" class="btn btn-primary" >
+				<button id="saveInfoActor" type="button" class="btn btn-block btn-primary" >
 					<i class="glyphicon glyphicon-save"></i> Lưu thay đổi</button>
 			</div>
 		</div>
@@ -176,10 +225,17 @@
 					<label><input type="checkbox" id="pay-money-modal-usecase"/> Tính tiền</label>
 				</div>
 				<div class="form-group">
+					<a id="a-question-upload-file" href="">Đặt câu hỏi và upload các tập tin liên quan</a>
+				</div>
+				<div class="form-group">
 					<label for="input-group-modal-usecase">Thuộc nhóm</label>
-					<input type="text" id="input-group-modal-usecase">
-					<label for="select-group-modal-usecase">Nhóm đã có</label>
-					<select id="select-group-modal-usecase"></select>
+					<div class="input-group">
+						<input type="text" id="input-group-modal-usecase" class="form-control"><br />
+						<!-- <label for="select-group-modal-usecase">Nhóm đã có</label> -->
+						<div class="input-group-addon" style="background: none;">
+							<select id="select-group-modal-usecase" style="border: none; outline: none;"></select>
+						</div>
+					</div>
 				</div>
 				<div class="form-group">
 					<label for="listUIOfUC">Gắn trên các giao diện</label>
@@ -193,7 +249,7 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button id="saveInfoUC" type="button" class="btn btn-primary" >
+				<button id="saveInfoUC" type="button" class="btn btn-block btn-primary" >
 					<i class="glyphicon glyphicon-save"></i> Lưu thay đổi</button>
 			</div>
 		</div>
@@ -207,14 +263,13 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title">Tạo nhóm</h4>
+				<h4 class="modal-title"><i class="glyphicon glyphicon-plus-sign"></i> Tạo sơ đồ mới</h4>
 			</div>
 			<div class="modal-body">
 				<input type="text" id="input-new-diagram" placeholder="Nhập tên nhóm" class="form-control" autofocus value=""/>
 			</div>
 			<div class="modal-footer">
-				<button type="submit" class="btn btn-info" id="btn-new-diagram">
-					<i class="glyphicon glyphicon-plus-sign"></i> OK</button>
+				<button type="submit" class="btn btn-block btn-info" id="btn-new-diagram">Tạo</button>
 			</div>
 		</div>
 	</div>
@@ -227,14 +282,13 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title">Đổi tên nhóm</h4>
+				<h4 class="modal-title"><i class="glyphicon glyphicon-pencil"></i> Đổi tên sơ đồ</h4>
 			</div>
 			<div class="modal-body">
 				<input type="text" id="input-rename-diagram" placeholder="Nhập tên nhóm" class="form-control" autofocus/>
 			</div>
 			<div class="modal-footer">
-				<button type="submit" class="btn btn-info" id="btn-rename-diagram">
-					<i class="glyphicon glyphicon-pencil"></i> Thay đổi</button>
+				<button type="submit" class="btn btn-block btn-info" id="btn-rename-diagram">Đổi tên</button>
 			</div>
 		</div>
 	</div>
@@ -247,7 +301,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title">Danh sách các sơ đồ</h4>
+				<h4 class="modal-title"><i class="glyphicon glyphicon-th-large"></i> Danh sách các sơ đồ</h4>
 			</div>
 			<div class="modal-body" >
 				<div class="row" id="body-list-diagram">
@@ -265,15 +319,14 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Tải xuống tập tin SVG</h4>
+					<h4 class="modal-title"><i class="glyphicon glyphicon-picture"></i> Xuất ảnh định dạng SVG</h4>
 				</div>
 				<div class="modal-body">
 					<input type="text" id="nameFileSVG" placeholder="Nhập tên file cần lưu" class="form-control" autofocus/>
 				</div>
 				<div class="modal-footer">
 					<!-- <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button> -->
-					<button type="button" class="btn btn-info" id="exportSVG">
-						<i class="glyphicon glyphicon-save"></i> Tải xuống</button>
+					<button type="button" class="btn btn-block btn-info" id="exportSVG">Xuất ảnh</button>
 				</div>
 			</div>
 		</div>
@@ -291,10 +344,10 @@
 			</div>
 			<div class="modal-body">
 				<div class="form-group">
-					<label><input type="radio" name="radio-delete-actor-usecase" value="0" /> Chỉ xóa khỏi sơ đồ hiện tại</label>
+					<label><input type="radio" checked="checked" name="radio-delete-actor-usecase" value="0" /> Chỉ xóa khỏi sơ đồ hiện tại</label>
 				</div>
 				<div class="form-group">
-					<label><input type="radio" name="radio-delete-actor-usecase" value="1"/> Xóa hoàn toàn khỏi dự án</label>
+					<label><input type="radio" name="radio-delete-actor-usecase" value="1"/><span class="alert-danger">Xóa hoàn toàn khỏi dự án, mọi dữ liệu liên quan sẽ mất</span></label>
 				</div>			</div>
 			<div class="modal-footer">
 				<button type="submit" class="btn btn-danger" id="btn-delete-actor-usecase">

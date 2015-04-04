@@ -3,6 +3,7 @@ package vn.com.luanvan.model;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+@SuppressWarnings("serial")
 @Embeddable
 public class UIUsecaseId implements java.io.Serializable {
 	private int uiid;

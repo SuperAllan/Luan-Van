@@ -1,7 +1,5 @@
 package vn.com.luanvan.controller;
 
-import java.io.File;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +7,6 @@ import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBException;
-import javax.xml.transform.TransformerException;
 
 import vn.com.luanvan.dao.ActorDao;
 import vn.com.luanvan.dao.BmtDao;
@@ -196,7 +192,6 @@ public class DocumentController{
 		phuLuc7.add(xepHangMoiTruongDao.TongKetQuaMoiTruong(projectid));
 		phuLuc7.add(xepHangMoiTruongDao.tinhNoiSuyLaoDong(projectid));
 		phuLuc7.add(project.getTrongsonoluc());
-		phuLuc7.add(trongsonolucDao.findByGiaTri(project.getTrongsonoluc()));
 		phuLuc7.add(luongDao.TinhCP1Gio(mucLuongNhaNuoc, luongs, listGiaTri).get(project.getBacluong()-1));
 		listSheep.add(new DocumentExcel("Phụ lục VII", "BẢNG TÍNH TOÁN GIÁ TRỊ PHẦN MỀM", project.getTenproject(), phuLuc7));
 		

@@ -8,4 +8,6 @@ public interface TrongsonolucDao{
 	List<Trongsonoluc> getAll();
 	
 	Trongsonoluc findByGiaTri(double giaTri);
+	
+	Trongsonoluc findByID(int trongsoID);
 }

@@ -5,7 +5,7 @@
 <head>
 <meta charset="utf-8">
 <title>Login Page</title>
-<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
 <style>
 .error {
 	padding: 15px;

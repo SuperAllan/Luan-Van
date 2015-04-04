@@ -1,5 +1,6 @@
 package vn.com.luanvan.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.List;
 
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import vn.com.luanvan.dao.BmtDao;
@@ -23,6 +23,7 @@ import vn.com.luanvan.dao.NhomChucNangDao;
 import vn.com.luanvan.dao.NhomucDao;
 import vn.com.luanvan.dao.PhanLoaiChucNangDao;
 import vn.com.luanvan.dao.ProjectDao;
+import vn.com.luanvan.dao.TrongsonolucDao;
 import vn.com.luanvan.dao.UsecaseDao;
 import vn.com.luanvan.dao.XepHangKyThuatDao;
 import vn.com.luanvan.dao.XepHangMoiTruongDao;
@@ -66,6 +67,8 @@ public class UocLuongController {
 	private UsecaseDao usecaseDao;
 	@Autowired
 	private BmtDao bmtDao;
+	@Autowired
+	private TrongsonolucDao trongsonolucDao;
 	
 	
 	/**
@@ -76,10 +79,11 @@ public class UocLuongController {
 	 * @param principal			Lấy username người dùng.
 	 * @param redirectAttributes	
 	 * @return					redirect tới trang detailProject.
+	 * @throws UnsupportedEncodingException 
 	 */
 	@RequestMapping(value="/updateFeatures", method = RequestMethod.GET)
-	public ModelAndView updateFeatures(HttpServletRequest request, @RequestParam("nhomChucNang") String[] nhoms,
-			@RequestParam("soLuongChucNang") String[] soLuong, @ModelAttribute FormChucNang form, Principal principal, RedirectAttributes redirectAttributes) {
+	public String updateFeatures(HttpServletRequest request, @RequestParam("nhomChucNang") String[] nhoms,
+			@RequestParam("soLuongChucNang") String[] soLuong, @ModelAttribute FormChucNang form, Principal principal, RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
 		
 		String tenProject = request.getParameter("tenProject");
 		Project project = projectDao.findProjectByName(principal.getName(), tenProject);
@@ -105,15 +109,19 @@ public class UocLuongController {
 				currentChucNang.setProject(projectDao.findProjectByName(principal.getName(), tenProject));
 				currentChucNang.setMucdo(mucDoDao.findMucDoByID(Integer.parseInt(form.getListMucDo()[dem])));
 				currentChucNang.setPhanloaichucnang(phanLoaiChucNangDao.findPhanLoaiByID(Integer.parseInt(form.getListPhanLoai()[dem])));
-				currentChucNang.setGhichu(form.getListGhiChu()[dem]);
+				if(form.getListGhiChu().length > 0){
+					if(form.getListGhiChu()[dem] != null){
+						currentChucNang.setGhichu(form.getListGhiChu()[dem]);
+					}
+				}
 				currentChucNang.setNhomchucnang(nhomChucNang);
 				chucNangDao.save(currentChucNang);
 				dem++;
 			}
 		}
-		redirectAttributes.addAttribute("UpdateChucNangSuccess", "Cập nhật chức năng thành công!");
-		redirectAttributes.addAttribute("name", project.getTenproject());
-		return new ModelAndView("redirect:/detailProject");
+		redirectAttributes.addFlashAttribute("UpdateChucNangSuccess", "Cập nhật chức năng thành công!");
+		redirectAttributes.addFlashAttribute("name", project.getTenproject());
+		return "redirect:/detailProject";
 	}
 	/**
 	 * @param request				Dùng để lấy biến từ trang view.
@@ -125,11 +133,12 @@ public class UocLuongController {
 	 * @param listMoTaUC			Danh sách các mô tả Usecase.
 	 * @param listBMT				Danh sách các BMT.
 	 * @return						redirect tới trang detail.
+	 * @throws UnsupportedEncodingException 
 	 */
 	@RequestMapping(value="/updateChuyenDoiUsecase", method = RequestMethod.GET)
-	public ModelAndView updateChuyenDoiUsecase(HttpServletRequest request, RedirectAttributes redirectAttributes, Principal principal,
+	public String updateChuyenDoiUsecase(HttpServletRequest request, RedirectAttributes redirectAttributes, Principal principal,
 			@RequestParam("listNhomUCId") Integer[] listNhomUCId, @RequestParam("listNhomUCName") String[] listNhomUCName, @RequestParam("listUCId") Integer[] listUCId, 
-			@RequestParam("listUCName") String[] listUCName, @RequestParam("listMoTaUC") String[] listMoTaUC, @RequestParam("listBMT") Integer[] listBMT){
+			@RequestParam("listUCName") String[] listUCName, @RequestParam("listMoTaUC") String[] listMoTaUC, @RequestParam("listBMT") Integer[] listBMT) throws UnsupportedEncodingException{
 		String tenProject = request.getParameter("tenProject");
 		Project project = projectDao.findProjectByName(principal.getName(), tenProject);
 		for(int i = 0; i < listNhomUCId.length; i++){
@@ -145,9 +154,9 @@ public class UocLuongController {
 			UC.setBmt(bmt);
 			usecaseDao.update(UC);
 		}
-		redirectAttributes.addAttribute("UpdateChuyenDoiSuccess", "Cập nhật thành công!");
-		redirectAttributes.addAttribute("name", project.getTenproject());
-		return new ModelAndView("redirect:/detailProject");
+		redirectAttributes.addFlashAttribute("UpdateChuyenDoiSuccess", "Cập nhật thành công!");
+		redirectAttributes.addFlashAttribute("name", project.getTenproject());
+		return "redirect:/detailProject";
 	}
 	
 	/**
@@ -159,10 +168,11 @@ public class UocLuongController {
 	 * @param request				Dùng để lấy các biến từ trang view.
 	 * @param redirectAttributes
 	 * @return						redirect tới trang detailProject.
+	 * @throws UnsupportedEncodingException 
 	 */	
 	@RequestMapping(value="/updateHeSoKyThuat", method = RequestMethod.GET)
 	public String updateKyThuat(@RequestParam("giaTriXepHang") String[] listGiaTri, @RequestParam("ghiChuKyThuat") String[] listGhiChu,
-			Principal principal,@RequestParam("IDHeSo") String[] listIdHeSo, HttpServletRequest request, RedirectAttributes redirectAttributes){
+			Principal principal,@RequestParam("IDHeSo") String[] listIdHeSo, HttpServletRequest request, RedirectAttributes redirectAttributes) throws UnsupportedEncodingException{
 		
 		String projectName = request.getParameter("projectNameForKyThuat");
 		Project project = projectDao.findProjectByName(principal.getName(), projectName);
@@ -177,8 +187,8 @@ public class UocLuongController {
 			xepHang.setGhichu(listGhiChu[i]);
 			xepHangKyThuatDao.save(xepHang);
 		}
-		redirectAttributes.addAttribute("updateKyThuatSuccess","Cập nhật kỹ thuật công nghệ thành công!");
-		redirectAttributes.addAttribute("name", project.getTenproject());
+		redirectAttributes.addFlashAttribute("updateKyThuatSuccess","Cập nhật kỹ thuật công nghệ thành công!");
+		redirectAttributes.addFlashAttribute("name", project.getTenproject());
 		return "redirect:/detailProject";
 	}
 	/**
@@ -190,10 +200,11 @@ public class UocLuongController {
 	 * @param request			Lấy các biến truyên từ trang view.
 	 * @param redirectAttributes
 	 * @return					redirect tới trang detailProject.
+	 * @throws UnsupportedEncodingException 
 	 */
 	@RequestMapping(value="/updateHeSoMoiTruong", method = RequestMethod.GET)
 	public String updateMoiTruong(@RequestParam("giaTriXepHangMT") String[] listGiaTri, @RequestParam("giaTriOnDinh") String[] listOnDinh,
-			Principal principal,@RequestParam("IDMoiTruong") String[] listIdHeSo, HttpServletRequest request, RedirectAttributes redirectAttributes){
+			Principal principal,@RequestParam("IDMoiTruong") String[] listIdHeSo, HttpServletRequest request, RedirectAttributes redirectAttributes) throws UnsupportedEncodingException{
 		
 		String projectName = request.getParameter("projectNameForMoiTruong");
 		Project project = projectDao.findProjectByName(principal.getName(), projectName);
@@ -208,8 +219,8 @@ public class UocLuongController {
 			xepHang.setOndinh(Float.parseFloat(listOnDinh[i]));
 			xepHangMoiTruongDao.save(xepHang);
 		}
-		redirectAttributes.addAttribute("name", project.getTenproject());
-		redirectAttributes.addAttribute("updateMoiTruongSuccess","Cập nhật thành công!");
+		redirectAttributes.addFlashAttribute("updateMoiTruongSuccess","Cập nhật thành công!");
+		redirectAttributes.addFlashAttribute("name", project.getTenproject());
 		return "redirect:/detailProject";
 	}
 	/**
@@ -222,11 +233,12 @@ public class UocLuongController {
 	 * @param pcLuuDong				Lấy biến pcLuuDong từ trang view.
 	 * @param luongIdForBangLuong	Lấy biến luongIdForBangLuong từ trang view.
 	 * @return						redirect tới trang detailProject.
+	 * @throws UnsupportedEncodingException 
 	 */
 	@RequestMapping(value="/updateBangLuong", method = RequestMethod.GET)
 	public String updateBangLuong(HttpServletRequest request, RedirectAttributes redirectAttributes, Principal principal,
 			@RequestParam("luongTangThem") String[] luongTangThem, @RequestParam("pcKhuVuc") String[] pcKhuVuc, @RequestParam("pcLuuDong") String[] pcLuuDong,
-			@RequestParam("luongIdForBangLuong") String[] luongIdForBangLuong){
+			@RequestParam("luongIdForBangLuong") String[] luongIdForBangLuong) throws UnsupportedEncodingException{
 		String projectName = request.getParameter("projectNameForLuong");
 		Project project = projectDao.findProjectByName(principal.getName(), projectName);
 		int luongNhaNuoc = Integer.parseInt(request.getParameter("mucLuongNhaNuoc"));
@@ -246,8 +258,8 @@ public class UocLuongController {
 			giaTriLuongDao.save(giaTri);
 		}
 		projectDao.save(project);
-		redirectAttributes.addAttribute("updateBangLuongSuccess","Cập nhật thành công!");
-		redirectAttributes.addAttribute("name", project.getTenproject());
+		redirectAttributes.addFlashAttribute("updateBangLuongSuccess","Cập nhật thành công!");
+		redirectAttributes.addFlashAttribute("name", project.getTenproject());
 		return "redirect:/detailProject";
 		
 	}
@@ -257,16 +269,17 @@ public class UocLuongController {
 	 * @param principal			Dùng để lấy username từ người dùng.
 	 * @param redirectAttributes
 	 * @return					redirect tới trang detailProject.
+	 * @throws UnsupportedEncodingException 
 	 */
 	@RequestMapping(value="/updateGiaTriPhanMem", method = RequestMethod.GET)
-	public String updateGiaTriPhanMem(HttpServletRequest request, Principal principal, RedirectAttributes redirectAttributes){
+	public String updateGiaTriPhanMem(HttpServletRequest request, Principal principal, RedirectAttributes redirectAttributes) throws UnsupportedEncodingException{
 		String projectName = request.getParameter("projectNameForGiaTriPhanMem");
 		Project project = projectDao.findProjectByName(principal.getName(), projectName);
 		String trongso = request.getParameter("selectNoLuc");
-		project.setTrongsonoluc(Double.parseDouble(trongso));
+		project.setTrongsonoluc(trongsonolucDao.findByGiaTri(Double.parseDouble(trongso)));
 		projectDao.save(project);
-		redirectAttributes.addAttribute("updateGiaTriPhanMemSuccess","Cập nhật thành công!");
-		redirectAttributes.addAttribute("name", project.getTenproject());
+		redirectAttributes.addFlashAttribute("updateGiaTriPhanMemSuccess","Cập nhật thành công!");
+		redirectAttributes.addFlashAttribute("name", project.getTenproject());
 		return "redirect:/detailProject";
 	}
 	

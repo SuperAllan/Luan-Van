@@ -15,6 +15,8 @@ var elementDown = null;
 var hasDrawing = false;
 var link = null;
 var hasDragDropTool = false;
+var hasBlankPointerDownDiagram = null;
+var selectViewDiagram = null;
 // End declare variable
 
 //$(document).ready(function() {
@@ -29,15 +31,22 @@ var hasDragDropTool = false;
 //	}
 //	// End loading diagram
 //});
-
+$(document).ready(function(){
+	$(".formatNameProject").each(function(){
+		if($(this).text().length > 70){
+		var formatTitle = $.trim($(this).text()).substring(0,70).split(" ").join(" ") + "...";
+		$(this).text(formatTitle);
+		}
+	});
+});
 // Begin set icon save
 function setIconSave(value) {
 	if (value == "saved") {
-		$("#saveDiagram").prop('disabled', true);
-		$("#saveDiagram").html("<i class='glyphicon glyphicon-floppy-saved'></i> Đã lưu");
+		$("#saveDiagram").attr("style", "background: #5cb85c; color: white;");
+		$("#saveDiagram").html("<i class='glyphicon glyphicon-floppy-saved'></i> Lưu");
 	} else {
-		$("#saveDiagram").prop('disabled', false);
-		$("#saveDiagram").html("<i class='glyphicon glyphicon-floppy-remove'></i> Chưa lưu");
+		$("#saveDiagram").attr("style", "background: #d9534f; color: white;");
+		$("#saveDiagram").html("<i class='glyphicon glyphicon-floppy-remove'></i> Lưu");
 	}
 }
 // End set icon save
@@ -186,12 +195,12 @@ $("#view-list-diagram").on("click", function() {
 			var object = $.parseJSON(result);
 			var str = "";
 			for (var i = 0; i < object.diagram.length; i++) {
-				str += '<div class="col-md-4"><div class="thumbnail" style="background: #0769AD;"><div style="background: white;">';
+				str += '<div class="col-md-4"><div class="thumbnail" style="background: #f2f2f2;"><div style="background: white;">';
 				str += '<img width="260" height="200" src="' + window.atob(object.diagram[i].image) + '" /></div>';
 				str += '<div class="caption">';
-		        str += '<h3 style="color: white;">' + object.diagram[i].name + '</h3>';
+		        str += '<h3 style="color: #333;">' + object.diagram[i].name + '</h3>';
 		        str += '<div class="btn-group" style="width: 100%;">'
-		        str += '<button class="btn btn-success edit-details-diagram" id="' + object.diagram[i].name + '" style="font-size: 20px; width: 50%;"><i class="glyphicon glyphicon-pencil"></i></button>';
+		        str += '<button class="btn btn-primary edit-details-diagram" id="' + object.diagram[i].name + '" style="font-size: 20px; width: 50%;"><i class="glyphicon glyphicon-pencil"></i></button>';
 		        str += '<button class="btn btn-danger delete-details-diagram" id="' + object.diagram[i].name + '" style="font-size: 20px; width: 50%;"><i class="glyphicon glyphicon-trash"></i></button>';
 		        str += '</div></div></div></div>';
 			}
@@ -265,7 +274,6 @@ $("#view-list-diagram").on("click", function() {
 			alert("Không thể tải được danh sách sơ đồ, vui lòng liên hệ ADMIN để giải quyết");
 		}
 	});
-	$("#modal-list-diagram").modal('show');
 });
 // End list diagram
 
@@ -435,12 +443,16 @@ paper.on('cell:pointerdblclick ', function(cellView, evt, x, y) {
 				var object = $.parseJSON(result);
 				$("#name-modal-actor").html(cellView.model.attributes.name);
 				$("#id-modal-actor").val(cellView.model.attributes.created);
-				$("#description-modal-actor").val(object.actor.mota);
+				if (object.actor.mota != "null") {
+					$("#description-modal-actor").val(object.actor.mota);
+				} else {
+					$("#description-modal-actor").val("");
+				}
 				$("#level-modal-actor").val(object.actor.mucdo);
 				var phanLoai = "";
 				for (var i = 0; i < object.actor.phanloai.length; i++) {
 					phanLoai += '<div class="form-group role-actor">' + object.actor.phanloai[i].name;
-					phanLoai += '<select class="pull-right selet-role" id="' + object.actor.phanloai[i].id + '">';
+					phanLoai += '<select class="pull-right select-role" id="' + object.actor.phanloai[i].id + '">';
 					if (object.actor.phanloai[i].vaitro == "0") {
 						phanLoai += '<option value="0" selected>Tác nhân phụ</option>';
 						phanLoai += '<option value="1">Tác nhân chính</option>';
@@ -467,8 +479,13 @@ paper.on('cell:pointerdblclick ', function(cellView, evt, x, y) {
 				var object = $.parseJSON(result);
 				$("#name-modal-usecase").html(cellView.model.attributes.name);
 				$("#id-modal-usecase").val(cellView.model.attributes.created);
-				$("#description-modal-usecase").val(object.usecase.mota);
+				if (object.usecase.mota != "null") {
+					$("#description-modal-usecase").val(object.usecase.mota);
+				} else {
+					$("#description-modal-usecase").val("");
+				}
 				$("#level-modal-usecase").val(object.usecase.mucdo);
+				$("#a-question-upload-file").attr("href", "/luanvan/detailUsecase?name=" + $("#nameProject").val() + "&usecaseid=" + cellView.model.attributes.created);
 				if (object.usecase.tinhtien == "0") {
 					$("#pay-money-modal-usecase").prop("checked", false);
 				} else {
@@ -653,6 +670,7 @@ $("#saveInfoActor").on('click', function(){
 	});
 //	$("#modal-actor").modal('hide');
 //	//$("#saveDiagram").trigger('click');
+	console.log(role);
 	$.ajax({
 		url: "/luanvan/diagram/saveinfoactor",
 		type: "post",
@@ -676,7 +694,7 @@ function listActor() {
 			var obj = $.parseJSON(result);
 			var str = "";
 			for (var i = 0; i < obj.actor.length; i++) {
-				str += "<div draggable='true' ondragstart='drag(event)' id='" + obj.actor[i].id + "'>" + obj.actor[i].name + "</div>";
+				str += "<div style='word-break: break-work;' class='forSearch' draggable='true' ondragstart='drag(event)' id='" + obj.actor[i].id + "'>" + obj.actor[i].name + "</div>";
 			}
 			$("#children-actor-view").html(str);
 			
@@ -706,7 +724,7 @@ function listUsecase() {
 			var obj = $.parseJSON(result);
 			var str = "";
 			for (var i = 0; i < obj.usecase.length; i++) {
-				str += "<div draggable='true' ondragstart='drag(event)' id='" + obj.usecase[i].id + "'>" + obj.usecase[i].name + "</div>";
+				str += "<div style='word-break: break-all;' class='forSearch' draggable='true' ondragstart='drag(event)' id='" + obj.usecase[i].id + "'>" + obj.usecase[i].name + "</div>";
 			}
 			$("#children-usecase-view").html(str);
 			
@@ -721,13 +739,30 @@ function listUsecase() {
 }
 
 paper.on('blank:pointerclick', function() {
+//	hideAllTool();
+	elementDown = null;
+});
+
+paper.on('blank:pointerdown', function(cellView, x, y) {
 	hideAllTool();
+	elementDown = null;
+	listSelectViewDiagram = [];
+	hasBlankPointerDownDiagram = true;
+	selectViewDiagram = new joint.shapes.basic.Rect({
+		type: 'selectViewDiagram',
+		position: { x: x, y: y },
+		size: { width: 1, height: 1 },
+		attrs:{
+			rect: { 'stroke' : '#333333', 'stroke-width': 1, 'stroke-dasharray': 5, fill: 'none'}
+		}
+	});
+	graph.addCell(selectViewDiagram);
 });
 
 // Khi mot doi tuong tren paper dang duoc chon
 paper.on('cell:pointerdown', function(cellView, evt, px, py) {
 	
-	console.log(cellView);
+	listSelectViewDiagram = [];
 	
 	elementDown = cellView;
 	
@@ -800,8 +835,12 @@ graph.on('change:position', function(cell) {
 
 // Khi chuot di chuyen tren paper
 $("#paper").on('mousemove', function(e) {
+	var pos = getClickPosition(e);
+	if (hasBlankPointerDownDiagram) {
+		selectViewDiagram.resize(pos.x - selectViewDiagram.attributes.position.x, pos.y - selectViewDiagram.attributes.position.y);
+	}
 	if (hasDrawing) {
-		link.set('target', getClickPosition(e));
+		link.set('target', pos);
 	}
 });
 
@@ -831,6 +870,26 @@ function hasNameUsecase(id) {
 
 // Khi chuot tha tren paper
 $("#paper").on('mouseup', function(e) {
+	
+	if (hasBlankPointerDownDiagram) {
+		hasBlankPointerDownDiagram = false;
+		var listElements = paper.findViewsInArea({
+			x: selectViewDiagram.attributes.position.x,
+			y: selectViewDiagram.attributes.position.y,
+			width: selectViewDiagram.attributes.size.width,
+			height: selectViewDiagram.attributes.size.height
+		});
+		for (var i = 0; i < listElements.length; i++) {
+			if (listElements[i].model.attributes.type != 'selectViewDiagram') {
+				listElements[i].$box.find('.delete').show();
+				listElements[i].$box.find('.relationship').show();
+				listElements[i].$box.find('.delete').parent().css('border', '1px dashed #d9534f');
+				listSelectViewDiagram.push(listElements[i]);
+			}
+		}
+		selectViewDiagram.remove();
+	}
+	
 	var posMouse = getClickPosition(e);
 	
 	removeLinkSameSourceTarget();
@@ -1215,9 +1274,13 @@ $("#scoreUsecase").click(function() {
 
 //Xu ly khi nhan phim
 $(document).keydown(function(event) {
-
 	if (event.keyCode == 46) {
-		if (elementDown) {
+		for (var i = 0; i < listSelectViewDiagram.length; i++) {
+			listSelectViewDiagram[i].model.remove();
+		}
+	}
+	if (elementDown) {
+		if (event.keyCode == 46) {
 			$("#modal-delete-actor-usecase").modal('show');
 		}
 	}
@@ -1228,18 +1291,21 @@ $("#btn-delete-actor-usecase").on('click', function() {
 		$.ajax({
 			url: "/luanvan/diagram/deleteobject",
 			data: "type=" + elementDown.model.attributes.type + "&id=" + elementDown.model.attributes.created
-			+ "&nameProject=" + nameProject,
+			+ "&nameProject=" + $("#nameProject").val(),
 			success: function(){
+				elementDown.model.remove();
 				listActor();
 				listUsecase();
-				setPathDiagram();
-				elementDown.model.remove();
-				$("#modal-delete-actor-usecase").modal('hide');
 			},
 			error: function() {
+				alert("Không thể xóa đối tượng");
 			}
 		});
+	} else {
+		elementDown.model.remove();
 	}
+	setPathDiagram();
+	$("#modal-delete-actor-usecase").modal('hide');
 });
 
 // Begin drag drop element to paper
@@ -1312,18 +1378,28 @@ function drop(ev) {
 		if (id == "create-new-actor") {
 			var actor = new joint.shapes.uml.Actor({position: { x: posMouse.x, y: posMouse.y }});
 			var max = 0;
+			var hasDefaultActor = false;
 			$("#children-actor-view div").each(function() {
 				var str = $(this).html().split(":");
-				if (str[1]) {
-					if (parseInt(str[1]) > max) {
+				console.log(str[1]);
+				if (str[0] == "Actor") {
+					if (str[1] == "" || str[1] == null || str[1] == "undefined") {
+						hasDefaultActor = true;
+					} else if (parseInt(str[1]) > max) {
 						max = parseInt(str[1]);
+						hasDefaultActor = false;
 					}
 				}
 			});
 			var nameActor = "Actor";
-			if (max > 0) {
+			if (hasDefaultActor) {
+				nameActor += ":1";
+			} else if (max > 0) {
 				nameActor += ":" + (max + 1);
 			}
+			actor.attributes.name = nameActor;
+			actor.attr(".name/text", nameActor);
+			graph.addCell(actor);
 			$.ajax({
 			url: "/luanvan/diagram/createactor",
 			type: "post",
@@ -1331,9 +1407,7 @@ function drop(ev) {
 				+ "&nameActor=" + nameActor,
 			success: function(result) {
 				actor.attributes.created = result;
-				actor.attributes.name = nameActor;
-				actor.attr(".name/text", nameActor);
-				graph.addCell(actor);
+				
 				setIconSave("saved");
 				listActor();
 				setPathDiagram();
@@ -1346,18 +1420,28 @@ function drop(ev) {
 		if (id == "create-new-usecase") {
 			var usecase = new joint.shapes.uml.Usecase({position: { x: posMouse.x, y: posMouse.y }});
 			var max = 0;
-			$("#children-actor-view div").each(function() {
+			var hasDefaultUsecase = false;
+			$("#children-usecase-view div").each(function() {
 				var str = $(this).html().split(":");
-				if (str[1]) {
-					if (parseInt(str[1]) > max) {
+				if (str[0] == "Usecase") {
+					if (str[1] == "" || str[1] == null || str[1] == "undefined") {
+						hasDefaultUsecase = true;
+					} else if (parseInt(str[1]) > max) {
 						max = parseInt(str[1]);
+						hasDefaultUsecase = false;
 					}
 				}
+				
 			});
 			var nameUsecase = "Usecase";
-			if (max > 0) {
+			if (hasDefaultUsecase) {
+				nameUsecase += ":1";
+			} else if (max > 0) {
 				nameUsecase += ":" + (max + 1);
 			}
+			usecase.attributes.name = nameUsecase;
+			usecase.attr(".name/text", nameUsecase);
+			graph.addCell(usecase);
 			$.ajax({
 				url: "/luanvan/diagram/createusecase",
 				type: "post",
@@ -1366,9 +1450,7 @@ function drop(ev) {
 				success: function(result) {
 					var object = $.parseJSON(result);
 					usecase.attributes.created = result;
-					usecase.attributes.name = nameUsecase;
-					usecase.attr(".name/text", nameUsecase);
-					graph.addCell(usecase);
+					
 					setIconSave("saved");
 					listUsecase();
 					setPathDiagram();

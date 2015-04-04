@@ -1,6 +1,5 @@
 package vn.com.luanvan.controller;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -9,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +21,6 @@ import vn.com.luanvan.dao.NhomucDao;
 import vn.com.luanvan.dao.ProjectDao;
 import vn.com.luanvan.dao.UsecaseDao;
 import vn.com.luanvan.dao.UserDao;
-import vn.com.luanvan.model.FileUC;
 import vn.com.luanvan.model.Nhomuc;
 import vn.com.luanvan.model.Project;
 import vn.com.luanvan.model.Usecase;
@@ -45,6 +42,9 @@ public class UsecaseController{
 	public String detailUsecase(HttpServletRequest request, Principal principal, Model model){
 		String projectName = request.getParameter("name");
 		Project project = projectDao.findProjectByName(principal.getName() , projectName);
+		if (request.getParameter("usecaseid") != null) {
+			model.addAttribute("usecaseid", request.getParameter("usecaseid"));
+		}
 		User user = userDao.findUserbyUserName(principal.getName());
 		model.addAttribute("project", project);
 		model.addAttribute("user", user);

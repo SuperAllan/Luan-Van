@@ -3,7 +3,7 @@
 	position: relative;
 	height: 1000px;
 	width: 1500px;
-	overflow: auto;
+	overflow: hidden;
 }
 
 #tool-UI {
@@ -16,20 +16,4 @@
 #element-design-ui div {
 	text-align: center;
 	padding-top: 10px;
-}
-
-#exportSVGUI,
-#exportXMLUI {
-	width:100%;
-	border-top-left-radius: 0;
-	border-top-right-radius: 0;
-	height: 56px;
-}
-
-#nameFileSVGUI,
-#nameFileXMLUI {
-	border:none;
-	box-shadow: none !important;
-	height:56px;
-	font-size:16px;
 }

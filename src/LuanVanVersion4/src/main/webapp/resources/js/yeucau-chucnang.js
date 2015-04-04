@@ -4,6 +4,7 @@
 
 var number = 0;
 var count = 0;
+
 $(document).ready(function() {
 	
     $('.countNhomChucNangFromData').each(function(){
@@ -30,12 +31,15 @@ $(document).ready(function() {
     	xoaNhom($(this).parent().parent().parent().attr("id"));
     });
     
+	countSTT();
 //    $('.listGhiChu').each(function(){
 //    	if($(this).val() == null || $(this).val() == "" || $(this).length < 1){
 //    		$(this).val("Ghi chú");
 //    	}
 //   	});
 });  
+
+
 
 function checkNameNhomChucNang(bienThis){
 	var dem = 0;
@@ -77,7 +81,7 @@ function themNhom(){
 	listChucNang.prepend(nhom);
 	$("#soLuongNhom"+number).val(0);
 	number++;
-	
+	countSTT();
 }
 
 function xoaNhom(id){
@@ -85,12 +89,13 @@ function xoaNhom(id){
 	if(isConfirm == true){
 		$("#"+id).remove();
 	}
+	countSTT();
 }
 
 /* Xu ly them phong */
 function themChucNang(id) {
 	var tr = "<tr>"+
-			"<td></td>"+
+			"<td class='countSTT'></td>"+
 			"<td><textarea name='listChucNang' rows='1' class='form-control chucNang' onblur='checkNameChucNang(this)' required='required' placeholder='Mô tả chức năng' data-bv-notempty='true' data-bv-notempty-message='Mô tả khác rỗng'></textarea></td>"+
 			"<td>"+
 				
@@ -109,17 +114,24 @@ function themChucNang(id) {
 			tr+="</select>"+
 			"</td>"+
 			"<td>"+
-				"<textarea class='form-control listGhiChu' rows='1' name='listGhiChu'>Ghi chú</textarea>"+
+				"<textarea class='form-control listGhiChu' rows='1' name='listGhiChu' placeholder='Ghi chú'></textarea>"+
 			"</td>"+
 			"<td><a class='btn btn-link btn-block removeFunction' onclick='xoaChucNang(\""+id+"\",this)' title='Xóa chức năng'>x</a></td>"+
 		"</tr>";
-	$("#"+id).after(tr);
+	//$("#"+id).after(tr);
+	if($("#"+id).children('tr').length > 1){
+		$("#"+id+" tr:first").after(tr);
+	}else{
+		$("#"+id).append(tr);
+	}
 	$("#soLuong"+id).val(parseInt($("#soLuong"+id).val())+1);
+	countSTT();
 }
 
 function xoaChucNang(id, bienThis){
 	$("#soLuong"+id).val(parseInt($("#soLuong"+id).val())-1);
 	$(bienThis).parent().parent().remove();
+	countSTT();
 }
 
 function checkData(){
@@ -134,4 +146,12 @@ function checkData(){
     	$('#buttonChucNang').prop("disabled", false);
     	return true;
     }
+}
+
+function countSTT(){
+	var countSTT = 0;
+	$('.countSTT').each(function(){
+		countSTT++;
+		$(this).text(countSTT);
+	});
 }

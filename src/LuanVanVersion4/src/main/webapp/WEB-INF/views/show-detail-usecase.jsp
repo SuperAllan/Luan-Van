@@ -107,20 +107,22 @@ function deleteFile(bienThis){
 	<button type="submit" class="btn btn-primary btn-lg" id="buttonSubmit">Cập nhật</button>
 			
 
-<table class="table table-hover text-center">
-	<tr>
+<table class="table table-hover">
+	<thead>
+		<tr>
 		<th>File Name</th>
 		<th>File Size</th>
 		<th>File Type</th>
 		<th>Download</th>
 		<th>Delete</th>
-	</tr>
+		</tr>
+	</thead>
 	<tbody id="listFile">
 		<c:forEach items="${usecase.files}" var="list">
 		<tr>
 			<td class="text-left">${list.name}</td>
 			<td>${list.size}</td>
-			<td class="formatType" title="${list.type}">${list.type}</td>
+			<td title="${list.type}">${list.type}</td>
 			<td><a href="${contextPath}/downloadFile?fileid=${list.fileid}">Download</a></td>
 			<td><a id="${list.fileid}" onclick="deleteFile(this)"><i class="glyphicon glyphicon-remove"></i></a></td>
 		</tr>

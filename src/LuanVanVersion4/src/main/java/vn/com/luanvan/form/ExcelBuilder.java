@@ -1,6 +1,5 @@
 package vn.com.luanvan.form;
 
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,14 +14,11 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellRangeAddress;
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
-import vn.com.luanvan.dao.ActorDao;
 import vn.com.luanvan.model.Bmt;
 import vn.com.luanvan.model.Chucnang;
 import vn.com.luanvan.model.DocumentExcel;
@@ -34,7 +30,6 @@ import vn.com.luanvan.model.Luong;
 import vn.com.luanvan.model.Nhomchucnang;
 import vn.com.luanvan.model.Nhomuc;
 import vn.com.luanvan.model.Phanloai;
-import vn.com.luanvan.model.Project;
 import vn.com.luanvan.model.Trongsonoluc;
 import vn.com.luanvan.model.Usecase;
 import vn.com.luanvan.model.Xephangkythuat;
@@ -64,6 +59,7 @@ public class ExcelBuilder extends AbstractExcelView{
         	createPhuLucVIII(lists.get(8), workbook);
 	}
 	
+	@SuppressWarnings({ "static-access", "deprecation", "unchecked"})
 	void createPhuLucI(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle styleBold = workbook.createCellStyle();
         Font fontBold = workbook.createFont();
@@ -152,6 +148,7 @@ public class ExcelBuilder extends AbstractExcelView{
     	
 	}
 	
+	@SuppressWarnings({ "static-access", "deprecation", "unchecked" })
 	void createPhuLucII(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle styleBold = workbook.createCellStyle();
         Font fontBold = workbook.createFont();
@@ -272,6 +269,7 @@ public class ExcelBuilder extends AbstractExcelView{
     	sheet.setColumnWidth(6, 2900);
 	}
 	
+	@SuppressWarnings({ "static-access", "deprecation", "unchecked" })
 	void createPhuLucIII(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle styleBold = workbook.createCellStyle();
         Font fontBold = workbook.createFont();
@@ -368,6 +366,7 @@ public class ExcelBuilder extends AbstractExcelView{
     	hssfSheet.setColumnWidth(5, 7300);
 	}
 	
+	@SuppressWarnings({ "static-access", "deprecation", "unchecked" })
 	void createPhuLucIV(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle styleBold = workbook.createCellStyle();
         Font fontBold = workbook.createFont();
@@ -496,11 +495,12 @@ public class ExcelBuilder extends AbstractExcelView{
     	sheetRow18.createCell(5).setCellValue(tongDiemUsecase);
     	sheetRow18.getCell(5).setCellStyle(textCenterBold);
     	hssfSheet.setColumnWidth(1, 3200);
-    	hssfSheet.setColumnWidth(2, 5300);
+    	hssfSheet.setColumnWidth(2, 5400);
     	hssfSheet.setColumnWidth(4, 2800);
     	hssfSheet.setColumnWidth(5, 5800);
 	}
 	
+	@SuppressWarnings({ "static-access", "deprecation", "unchecked" })
 	void createPhuLucV(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle styleBold = workbook.createCellStyle();
         Font fontBold = workbook.createFont();
@@ -596,6 +596,7 @@ public class ExcelBuilder extends AbstractExcelView{
     		hssfSheet.setColumnWidth(3, 3900);
 	}
 	
+	@SuppressWarnings({ "unchecked", "static-access", "deprecation" })
 	void createPhuLucVI(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle styleBold = workbook.createCellStyle();
         Font fontBold = workbook.createFont();
@@ -709,6 +710,7 @@ public class ExcelBuilder extends AbstractExcelView{
     		hssfSheet.setColumnWidth(5, 5600);
 	}
 	
+	@SuppressWarnings({ "unchecked", "static-access", "deprecation" })
 	void createPhuLucBangLuong(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle formatSeparator = workbook.createCellStyle();
 		formatSeparator.setDataFormat(HSSFDataFormat.getBuiltinFormat("#,##0"));
@@ -864,6 +866,7 @@ public class ExcelBuilder extends AbstractExcelView{
     		hssfSheet.setColumnWidth(12, 3500);
 	}
 	
+	@SuppressWarnings({ "static-access", "deprecation", "unchecked" })
 	void createPhuLucVII(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle formatSeparator = workbook.createCellStyle();
 		formatSeparator.setDataFormat(HSSFDataFormat.getBuiltinFormat("#,##0"));
@@ -926,9 +929,8 @@ public class ExcelBuilder extends AbstractExcelView{
     	float tongKyThuat = (Float) listObject.get(2);
     	float tongMoiTruong = (Float) listObject.get(3);
     	float noiSuy = (Float) listObject.get(4);
-    	double trongSoNoLuc = (Double) listObject.get(5);
-    	Trongsonoluc trongSo = (Trongsonoluc) listObject.get(6);
-    	Integer luongBinhQuan = (Integer) listObject.get(7);
+    	Trongsonoluc trongSo = (Trongsonoluc) listObject.get(5);
+    	Integer luongBinhQuan = (Integer) listObject.get(6);
     	
     	
     	HSSFRow sheetRow7 = hssfSheet.createRow(7);
@@ -987,7 +989,7 @@ public class ExcelBuilder extends AbstractExcelView{
     	sheetRow14.getCell(0).setCellStyle(styleBold);
     	sheetRow14.createCell(1).setCellValue("E="+trongSo.getMota()+"*AUCP");
     	sheetRow14.getCell(1).setCellStyle(textCenter);
-    	sheetRow14.createCell(2).setCellValue(trongSoNoLuc * AUCP);
+    	sheetRow14.createCell(2).setCellValue(trongSo.getGiatri() * AUCP);
     	sheetRow14.createCell(3).setCellValue("6/6-10/6");
     	
     	HSSFRow sheetRow15 = hssfSheet.createRow(15);
@@ -1003,7 +1005,7 @@ public class ExcelBuilder extends AbstractExcelView{
     	sheetRow16.getCell(0).setCellStyle(styleBold);
     	sheetRow16.createCell(1).setCellValue("G=1.4*E*P*H");
     	sheetRow16.getCell(1).setCellStyle(textCenter);
-    	sheetRow16.createCell(2).setCellValue(1.4*luongBinhQuan * noiSuy * (trongSoNoLuc * AUCP));
+    	sheetRow16.createCell(2).setCellValue(1.4*luongBinhQuan * noiSuy * (trongSo.getGiatri() * AUCP));
     	sheetRow16.getCell(2).setCellStyle(formatSeparator);
     	sheetRow16.createCell(3).setCellValue("");
     	
@@ -1013,6 +1015,7 @@ public class ExcelBuilder extends AbstractExcelView{
 		hssfSheet.setColumnWidth(3, 11300);
 	}
 	
+	@SuppressWarnings({ "static-access", "deprecation", "unchecked" })
 	void createPhuLucVIII(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle formatSeparator = workbook.createCellStyle();
 		formatSeparator.setDataFormat(HSSFDataFormat.getBuiltinFormat("#,##0"));
@@ -1076,9 +1079,9 @@ public class ExcelBuilder extends AbstractExcelView{
     	float tongKyThuat = (Float) listObject.get(2);
     	float tongMoiTruong = (Float) listObject.get(3);
     	float noiSuy = (Float) listObject.get(4);
-    	double trongSoNoLuc = (Double) listObject.get(5);
+    	Trongsonoluc trongSo = (Trongsonoluc) listObject.get(5);
     	Integer luongBinhQuan = (Integer) listObject.get(6);
-    	int G = (int) (1.4*luongBinhQuan*noiSuy*(trongSoNoLuc * ((tongUsecase+tongActor) * (0.6+0.01*tongKyThuat) * (1.4+(-0.03*tongMoiTruong)))));
+    	int G = (int) (1.4*luongBinhQuan*noiSuy*(trongSo.getGiatri() * ((tongUsecase+tongActor) * (0.6+0.01*tongKyThuat) * (1.4+(-0.03*tongMoiTruong)))));
     	int C = (int) (G*0.65);
     	int TL = (int) ((G+C)*0.06);
     	HSSFRow sheetRow6 = hssfSheet.createRow(6);

@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "giatriluong", catalog = "luanvan")
 public class Giatriluong implements java.io.Serializable {

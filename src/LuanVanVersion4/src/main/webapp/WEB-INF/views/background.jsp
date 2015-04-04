@@ -11,19 +11,22 @@
 	<link href="<c:url value="/resources/css/background.css" />" rel="stylesheet">
 </head>
 <body>
-	<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 	<div class="container">
 		<div class="panel panel-info content-home">
-			<div class="panel-heading">Thông tin chung</div>
+			<div class="panel-heading" >
+				<div id="header-background">
+					<a href="${contextPath}/">Ước lượng và thu thập yêu cầu </a>/<span> Các dự án </span>
+				</div>
+			</div>
 			<div class="panel-body">
 				<div class="col-md-2 text-center">
 		     		<form method="POST" action="/luanvan/uploadImage" role="form"  id="formUploadFile">
 		      			<div onclick="showDialog()" id="anhDaiDien">
 		      				<c:if test="${not empty user.image }">
-		      					<img src="<c:url value="${user.image}" />" style="height: 150px; width: 150px;">
+		      					<img src="<c:url value="${user.image}" />" style="height: 150px; width: 150px; cursor: pointer;">
 		      				</c:if>
 		      				<c:if test="${empty user.image }">
-		      					<img src="<c:url value="/resources/img/hinh.svg" />" style="height: 150px; width: 150px;">
+		      					<img src="<c:url value="/resources/img/hinh.svg" />" style="height: 150px; width: 150px; cursor: pointer;">
 		      				</c:if>
 		      			<div class="hoverImg" style="cursor: pointer;">
 		      				<i class="glyphicon glyphicon-edit"></i> Ảnh đại diện</div>
@@ -47,9 +50,8 @@
 			        <div class="tab-pane fade in active" id="tabDuAn">
 			            <div class="panel panel-primary">
 						  <div class="panel-heading" >
-						  		<span style="font-size: 18px">Các dự án</span>
-						 	 <a class="pull-right" style="color:white;" data-toggle="modal" data-target="#myModal">
-						 	 	<i class="glyphicon glyphicon-plus"></i> Tạo dự án</a>
+						 	 <a  style="color:white;" data-toggle="modal" data-target="#myModal">
+						 	 	<i class="glyphicon glyphicon-plus-sign"></i> Tạo dự án</a>
 						  </div>
 						  <div class="panel-body">
 							  <div class="col-md-4">
@@ -162,16 +164,12 @@
       <div class="modal-body">
 			<div class="form-group">
 				<label class="index">Tên dự án</label>
-				<input type="text" class="form-control input-lg" placeholder="Tên dự án" name="projectName"  maxlength="200" autofocus="autofocus"
-				data-bv-notempty="true"
-	          	data-bv-notempty-message="Tên dự án phải khác rỗng."
-	          	data-bv-stringlength="true">
+				<input type="text" class="form-control input-lg" placeholder="Tên dự án" name="projectName"  maxlength="200" autofocus="autofocus" required="required">
 			</div>
 			<c:if test="${empty errorName}">
 				<p>Hãy tạo tên dự án một cách ngắn gọn và dễ nhớ</p>
 			</c:if>
 				<span class="text-danger">${errorName}</span>
-			
 			<div class="form-group">
 				<label class="index">Mô tả dự án (Tùy chọn)</label>
 				<textarea class="form-control" placeholder="Mô tả dự án" name="description" rows="3"></textarea>

@@ -19,13 +19,16 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <div class="container-fluid">
 	<div class="panel panel-info content-home">
-		<div class="panel-heading">Thông tin chi tiết</div>
-		 <a href="${contextPath}/detailUsecase?name=${project.tenproject}">Chi tiet</a>
+		<div class="panel-heading">
+			<div id="header-detailProject">
+				<a href="${contextPath}/">Ước lượng và thu thập yêu cầu </a>/<a href="${contextPath}/background"> Các dự án </a>/
+				<span class="formatNameProject" title="${project.tenproject}"> Dự án: ${project.tenproject} </span>
+			</div>
+		</div>
 		<div class="panel-body">
 			<div class="col-md-12">
 				<div class="toggle-menu-detail-project"><i class="glyphicon glyphicon-chevron-left"></i></div>
 				<div class="col-md-2 text-center" id="menu-detail-project">
-				    <span style="font-size:20px; color:#666; cursor: default;" class="formatNameProject" title="${project.tenproject}">${project.tenproject}</span>
 				    <input type="hidden" id="nameProject" name="nameProject" value="${ project.tenproject }" />
 				    <div class="tabs-left">
 						<ul class="nav nav-stacked tab-left">

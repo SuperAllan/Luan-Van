@@ -3,7 +3,7 @@ package vn.com.luanvan.model;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
+@SuppressWarnings("rawtypes")
 @XmlRootElement
 public class DocumentExcel{
 	private String nameOfWorkSheet;

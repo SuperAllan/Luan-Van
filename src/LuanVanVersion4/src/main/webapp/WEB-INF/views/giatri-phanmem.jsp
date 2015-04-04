@@ -81,7 +81,7 @@
 			<td class="text-center text-bold">E= <select id="selectNoLuc" name="selectNoLuc">
 													<c:forEach items="${listTrongSoNoLuc}" var="list">
 														<c:choose>
-															<c:when test="${project.trongsonoluc ==	list.giatri}">
+															<c:when test="${project.trongsonoluc.trongsoid == list.trongsoid}">
 																<option value="${list.giatri}" selected>${list.mota}</option>
 															</c:when>
 															<c:otherwise>

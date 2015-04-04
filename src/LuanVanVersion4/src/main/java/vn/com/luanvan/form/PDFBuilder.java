@@ -1,9 +1,7 @@
 package vn.com.luanvan.form;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -13,30 +11,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.support.CglibSubclassingInstantiationStrategy;
 import org.springframework.web.servlet.view.document.AbstractPdfView;
 
 import vn.com.luanvan.dao.PhanloaiDao;
-import vn.com.luanvan.model.Chucnang;
-import vn.com.luanvan.model.Nhomchucnang;
-import vn.com.luanvan.model.Nhomuc;
 import vn.com.luanvan.model.Phanloai;
 import vn.com.luanvan.model.Project;
 import vn.com.luanvan.model.Usecase;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.ElementListener;
 import com.lowagie.text.Font;
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.Header;
-import com.lowagie.text.HeaderFooter;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.Table;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfWriter;
 
@@ -44,6 +30,7 @@ public class PDFBuilder extends AbstractPdfView{
 	@Autowired
 	private PhanloaiDao phanLoaiDao;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void buildPdfDocument(Map<String, Object> model, Document document,
 			PdfWriter writer, HttpServletRequest request, HttpServletResponse response)

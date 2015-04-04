@@ -55,26 +55,23 @@ public class ProjectDaoImpl implements ProjectDao{
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Project> getListProject(String username, int status) {
-		List<Project> projects = new ArrayList<Project>();
 		String hql = "from Project as a where a.user.username= :username and a.trangthai= :status"; 
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("username", username);
 		query.setParameter("status", status);
-		projects = query.list();
-		return projects;
+		return query.list();
 	}
 
 	@Transactional
 	public Project findProjectByName(String username,String projectName) {
-		List<Project> projects = new ArrayList<Project>();
 		String hql = "from Project as a where a.user.username= :username and a.tenproject= :name"; 
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("username", username);
 		query.setParameter("name", projectName);
-		projects = query.list();
-		return projects.get(0);
+		return (Project) query.list().get(0);
 	}
 
 	@Transactional

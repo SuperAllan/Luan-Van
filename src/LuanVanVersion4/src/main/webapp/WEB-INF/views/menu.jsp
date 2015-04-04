@@ -28,7 +28,7 @@
             $.material.init();
         });
     </script> 
-<nav class="navbar navbar-default" style="margin-bottom: 0; background: url('/luanvan/resources/img/bg-footer.jpg');">
+<nav class="navbar navbar-default navbar-fixed-top" style="margin-bottom: 0px; background: url('/luanvan/resources/img/bg-footer.jpg');">
   <div class="container">
     <div class="navbar-header">
 	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -56,6 +56,14 @@
 	  	<div class="alert alert-success text-center alert-menu message-custom" >
 			<button type="button" class="close pull-right" data-dismiss="alert" aria-hidden="true">&times;</button>
 			${successRegister}
+		</div>
+	 </c:if>
+	 
+	 <!-- alert dang ky bi loi-->
+    <c:if test="${not empty errorRegister}">
+	  	<div class="alert alert-danger text-center alert-menu message-custom" >
+			<button type="button" class="close pull-right" data-dismiss="alert" aria-hidden="true">&times;</button>
+			${errorRegister}
 		</div>
 	 </c:if>
 	 
@@ -202,15 +210,11 @@
         	<sec:authorize access="isAuthenticated()">
 				<!-- For login user -->
 				<c:url value="/j_spring_security_logout" var="logoutUrl" />
-				<form action="${logoutUrl}" method="POST" id="logoutForm">
+				<form action="${logoutUrl}" method="POST" id="logoutFormMenu">
 					<input type="hidden" name="${_csrf.parameterName}"
 						value="${_csrf.token}" />
 				</form>
-				<script>
-					function formSubmit() {
-						document.getElementById("logoutForm").submit();
-					}
-				</script>
+				
 		 
 				<c:if test="${pageContext.request.userPrincipal.name != null}">
 					<li class="dropdown">			  
@@ -224,7 +228,7 @@
 					  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 					  
 					    <li role="presentation"><a role="menuitem" tabindex="-1" href="/luanvan/background" ><i class="mdi-action-assignment-ind"></i> Thông tin chung</a></li>
-					    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:formSubmit()"><i class="mdi-action-settings-power"></i> Đăng xuất</a></li>
+					    <li role="presentation"><a role="menuitem" tabindex="-1" onclick="formSubmitMenu()"><i class="mdi-action-settings-power"></i> Đăng xuất</a></li>
 					  </ul>
 					</li>
 				</c:if>
@@ -250,3 +254,8 @@
 		</div>
 	</div>
 </div>
+<script>
+	function formSubmitMenu() {
+		document.getElementById("logoutFormMenu").submit();
+	}
+</script>

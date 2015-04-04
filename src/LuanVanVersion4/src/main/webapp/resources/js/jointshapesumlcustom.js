@@ -74,8 +74,9 @@ joint.shapes.uml.ActorView = joint.dia.ElementView.extend({
         this.$box.find('textarea').on('focusout', _.bind(function(evt) {
             this.model.attr('.name/fill-opacity', 1);
             $(evt.target).val("");
+            $("#saveDiagram").trigger('click');
         }, this));
-        this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
+        this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
         // Update the box position whenever the underlying model changes.
         this.model.on('change', this.updateActorView, this);
         // Remove the box when the model gets removed from the graph.
@@ -171,8 +172,9 @@ joint.shapes.uml.UsecaseView = joint.dia.ElementView.extend({
         this.$box.find('textarea').on('focusout', _.bind(function(evt) {
             this.model.attr('.name/fill-opacity', 1);
             $(evt.target).val("");
+            $("#saveDiagram").trigger('click');
         }, this));
-        this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
+        this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
         // Update the box position whenever the underlying model changes.
         this.model.on('change', this.updateUsecaseView, this);
         // Remove the box when the model gets removed from the graph.

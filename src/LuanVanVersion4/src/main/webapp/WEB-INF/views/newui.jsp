@@ -22,22 +22,29 @@
 <input type="hidden" id="nameProject" value="${project.tenproject}" />
 <div id="path" style="display:none;">${path}</div>
 <div id="wrapper-diagram">
-	<div id="properties-diagram">
-		<div class="btn-group">
-			<a class="btn btn-default" href="${contextPath}/detailProject?name=${project.tenproject}"><i class="glyphicon glyphicon-home"></i> Thông tin chi tiết</a>
-			<button class="btn btn-default" id="new-design-ui"><i class="glyphicon glyphicon-plus-sign"></i> Tạo mới</button>
-			<button class="btn btn-default" id="btn-svgUI"><i class="glyphicon glyphicon-picture"></i> Xuất ảnh</button>
-			<button class="btn btn-default" id="viewListUI"><i class="glyphicon glyphicon-th-large"></i> Danh sách giao diện</button>
-			<button class="btn btn-default" id="assign-usecase-design-ui"><i class="glyphicon glyphicon-list"></i> Gán giao diện vào use case</button>
-			<button class="btn btn-default" id="saveDiagramUI" disabled="disabled">
-				<i class="glyphicon glyphicon-floppy-saved"></i> Đã lưu
-			</button>
+	<div id="header-diagram">
+		<div>
+			<img src="${contextPath}/resources/img/logo.gif" width="20" height="20">
+			<a href="${contextPath}/">Ước lượng và thu thập yêu cầu </a>/<a href="${contextPath}/background"> Các dự án </a>/
+			<a href="${contextPath}/detailProject?name=${project.tenproject}"> Dự án: <strong class="formatNameProject">${project.tenproject}</strong></a>
+			<span> / Thiết kế giao diện</span>
 		</div>
-		<div class="btn-group pull-right" >
+		<div class="pull-right" >
 			<sec:authorize access="isAuthenticated()">
+				<!-- For login user -->
+				<c:url value="/j_spring_security_logout" var="logoutUrl" />
+				<form action="${logoutUrl}" method="POST" id="logoutForm" style="display: none;">
+					<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" />
+				</form>
+				<script>
+					function formSubmit() {
+						document.getElementById("logoutForm").submit();
+					}
+				</script>
 				<c:if test="${pageContext.request.userPrincipal.name != null}">
 						<div class="dropdown pull-right">			  
-							<a type="button" id="dropdownMenu1" data-toggle="dropdown" class="btn btn-default" aria-expanded="true" style="cursor: pointer; color: #333; margin-right: 100px;">
+							<a id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="cursor: pointer; color: white; text-decoration: none;">
 						    <c:if test="${not empty user.image}">
 						    	<img src="<c:url value="${user.image}" />" class="img-rounded" style="width: 20px; height: 20px;">
 						    </c:if>
@@ -45,12 +52,21 @@
 						    <span class="caret"></span>
 						  </a>
 						  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-						    <li role="presentation"><a role="menuitem" tabindex="-1" href="/luanvan/background" ><i class="mdi-action-assignment-ind"></i> Thông tin chung</a></li>
-						    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:formSubmit()"><i class="mdi-action-settings-power"></i> Đăng xuất</a></li>
+						    <li role="presentation"><a role="menuitem" tabindex="-1" href="/luanvan/background" style="color: #333;" ><i class="mdi-action-assignment-ind"></i> Thông tin chung</a></li>
+						    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:formSubmit()" style="color: #333;"><i class="mdi-action-settings-power"></i> Đăng xuất</a></li>
 						  </ul>
 						</div>
 					</c:if>
 			</sec:authorize>
+		</div>
+	</div>
+	<div id="properties-diagram">
+		<div class="btn-group">
+			<a class="btn-default" id="new-design-ui"><i class="glyphicon glyphicon-plus-sign"></i> Tạo mới giao diện</a>
+			<a class="btn-default" id="btn-svgUI"><i class="glyphicon glyphicon-picture"></i> Xuất ảnh</a>
+			<a class="btn-default" id="viewListUI"><i class="glyphicon glyphicon-th-large"></i> Danh sách giao diện</a>
+			<a class="btn-default" id="assign-usecase-design-ui"><i class="glyphicon glyphicon-list"></i> Gán giao diện vào use case</a>
+			<a class="btn-default" id="saveDiagramUI" style="background: #5cb85c; color: white;"><i class="glyphicon glyphicon-floppy-saved"></i> Lưu</a>
 		</div>
 	</div>
 	<div id="content-diagram">
@@ -114,7 +130,7 @@
 				<div id="name-diagram">
 					<span id="name-ui-show">${nameUI}</span>
 					<a href="#modal-rename-ui" data-toggle="modal" id="a-rename-ui" style="display: none;">
-						<i class="glyphicon glyphicon-pencil"></i>
+						<i class="glyphicon glyphicon-pencil"></i> Đổi tên
 					</a>
 				</div>
 				<div id="paperUI" ondrop="drop(event);" ondragover="allowDrop(event)"></div>
@@ -160,15 +176,13 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title">Lưu file SVG</h4>
+				<h4 class="modal-title"><i class="glyphicon glyphicon-picture"></i> Xuất ảnh định dạng SVG</h4>
 			</div>
-			<div class="modal-body" style="padding: 0;">
+			<div class="modal-body">
 				<input type="text" id="nameFileSVGUI" placeholder="Nhập tên file cần lưu" class="form-control" autofocus/>
 			</div>
-			<div class="modal-footer" style="padding: 0; border: none;">
-				<!-- <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button> -->
-				<button type="submit" class="btn btn-info" id="exportSVGUI">
-					<i class="glyphicon glyphicon-save"></i> OK</button>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-block btn-info" id="exportSVGUI">Xuất ảnh</button>
 			</div>
 		</div>
 	</div>
@@ -181,15 +195,13 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title">Tạo giao diện mới</h4>
+				<h4 class="modal-title"><i class="glyphicon glyphicon-plus-sign"></i> Tạo giao diện mới</h4>
 			</div>
 			<div class="modal-body">
 				<input type="text" id="input-nameUI" placeholder="Nhập tên giao diện" class="form-control" autofocus/>
 			</div>
 			<div class="modal-footer">
-				<!-- <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button> -->
-				<button type="submit" class="btn btn-info" id="create-name-UI">
-					<i class="glyphicon glyphicon-save"></i> OK</button>
+				<button type="submit" class="btn btn-block btn-info" id="create-name-UI">Tạo</button>
 			</div>
 		</div>
 	</div>
@@ -202,7 +214,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title">Danh sách các giao diện</h4>
+				<h4 class="modal-title"><i class="glyphicon glyphicon-th-large"></i> Danh sách các giao diện</h4>
 			</div>
 			<div class="modal-body" >
 				<div class="row" id="body-listUI">
@@ -215,24 +227,26 @@
 
 <!-- Begin modal list ui -->
 <div class="modal fade" id="modal-assignUI">
-	<div class="modal-dialog modal-sm">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title">Lựa chọn usecase gán vào giao diện: <strong>${nameUI}</strong></h4>
+				<h4 class="modal-title"><i class="glyphicon glyphicon-list"></i> Lựa chọn Use-case gán vào giao diện: <strong>${nameUI}</strong></h4>
 			</div>
 			<div class="modal-body" >
 				<div class="row" id="body-assignUI" style="padding-left: 20px;">
-					<c:forEach items="${usecases}" var="usecase">
-						<div class="form-group">
-							<label><input type="checkbox" class="checkbox-assignUI" value="${usecase.usecaseid}" /> ${usecase.nameofuc}</label>
-						</div>
+					<c:forEach items="${nhomUC}" var="list">
+						<div class="form-group">${list.tennhom}</div>
+							<c:forEach items="${list.usecases}" var="list2">
+								<div class="form-group">
+									<label><input type="checkbox" class="checkbox-assignUI" value="${list2.usecaseid}" /> ${list2.nameofuc}</label>
+								</div>
+							</c:forEach>
 					</c:forEach>
 				</div>
 			</div>
 			<div class="modal-footer" >
-				<button type="submit" class="btn btn-info" id="btn-assignUI">
-					<i class="glyphicon glyphicon-plus-sign"></i> Gán</button>
+				<button type="submit" class="btn btn-info" id="btn-assignUI">Gán</button>
 			</div>
 		</div>
 	</div>
@@ -245,15 +259,14 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title">Đổi tên giao diện</h4>
+				<h4 class="modal-title"><i class="glyphicon glyphicon-pencil"></i> Đổi tên giao diện</h4>
 			</div>
 			<div class="modal-body">
 				<input type="text" id="input-rename-ui" placeholder="Nhập tên giao diện" class="form-control" autofocus/>
 			</div>
 			<div class="modal-footer">
 				<!-- <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button> -->
-				<button type="submit" class="btn btn-info" id="btn-rename-ui">
-					<i class="glyphicon glyphicon-save"></i> OK</button>
+				<button type="submit" class="btn btn-block btn-info" id="btn-rename-ui">Đổi tên</button>
 			</div>
 		</div>
 	</div>

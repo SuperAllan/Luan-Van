@@ -2,6 +2,9 @@ $(document).ready(function(){
 	
 	$("#danhSachUsecase").css("position", "relative");
 	$('#danhSachUsecase').perfectScrollbar();
+	if ($("#usecaseFromDiagram").val() != "") {
+		showDetailUsecase($("#usecaseFromDiagram").val());
+	}
 });
 
 function checkChangeValue(){
@@ -22,8 +25,6 @@ function showDetailUsecase(usecaseid){
 		}
 	});
 }
-
-
 
 function searchUsecase(noidung, projectid) {
 	$("#danhSachUsecase").html("<div class='panel panel-info'><div class='panel-heading'><h3 class='panel-title'>Đang tải</h3></div></div>");

@@ -53,6 +53,7 @@ public class ActorDaoImpl implements ActorDao {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Integer> countActor(Integer projectid) {
 		List<Integer> count = new ArrayList<Integer>();
@@ -114,6 +115,7 @@ public class ActorDaoImpl implements ActorDao {
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Actor> getActorNameDefault(int projectID) {
 		String hql = "from Actor as a where a.nameofactor like 'Actor:%' and a.project.projectid = :projectID";
