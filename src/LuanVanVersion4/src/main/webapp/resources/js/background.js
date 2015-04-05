@@ -21,6 +21,7 @@ $(document).ready(function(){
 		$(this).text(formatDescription);
 		}
 	});
+	
 });
 
 // convert image to base64
@@ -41,8 +42,22 @@ function showMyModal(){
 	$('#myModal').modal('show');   
 }
 
-
-
+function checkSpecialCharacter(value){
+	var dem = 0;
+	var iChars = "!@#$%^&*()+=-[]\\\';,./{}|\":<>?";
+	for(var i = 0; i < value.length; i++){
+		console.log(value.charAt(i));
+		if(iChars.indexOf(value.charAt(i)) != -1){
+			$('#showCheckSpecialCharacter').text('Tên dự án chí chấp nhận chữ và số.');
+			$('#submitCreateProject').prop('disabled', true);
+			dem++;
+		}
+	}
+	if(dem == 0){
+		$('#showCheckSpecialCharacter').text('');
+		$('#submitCreateProject').prop('disabled', false);
+	}
+}
 
 
 

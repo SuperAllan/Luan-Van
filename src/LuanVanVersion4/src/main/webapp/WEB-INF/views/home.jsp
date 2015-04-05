@@ -34,6 +34,7 @@
 				Các loại tập tin có thể tải lên hoặc tải xuống: pdf, docx, xls, tập tin ảnh (svg) ...
 			</div>
 		</div>
+	<sec:authorize access="isAnonymous()">
 		<div class="form-register-home col-md-4">
 				<form action="/luanvan/dangky" method="POST" role="form" id="form-dang-ky">
 					<div class="form-group">
@@ -58,9 +59,9 @@
 						<div class="input-group">
 						  <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
 						  <input type="password" name="password" id="password" class="form-control input-lg"  placeholder="Mật khẩu" 
-						  	data-bv-notempty="true"
+						  		data-bv-notempty="true"
 		              			data-bv-notempty-message="Mật khẩu phải khác rỗng"
-						  	data-bv-stringlength="true"
+						  		data-bv-stringlength="true"
 		              			data-bv-stringlength-min="6"
 		              			data-bv-stringlength-max="30"
 		              			data-bv-stringlength-message="Mật khẩu phải ít nhất là 6 ký tự và nhiều nhất là 30 ký tự">
@@ -71,11 +72,11 @@
 						<div class="input-group">
 						  <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
 						  <input type="password" name="confirmPassword" id="confirmPassword" class="form-control input-lg"  placeholder="Nhập lại mật khẩu" 
-						  	data-bv-notempty="true"
-		              			data-bv-notempty-message="Mật khẩu phải khác rỗng"
-						  	data-bv-identical="true" 
-		            			data-bv-identical-field="password" 
-		            			data-bv-identical-message="Nhập lại mật khẩu chưa chính xác.">
+					  		data-bv-notempty="true"
+	              			data-bv-notempty-message="Mật khẩu phải khác rỗng"
+					  		data-bv-identical="true" 
+	            			data-bv-identical-field="password" 
+	            			data-bv-identical-message="Nhập lại mật khẩu chưa chính xác.">
 						</div>
 					</div>
 					
@@ -96,19 +97,20 @@
 						</div>
 					</div>
 		        <button type="submit" class="btn btn-info btn-lg btn-block"><i class="glyphicon glyphicon-hand-o-right"></i> Đăng kí ngay</button>
+		        <small class="text-danger"></small>
 		     </form>
 		     <span style="color: black;">Sau khi đăng ký thành công. Xin vào Email để kích hoạt tài khoản. 
-		     <c:if test="${not empty userInActive}">
-		      Nếu không nhận được Email 
-			     <form action="/luanvan/sendMailAgain" method="POST" role="form" id="form-send-mail-again">
-			     <input type="hidden" name="userInActiveForSendMail" value="${userInActive.username}">
-			     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-			   	 <a type="submit" onclick="formSubmit()">nhấn vào đây.</a>
-			   	 </form>
-		   	 </c:if>
-			   	 </span>
-			
+			     <c:if test="${not empty userInActive}">
+			      	 Nếu không nhận được Email 
+				     <form action="/luanvan/sendMailAgain" method="POST" role="form" id="form-send-mail-again">
+				     <input type="hidden" name="userInActiveForSendMail" value="${userInActive.username}">
+				     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				   	 <a type="submit" onclick="formSubmit()">nhấn vào đây.</a>
+				   	 </form>
+			   	 </c:if>
+			 </span>
 		</div>
+	</sec:authorize>
 		<div class="col-md-12">
 			<div class="header-in-content-home">Các tính năng</div>
 			<div class="col-md-12">

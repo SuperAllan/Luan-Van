@@ -63,7 +63,7 @@
 						        		<span>Xuất File PDF</span>
 					        		</a>
 					        	</div>
-					        	<div class="form-group" style="display: inline; margin-left: 100px;">
+					        	<div class="form-group" style="display: inline; margin-left: 100px;" id="downloadExcel">
 					        		<a href="${contextPath}/downloadExcel/project=${project.tenproject}">
 						        		<img alt="Xuất File .xls" style="width: 40px; height: 40px;" src="${contextPath}/resources/img/excel.png">
 						        		<span>Xuất File Excel</span>

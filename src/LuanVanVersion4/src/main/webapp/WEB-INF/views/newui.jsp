@@ -52,8 +52,8 @@
 						    <span class="caret"></span>
 						  </a>
 						  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-						    <li role="presentation"><a role="menuitem" tabindex="-1" href="/luanvan/background" style="color: #333;" ><i class="mdi-action-assignment-ind"></i> Thông tin chung</a></li>
-						    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:formSubmit()" style="color: #333;"><i class="mdi-action-settings-power"></i> Đăng xuất</a></li>
+						    <li role="presentation"><a role="menuitem" tabindex="-1" href="/luanvan/background" style="color: #333 !important;" ><i class="mdi-action-assignment-ind"></i> Thông tin chung</a></li>
+						    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:formSubmit()" style="color: #333 !important;"><i class="mdi-action-settings-power"></i> Đăng xuất</a></li>
 						  </ul>
 						</div>
 					</c:if>

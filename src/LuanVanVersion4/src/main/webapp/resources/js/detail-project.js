@@ -1,4 +1,22 @@
 $(document).ready(function(){
+	$('#downloadExcel').click(function(){
+		var href = $('#downloadExcel > a').attr('href');
+		if($('#luongNhaNuoc').val() < 1){
+			$('#downloadExcel > a').attr('href', "#");
+			var isConfirm  = confirm('Bạn chưa tính bảng lương. Vui lòng tính bảng lương trước.');
+			if(isConfirm == true){
+				removeClassActive();
+				$("#uocLuong").addClass("active");
+				$("#tabUocLuong").addClass("in active")
+				$("#bangLuong").addClass("active");
+				$("#tabBangLuong").addClass("in active");
+			}
+		}else{
+			$('#downloadExcel > a').attr('href', href);
+		}
+	});
+	
+	
 	$(".formatNameProject").each(function(){
 		if($(this).text().length > 70){
 		var formatTitle = $.trim($(this).text()).substring(0,70).split(" ").join(" ") + "...";
@@ -58,8 +76,7 @@ $(document).ready(function(){
 		$("#uocLuong").addClass("active");
 		$("#tabUocLuong").addClass("in active")
 		$("#bangLuong").addClass("active");
-		$("#tabBangLuong").addClass("in active")
-		
+		$("#tabBangLuong").addClass("in active");
 	}
 	
 	if ($("#updateGiaTriPhanMemSuccess").text() != "") {

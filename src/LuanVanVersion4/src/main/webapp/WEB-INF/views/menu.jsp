@@ -219,12 +219,12 @@
 				<c:if test="${pageContext.request.userPrincipal.name != null}">
 					<li class="dropdown">			  
 						<a type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="cursor: pointer; ">
-					    <c:if test="${not empty user.image}">
-					    	<img src="<c:url value="${user.image}" />" class="img-rounded" style="width: 20px; height: 20px;">
-					    </c:if>
-					    ${pageContext.request.userPrincipal.name}
-					    <span class="caret"></span>
-					  </a>
+						    <c:if test="${not empty user.image}">
+						    	<img src="<c:url value="${user.image}" />" class="img-rounded" style="width: 20px; height: 20px;">
+						    </c:if>
+						    <span id="userNameInMenu">${pageContext.request.userPrincipal.name}</span>
+						    <span class="caret"></span>
+					    </a>
 					  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 					  
 					    <li role="presentation"><a role="menuitem" tabindex="-1" href="/luanvan/background" ><i class="mdi-action-assignment-ind"></i> Thông tin chung</a></li>

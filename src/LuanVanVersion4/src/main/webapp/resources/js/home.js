@@ -5,3 +5,6 @@ $(document).ready(function() {
     	$('#confirmPassword').val("");
     });
 });
+function formSubmit(){
+	$('#form-send-mail-again').submit();
+ }

@@ -24,3 +24,25 @@
 #header-background a:hover {
 	opacity: 1 !important;
 }
+
+#anhdaidien {
+	height: 150px;
+	width: 150px;
+}
+
+.hoverImg {
+	z-index: 10;
+	color: white;
+	background: black;
+	opacity:0.05;
+	position: relative;
+	width: 150px;
+	height: 50px;
+	top: -50px;
+	line-height: 50px;
+	cursor: pointer;
+}
+
+.hoverImg:hover {
+	opacity: 0.8;
+}

@@ -5,7 +5,7 @@
 	<input type="hidden" name="projectNameForLuong" value="${project.tenproject}">
 	<div class="text-center" style="margin-top: 10px;  ">
 		<span>Chọn mức lương cơ bản:</span> 
-		<input type="number" class="form-control" value="${project.luongcoban}" min="0" step="50000" style="width: 150px; display: inline;" id="luongNhaNuoc" name="mucLuongNhaNuoc" required="required">
+		<input type="number" class="form-control" value="${project.luongcoban}" min="1" step="50000" style="width: 150px; display: inline;" id="luongNhaNuoc" name="mucLuongNhaNuoc" required="required">
 		<select class="form-control" id="selectLuongNhaNuoc" style="width: 150px; display: inline;">
 			<option>---</option>
 			<c:forEach items="${mucLuongNhaNuoc}" var="listMuc">
@@ -22,8 +22,7 @@
 				<td>Lương cơ bản</td>
 				<td>Lương tăng thêm</td>
 				<td>Lương phụ</td>
-				<td>PC 
-				Khu vực</td>
+				<td>PC Khu vực</td>
 				<td>PC Lưu động</td>
 				<td>CPKG</td>
 				<td>

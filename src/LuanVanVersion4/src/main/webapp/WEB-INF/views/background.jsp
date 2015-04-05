@@ -163,22 +163,24 @@
       </div>
       <div class="modal-body">
 			<div class="form-group">
-				<label class="index">Tên dự án</label>
-				<input type="text" class="form-control input-lg" placeholder="Tên dự án" name="projectName"  maxlength="200" autofocus="autofocus" required="required">
+				<label class="index">Tên dự án:</label>
+				<input type="text" class="form-control input-lg" onkeyup="checkSpecialCharacter(this.value)" placeholder="Tên dự án" name="projectName"  maxlength="200" autofocus="autofocus" required="required"
+					data-bv-notempty="true"
+		            data-bv-notempty-message="Tên dự án phải khác rỗng.">
+				<c:if test="${empty errorName}">
+					<span class="help-block text-info" style="color: #03a9f4 !important;">Hãy tạo tên dự án một cách ngắn gọn và dễ nhớ</span>
+				</c:if>
+				<small id="showCheckSpecialCharacter" style="color: #a94442;">${errorName}</small>
 			</div>
-			<c:if test="${empty errorName}">
-				<p>Hãy tạo tên dự án một cách ngắn gọn và dễ nhớ</p>
-			</c:if>
-				<span class="text-danger">${errorName}</span>
 			<div class="form-group">
-				<label class="index">Mô tả dự án (Tùy chọn)</label>
-				<textarea class="form-control" placeholder="Mô tả dự án" name="description" rows="3"></textarea>
-				<p>Hãy giới thiệu hoặc mô tả ngắn gọn mục tiêu 	mà dự án bạn hướng tới. Bạn có thể để trống mục này.</p>
+				<label class="index">Mô tả dự án (Tùy chọn):</label>
+				<textarea class="form-control" placeholder="Mô tả dự án" name="description" rows="3" style="resize: vertical"></textarea>
+				<span class="help-block text-info">Hãy giới thiệu hoặc mô tả ngắn gọn mục tiêu mà dự án bạn hướng tới. Bạn có thể để trống mục này.</span>
 			</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-        <button type="submit" class="btn btn-primary">Đồng ý</button>
+        <button type="submit" id="submitCreateProject" class="btn btn-primary">Đồng ý</button>
       </div>
     </div>
   </div>
