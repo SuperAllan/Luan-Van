@@ -51,6 +51,11 @@ function setIconSave(value) {
 }
 // End set icon save
 
+$("#a-new-diagram").on('click', function() {
+	$("#input-new-diagram").val("");
+	$("#modal-new-diagram").modal('show');
+});
+
 // Begin create new diagram
 $("#btn-new-diagram").on('click', function() {
 	$.ajax({
@@ -744,19 +749,21 @@ paper.on('blank:pointerclick', function() {
 });
 
 paper.on('blank:pointerdown', function(cellView, x, y) {
-	hideAllTool();
-	elementDown = null;
-	listSelectViewDiagram = [];
-	hasBlankPointerDownDiagram = true;
-	selectViewDiagram = new joint.shapes.basic.Rect({
-		type: 'selectViewDiagram',
-		position: { x: x, y: y },
-		size: { width: 1, height: 1 },
-		attrs:{
-			rect: { 'stroke' : '#333333', 'stroke-width': 1, 'stroke-dasharray': 5, fill: 'none'}
-		}
-	});
-	graph.addCell(selectViewDiagram);
+	if (!hasDrawing) {
+		hideAllTool();
+		elementDown = null;
+		listSelectViewDiagram = [];
+		hasBlankPointerDownDiagram = true;
+		selectViewDiagram = new joint.shapes.basic.Rect({
+			type: 'selectViewDiagram',
+			position: { x: x, y: y },
+			size: { width: 1, height: 1 },
+			attrs:{
+				rect: { 'stroke' : '#333333', 'stroke-width': 1, 'stroke-dasharray': 5, fill: 'none'}
+			}
+		});
+		graph.addCell(selectViewDiagram);
+	}
 });
 
 // Khi mot doi tuong tren paper dang duoc chon
@@ -938,12 +945,12 @@ $("#paper").on('mouseup', function(e) {
 	if (link) {
 		link.remove();
 		if (link.attributes.type == "uml.Association") {
-			if (viewTarget[0].model.attributes.type == "uml.Actor") {
-				var usecase = graph.getCell(link.attributes.source.id);
+			var object = graph.getCell(link.attributes.source.id);
+			if (viewTarget[0].model.attributes.type == "uml.Actor" && object.attributes.type == "uml.Usecase") {
 				$.ajax({
 					type: "post",
 					url: '/luanvan/diagram/setroleactor',
-					data: "idActor=" + viewTarget[0].model.attributes.created + "&idUsecase=" + usecase.attributes.created,
+					data: "idActor=" + viewTarget[0].model.attributes.created + "&idUsecase=" + object.attributes.created,
 					success: function(result) {
 						setPathDiagram();
 					},
@@ -953,12 +960,11 @@ $("#paper").on('mouseup', function(e) {
 				});
 				//getRelationshipActor(viewTarget[0].model);
 				//getRelationshipUsecase(graph.getCell(link.attributes.source.id));
-			} else {
-				var actor = graph.getCell(link.attributes.source.id);
+			} else if (viewTarget[0].model.attributes.type == "uml.Usecase" && object.attributes.type == "uml.Actor") {
 				$.ajax({
 					type: "post",
 					url: '/luanvan/diagram/setroleactor',
-					data: "idUsecase=" + viewTarget[0].model.attributes.created + "&idActor=" + actor.attributes.created,
+					data: "idUsecase=" + viewTarget[0].model.attributes.created + "&idActor=" + object.attributes.created,
 					success: function(result) {
 						setPathDiagram();
 					},
@@ -1104,6 +1110,10 @@ function toggleElementLinkView(value) {
     $(".connection-wrap").css('display', value);
 }
 
+$("#a-export-svg").on('click', function() {
+	$("#nameFileSVG").val("");
+	$("#modal-exportSVG").modal('show');
+});
 $("#exportSVG").on('click', function() {
 
 	// Khong hien thi cac view khong can thiet khi xuat hinh

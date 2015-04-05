@@ -56,16 +56,16 @@ var lineV2 = new joint.shapes.basic.Rect({
 //	}
 //	// End loading diagram
 //});
-$(document).ready(function(){
-	$(document).ready(function(){
-		$(".formatNameProject").each(function(){
-			if($(this).text().length > 70){
-			var formatTitle = $.trim($(this).text()).substring(0,70).split(" ").join(" ") + "...";
-			$(this).text(formatTitle);
-			}
-		});
-	});
-});
+//$(document).ready(function(){
+//	$(document).ready(function(){
+//		$(".formatNameProject").each(function(){
+//			if($(this).text().length > 70){
+//			var formatTitle = $.trim($(this).text()).substring(0,70).split(" ").join(" ") + "...";
+//			$(this).text(formatTitle);
+//			}
+//		});
+//	});
+//});
 paperUI.on('cell:pointerdblclick', function(cellView, x, y) {
 	enableInput(cellView);
 });
@@ -775,6 +775,7 @@ $("#viewListUI").on("click", function() {
 });
 
 $("#btn-svgUI").on('click', function() {
+	$("#input-rename-ui").val("");
 	$("#modal-exportSVGUI").modal('show');
 });
 
