@@ -5,12 +5,15 @@
 
 <style>
  .scroll { position:relative; height: 400px; overflow: hidden; width: 100%;}
+ .tableChuyenDoi tbody tr td{
+ 	border: none;
+ }
 </style>
 <h3 style="text-align: center;">BẢNG CHUYỂN ĐỔI YÊU CẦU CHỨC NĂNG SANG TRƯỜNG HỢP SỬ DỤNG (USE-CASE)</h3>
 <form action="/luanvan/updateChuyenDoiUsecase" role="form"  method="GET">
 	<input type="hidden" name="tenProject" value="${project.tenproject}">
 	<div class="scrollBar" style="height: 400px; overflow: hidden; position: relative; width: 100%;">
-		<table class="table table=hover">
+		<table class="table table-hover tableChuyenDoi">
 			<thead>
 				<tr>
 					<th></th>
@@ -24,18 +27,21 @@
 			
 			<c:forEach items="${listNhomUC}" var="listData">
 				<tbody>
-					 <tr class="well-material-green-100">
+					 <tr>
 					 	<td colspan="6">
 					 		<input type="hidden" name="listNhomUCId" value="${listData.nhomucid}" required="required">
-					 		<input type="text" name="listNhomUCName" class="form-control well-material-green-100 nhomUCName" onblur="checkNhomUCName(this)" value="${listData.tennhom}" required="required">
+					 		<input type="text" name="listNhomUCName" class="form-control-bs nhomUCName" onblur="checkNhomUCName(this)" value="${listData.tennhom}" required="required">
 					 	</td>
 					 </tr>
 					 	<c:forEach items="${listData.usecases}" var="listData2">
 						 <tr>
-						 	<td>
-						 		<input type="hidden" name="listUCId" value="${listData2.usecaseid}">
+						 	<td class="countSTTForChuyenDoi text-center">
+						 		
 						 	</td>
-						 	<td><textarea name="listUCName" rows="1" class="form-control" required >${listData2.nameofuc}</textarea></td>
+						 	<td>
+							 	<input type="hidden" name="listUCId" value="${listData2.usecaseid}">
+							 	<textarea name="listUCName" style="resize: vertical;" onkeyup="textAreaAdjust(this)" rows="1" class="form-control" required >${listData2.nameofuc}</textarea>
+							</td>
 						 	<td>
 								<c:forEach items="${listData2.phanloais}" var="listData3">
 									<c:if test="${listData3.vaitro == 1}">

@@ -8,10 +8,11 @@
 	</c:if>
 	<c:forEach items="${resultNhomUC}" var="list">
 	  <div class="panel-heading">
-	    <h3 class="panel-title">${list.tennhom} <span class="pull-right badge">${fn:length(list.usecases)}</span></h3>
+	    <h3 class="panel-title">${list.tennhom} </h3>
+	    <span class="pull-right badge">${fn:length(list.usecases)}</span>
 	  </div> 
 	   <c:forEach items="${list.usecases}" var="list2">
-				  	<a class="list-group-item" onclick="showDetailUsecase(${list2.usecaseid})">
+				  	<a class="list-group-item" onclick="showDetailUsecase(${list2.usecaseid})" >
 				  		<div class="text-danger">${list2.nameofuc}</div>
 				  	</a>
 		</c:forEach>

@@ -9,11 +9,6 @@
 <head>
 <title>Chi tiết dự án</title>
 <link href="<c:url value="/resources/css/detail-project.css" />" rel="stylesheet">
-<link href="<c:url value="/resources/css/joint.nojquery.min.css" />" rel="stylesheet">
-<link href="<c:url value="/resources/css/diagram.css" />" rel="stylesheet">
-<link href="<c:url value="/resources/css/jointshapesumlcustom.css" />" rel="stylesheet">
-<link href="<c:url value="/resources/css/diagramui.css" />" rel="stylesheet">
-<link href="<c:url value="/resources/css/joint.shapes.ui.custom.css" />" rel="stylesheet">
 </head>
 <body>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
@@ -99,15 +94,6 @@
 <!-- Insert footer.jsp -->
 <%@ include file="/WEB-INF/views/footer.jsp" %> 
 
-<script src="<c:url value="/resources/js/joint.nojquery.min.js" />" ></script>
-<script src="<c:url value="/resources/js/diagram.js" />" ></script>
-<script src="<c:url value="/resources/js/xml2json.js" />" ></script>
-<script src="<c:url value="/resources/js/jointshapesumlcustom.js"/>"></script>
 <script src="<c:url value="/resources/js/detail-project.js" />"></script>
-<script src="<c:url value="/resources/js/diagramui.js" />"></script>
-<script src="<c:url value="/resources/js/joint.shapes.ui.custom.js" />"></script>
-
-
 </body>
-
 </html>

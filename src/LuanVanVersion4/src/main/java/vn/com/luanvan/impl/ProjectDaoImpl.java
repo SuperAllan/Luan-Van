@@ -78,5 +78,10 @@ public class ProjectDaoImpl implements ProjectDao{
 	public void delete(Project project) {
 		sessionFactory.getCurrentSession().delete(project);
 	}
+
+	@Transactional
+	public Project findProjectByID(int projectID) {
+		return (Project) sessionFactory.getCurrentSession().get(Project.class, projectID);
+	}
 	
 }

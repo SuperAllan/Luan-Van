@@ -20,7 +20,7 @@
 		<tbody>
 		<c:forEach items="${bmts}" var="list" varStatus="status">
 			<c:if test="${status.index == 0}">
-				<tr class="text-warning">
+				<tr class="text-warning text-center">
 					<td>1</td>
 					<td style="font-weight: bold;">B</td>
 					<td></td>
@@ -30,7 +30,7 @@
 				</tr>
 			</c:if>
 			<c:if test="${status.index == 3}">
-				<tr class="text-info">
+				<tr class="text-info text-center">
 					<td>2</td>
 					<td style="font-weight: bold;">M</td>
 					<td></td>
@@ -40,7 +40,7 @@
 				</tr>
 			</c:if>
 			<c:if test="${status.index == 6}">
-				<tr class="text-success">
+				<tr class="text-success text-center">
 					<td>3</td>
 					<td style="font-weight: bold;">T</td>
 					<td></td>

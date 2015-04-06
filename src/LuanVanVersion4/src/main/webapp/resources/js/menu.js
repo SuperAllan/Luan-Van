@@ -11,3 +11,9 @@ $(document).ready(function(){
 function formSubmitMenu() {
 	document.getElementById("logoutFormMenu").submit();
 }
+
+//Xu ly enter trong textarea
+function textAreaAdjust(o) {
+    o.style.height = "1px";
+    o.style.height = o.scrollHeight + "px";
+}

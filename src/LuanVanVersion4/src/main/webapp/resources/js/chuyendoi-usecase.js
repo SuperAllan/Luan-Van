@@ -1,4 +1,6 @@
-
+$(document).ready(function(){
+	STTForChuyenDoi();
+});
 function checkNhomUCName(bienThis){
 	var dem = 0;
 	var value = $(bienThis).val();
@@ -12,3 +14,12 @@ function checkNhomUCName(bienThis){
 		 }
 	 }); 
 }
+
+function STTForChuyenDoi(){
+	var count = 0;
+	$('.countSTTForChuyenDoi').each(function(){
+		count++;
+		$(this).text(count);
+	});
+}
+

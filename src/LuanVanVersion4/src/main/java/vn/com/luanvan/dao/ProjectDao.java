@@ -19,4 +19,6 @@ public interface ProjectDao{
 	List<Project> getListProject(String username,int status);
 	
 	Project findProjectByName(String username, String projectName);
+	
+	Project findProjectByID (int projectID);
 }

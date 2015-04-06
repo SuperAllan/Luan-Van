@@ -10,6 +10,9 @@
 .nav-tabs>li>a, .nav-tabs>li>a:hover, .nav-tabs>li>a:focus{
 	opacity: 0.7;
 }
+#listChucNang tr td {
+	border: none;
+}
 </style>
 <h3 style="text-align: center;">BẢNG SẮP XẾP THỨ TỰ ƯU TIÊN CÁC YÊU CẦU 
 CHỨC NĂNG CỦA PHẦN MỀM</h3>
@@ -25,7 +28,7 @@ CHỨC NĂNG CỦA PHẦN MỀM</h3>
 					<th>Phân loại</th>
 					<th>Mức độ</th>
 					<th>Ghi chú</th>
-					<th><a class="btn btn-link btn-block" onclick="themNhom(); checkData()"><i class="glyphicon glyphicon-plus" title="Thêm nhóm"></i></a>
+					<th><a class="btn btn-link btn-block text-success" style="padding: 0px; margin: 0px;" onclick="themNhom(); checkData()"><i class="glyphicon glyphicon-plus-sign" title="Thêm nhóm"></i> Thêm nhóm</a>
 					</th>
 				</tr>
 			</thead>
@@ -51,18 +54,20 @@ CHỨC NĂNG CỦA PHẦN MỀM</h3>
 			
 			<c:forEach items="${listNhomChucNangFromData}" var="listData">
 				<tbody>
-					 <tr class="well-material-green-100">
+					 <tr>
 					 	<td colspan="5">
-					 		<input type="text" name="nhomChucNang" class="form-control nhomChucNang well-material-green-100" required value="${listData.tennhom}" onblur="checkNameNhomChucNang(this)">
+					 		<input type="text" name="nhomChucNang" class="form-control-bs nhomChucNang" style="width: 710px;" required value="${listData.tennhom}" onblur="checkNameNhomChucNang(this)" placeholder="Nhập tên nhóm">
 					 		<input type="hidden" name="soLuongChucNang"  class="countNhomChucNangFromData">
 					 	</td>
-					 	<td><a class="btn btn-link btn-block loadFromData " title="Thêm chức năng"><i class="mdi-content-add"></i></a></td>
-					 	<td><a class="btn btn-link btn-block xoaNhomFromData " title='Xóa nhóm'><i class="mdi-content-clear"></i></a></td>
+					 	<td>
+						 	<a class="btn btn-link btn-block loadFromData text-success" title="Thêm chức năng" style="display: inline; padding-right: 5px;"><small><i class="glyphicon glyphicon-plus"></i> Thêm chức năng</small></a>
+						 	<a class="btn btn-link btn-block xoaNhomFromData text-danger" title='Xóa nhóm' style="display: inline; padding-left: 0px;"><small ><i class="glyphicon glyphicon-remove"></i> Xóa nhóm</small></a>
+					 	</td>
 					 </tr>
 					 	<c:forEach items="${listData.chucnangs}" var="listData2">
 						 <tr>
 						 	<td class="countSTT"></td>
-						 	<td><textarea name="listChucNang" rows="1" class="form-control chucNang" required onblur="checkNameChucNang(this)">${listData2.motayeucau}</textarea></td>
+						 	<td><textarea name="listChucNang" rows="1" class="form-control chucNang" style="resize: vertical;" required onkeyup="textAreaAdjust(this)" onblur="checkNameChucNang(this)">${listData2.motayeucau}</textarea></td>
 						 	<td>
 								<select class="form-control" name="listPhanLoai">
 									<c:forEach var="list" items="${listPhanLoai}">
@@ -94,7 +99,7 @@ CHỨC NĂNG CỦA PHẦN MỀM</h3>
 						 	<td>
 						 		<textarea class="form-control listGhiChu" rows="1" name="listGhiChu" placeholder="Ghi chú">${listData2.ghichu }</textarea>
 						 	</td>
-						 	<td><a class='btn btn-link btn-block removeFunctionFromData '  title='Xóa chức năng'>x</a></td>
+						 	<td><a class='btn btn-link btn-block removeFunctionFromData text-danger'  title='Xóa chức năng'><small><i class="glyphicon glyphicon-remove"></i> Xóa chức năng</small></a></td>
 						 </tr>
 						 </c:forEach>
 				</tbody>

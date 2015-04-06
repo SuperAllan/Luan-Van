@@ -30,49 +30,49 @@
 			<td class="text-center">1</td>
 			<td>Điểm actor (TAW)</td>
 			<td></td>
-			<td>${tongDiemActor}</td>
+			<td class="text-right">${tongDiemActor}</td>
 			<td></td>
 		</tr>
 		<tr>
 			<td class="text-center">2</td>
 			<td>Điểm Use-cases (TBF)</td>
 			<td></td>
-			<td>${tongDiemTungUsecase}</td>
+			<td class="text-right">${tongDiemTungUsecase}</td>
 			<td></td>
 		</tr>
 		<tr>
 			<td class="text-center">3</td>
 			<td>Tính điểm UUCP</td>
 			<td class="text-center text-bold">UUCP=TAW + TBF</td>
-			<td>${tongDiemActor + tongDiemTungUsecase}</td>
+			<td class="text-right">${tongDiemActor + tongDiemTungUsecase}</td>
 			<td>Giá trị điểm trường hợp sử dụng trước khi hiệu chỉnh</td>
 		</tr>
 		<tr>
 			<td class="text-center">4</td>
 			<td>Hệ số phức tạp về KT-CN (TCF)</td>
 			<td class="text-center text-bold">TCF=0.6+(0.01*TFW)</td>
-			<td>${(tongKetQuaFromKyThuat * 0.01) + 0.6} </td>
+			<td class="text-right">${(tongKetQuaFromKyThuat * 0.01) + 0.6} </td>
 			<td>0.6, 0.01: Trọng số đo chuẩn</td>
 		</tr>
 		<tr>
 			<td class="text-center">5</td>
 			<td>Hệ số phức tạp về môi trường (EF)</td>
 			<td class="text-center text-bold">EF=1.4+(-0.03*EFW)</td>
-			<td>${1.4 + (-0.03 * tongKetQuaFromMoiTruong)}</td>
+			<td class="text-right">${1.4 + (-0.03 * tongKetQuaFromMoiTruong)}</td>
 			<td>1.4, 0.03: Trọng số đo chuẩn</td>
 		</tr>
 		<tr>
 			<td class="text-center">6</td>
 			<td>Tính điểm AUCP</td>
 			<td class="text-center text-bold">AUCP = UUCP*TCF*EF</td>
-			<td id="AUCP">${((tongDiemActor + tongDiemTungUsecase) * ((tongKetQuaFromKyThuat * 0.01) + 0.6) * (1.4 + (-0.03 * tongKetQuaFromMoiTruong)))} </td>
+			<td id="AUCP" class="text-right">${((tongDiemActor + tongDiemTungUsecase) * ((tongKetQuaFromKyThuat * 0.01) + 0.6) * (1.4 + (-0.03 * tongKetQuaFromMoiTruong)))} </td>
 			<td>Giá trị điểm trường hợp sử dụng sau khi hiệu chỉnh</td>
 		</tr>
 		<tr>
 			<td class="text-center text-bold">II</td>
 			<td class="text-bold">Nội suy thời gian lao động (P)</td>
 			<td class="text-center text-bold">P=người/giờ/AUCP</td>
-			<td id="noiSuyP">${tinhNoiSuy}</td>
+			<td id="noiSuyP" class="text-right">${tinhNoiSuy}</td>
 			<td></td>
 		</tr>
 		<tr>
@@ -92,21 +92,21 @@
 													</c:forEach>
 												</select> *AUCP
 			</td>
-			<td id="noLucE"></td>
+			<td id="noLucE" class="text-right"></td>
 			<td></td>
 		</tr>
 		<tr>
 			<td class="text-center text-bold">IV</td>
 			<td class="text-bold">Mức lương lao động bình quân (H)</td>
 			<td class="text-center text-bold">H=người/giờ</td>
-			<td id="chooseLuongFromBangLuong" class="formatKetQua"></td>
+			<td id="chooseLuongFromBangLuong" class="formatKetQua text-right"></td>
 			<td></td>
 		</tr>
 		<tr>
 			<td class="text-center text-bold">V</td>
 			<td class="text-bold">Định giá phần mềm nội bộ (G)</td>
 			<td class="text-center text-bold">G=1.4*E*P*H</td>
-			<td id="dinhGiaG" class="formatKetQua"></td>
+			<td id="dinhGiaG" class="formatKetQua text-right"></td>
 			<td></td>
 		</tr>
 		</tbody>

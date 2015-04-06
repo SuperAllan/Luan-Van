@@ -39,8 +39,6 @@ $(document).ready(function() {
 //   	});
 });  
 
-
-
 function checkNameNhomChucNang(bienThis){
 	var dem = 0;
 	var value = $(bienThis).val();
@@ -75,8 +73,13 @@ function themNhom(){
 	if(count > number){
 		number = count + 1;
 	}
-	var nhom = "<tbody id='Nhom"+number+"'><tr class='well-material-green-100'><td colspan='5'><input name='nhomChucNang' type='text' class='form-control nhomChucNang well-material-green-100' onblur='checkNameNhomChucNang(this)' required='required' placeholder='Nhập tên nhóm' data-bv-notempty='true' data-bv-notempty-message='Tên nhóm khác rỗng' >"+
-	"<input type='hidden' name='soLuongChucNang'  id='soLuongNhom"+number+"'></td><td><a class='btn btn-link btn-block' onclick='themChucNang(\"Nhom"+number+"\")' title='Thêm chức năng'>+</a></td><td><a class='btn btn-link btn-block' onclick='xoaNhom(\"Nhom"+number+"\")' title='Xóa nhóm'>x</a></td></tr></tbody>";
+	var nhom = "<tbody id='Nhom"+number+"'><tr>" +
+			"<td colspan='5'><input name='nhomChucNang' type='text' style='width: 710px;' class='form-control-bs nhomChucNang' onblur='checkNameNhomChucNang(this)' required='required' placeholder='Nhập tên nhóm'>"+
+			"<input type='hidden' name='soLuongChucNang'  id='soLuongNhom"+number+"'></td>" +
+			"<td>" +
+				"<a class='btn btn-link btn-block text-success' onclick='themChucNang(\"Nhom"+number+"\")' title='Thêm chức năng' style='display: inline; padding-right: 5px;'><small><i class='glyphicon glyphicon-plus'></i> Thêm chức năng</small></a>" +
+				"<a class='btn btn-link btn-block text-danger' onclick='xoaNhom(\"Nhom"+number+"\")' title='Xóa nhóm' style='display: inline; padding-left: 0px;'><small ><i class='glyphicon glyphicon-remove'></i> Xóa nhóm</small></a>" +
+			"</td></tr></tbody>";
 	
 	listChucNang.prepend(nhom);
 	$("#soLuongNhom"+number).val(0);
@@ -96,11 +99,9 @@ function xoaNhom(id){
 function themChucNang(id) {
 	var tr = "<tr>"+
 			"<td class='countSTT'></td>"+
-			"<td><textarea name='listChucNang' rows='1' class='form-control chucNang' onblur='checkNameChucNang(this)' required='required' placeholder='Mô tả chức năng' data-bv-notempty='true' data-bv-notempty-message='Mô tả khác rỗng'></textarea></td>"+
+			"<td><textarea name='listChucNang' rows='1' style='resize: vertical;' class='form-control chucNang' onkeyup='textAreaAdjust(this)'  onblur='checkNameChucNang(this)' required='required' placeholder='Mô tả chức năng' data-bv-notempty='true' data-bv-notempty-message='Mô tả khác rỗng'></textarea></td>"+
 			"<td>"+
-				
 				"<select class='form-control' name='listPhanLoai'>";
-	
 				$("#selectPhanLoai > option").each(function() {
 				tr += "<option value="+this.value+">"+this.text+"</option>";
 				});
@@ -116,7 +117,7 @@ function themChucNang(id) {
 			"<td>"+
 				"<textarea class='form-control listGhiChu' rows='1' name='listGhiChu' placeholder='Ghi chú'></textarea>"+
 			"</td>"+
-			"<td><a class='btn btn-link btn-block removeFunction' onclick='xoaChucNang(\""+id+"\",this)' title='Xóa chức năng'>x</a></td>"+
+			"<td><a class='btn btn-link btn-block removeFunction text-danger' onclick='xoaChucNang(\""+id+"\",this)' title='Xóa chức năng'><small><i class='glyphicon glyphicon-remove'></i> Xóa chức năng</small></a></td>"+
 		"</tr>";
 	//$("#"+id).after(tr);
 	if($("#"+id).children('tr').length > 1){

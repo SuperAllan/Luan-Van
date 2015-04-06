@@ -174,7 +174,7 @@
 			</div>
 			<div class="form-group">
 				<label class="index">Mô tả dự án (Tùy chọn):</label>
-				<textarea class="form-control" placeholder="Mô tả dự án" name="description" rows="3" style="resize: vertical"></textarea>
+				<textarea class="form-control" placeholder="Mô tả dự án" name="description" rows="3" style="resize: vertical;"></textarea>
 				<span class="help-block text-info">Hãy giới thiệu hoặc mô tả ngắn gọn mục tiêu mà dự án bạn hướng tới. Bạn có thể để trống mục này.</span>
 			</div>
       </div>

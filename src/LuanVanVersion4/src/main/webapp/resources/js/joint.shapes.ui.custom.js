@@ -50,7 +50,7 @@ joint.shapes.ui.ButtonView = joint.dia.ElementView.extend({
         this.$box.find('input').on('focusout', _.bind(function(evt) {
             this.model.attr('text/fill-opacity', 1);
         }, this));
-        this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
+        this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
         // Update the box position whenever the underlying model changes.
         this.model.on('change', this.updateButtonView, this);
         // Remove the box when the model gets removed from the graph.
@@ -115,7 +115,7 @@ joint.shapes.ui.DivView = joint.dia.ElementView.extend({
         });
 
         this.$box = $(_.template(this.template)());
-        this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
+        this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
         
         // Update the box position whenever the underlying model changes.
         this.model.on('change', this.updateDivView, this);
@@ -199,7 +199,7 @@ joint.shapes.ui.TextBoxView = joint.dia.ElementView.extend({
             this.model.attr('text/fill-opacity', 1);
             $(evt.target).val("");
         }, this));
-        this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
+        this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
         // Update the box position whenever the underlying model changes.
         this.model.on('change', this.updateTextBoxView, this);
         // Remove the box when the model gets removed from the graph.
@@ -282,7 +282,7 @@ joint.shapes.ui.TextAreaView = joint.dia.ElementView.extend({
             this.model.attr('text/fill-opacity', 1);
             $(evt.target).val("");
         }, this));
-        this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
+        this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
         // Update the box position whenever the underlying model changes.
         this.model.on('change', this.updateTextAreaView, this);
         // Remove the box when the model gets removed from the graph.
@@ -360,7 +360,7 @@ joint.shapes.ui.LabelView = joint.dia.ElementView.extend({
         this.$box.find('input').on('focusout', _.bind(function(evt) {
             this.model.attr('text/fill-opacity', 1);
         }, this));
-        this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
+        this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
         // Update the box position whenever the underlying model changes.
         this.model.on('change', this.updateLabelView, this);
         // Remove the box when the model gets removed from the graph.
@@ -441,7 +441,7 @@ joint.shapes.ui.RadioCheckedView = joint.dia.ElementView.extend({
         this.$box.find('input').on('focusout', _.bind(function(evt) {
             this.model.attr('text/fill-opacity', 1);
         }, this));
-        this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
+        this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
         // Update the box position whenever the underlying model changes.
         this.model.on('change', this.updateRadioCheckedView, this);
         // Remove the box when the model gets removed from the graph.
@@ -520,7 +520,7 @@ joint.shapes.ui.RadioView = joint.dia.ElementView.extend({
         this.$box.find('input').on('focusout', _.bind(function(evt) {
             this.model.attr('text/fill-opacity', 1);
         }, this));
-        this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
+        this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
         // Update the box position whenever the underlying model changes.
         this.model.on('change', this.updateRadioView, this);
         // Remove the box when the model gets removed from the graph.
@@ -602,7 +602,7 @@ joint.shapes.ui.CheckboxCheckedView = joint.dia.ElementView.extend({
             this.model.attr('.name/fill-opacity', 1);
             $(evt.target).val("");
         }, this));
-        this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
+        this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
         // Update the box position whenever the underlying model changes.
         this.model.on('change', this.updateCheckboxCheckedView, this);
         // Remove the box when the model gets removed from the graph.
@@ -681,7 +681,7 @@ joint.shapes.ui.CheckboxView = joint.dia.ElementView.extend({
         this.$box.find('input').on('focusout', _.bind(function(evt) {
             this.model.attr('text/fill-opacity', 1);
         }, this));
-        this.$box.find('.delete').on('click', _.bind(this.model.remove, this.model));
+        this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
         // Update the box position whenever the underlying model changes.
         this.model.on('change', this.updateCheckboxView, this);
         // Remove the box when the model gets removed from the graph.
