@@ -223,10 +223,9 @@ public class ProjectController {
 	 * @param principal		
 	 * @param redirectAttributes	Truyền các biến (errorNameThietLap, updateTrangThaiSuccess) cho trang redirect tới.
 	 * @return						redirect tới trang detailProject
-	 * @throws UnsupportedEncodingException 
 	 */
 	@RequestMapping(value = "/updateProject", method = RequestMethod.GET)
-	public String  updateProject(Project project, Principal principal, RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
+	public String  updateProject(Project project, Principal principal, RedirectAttributes redirectAttributes){
 		String projectName = request.getParameter("tenProject");
 		String projectNameOld = request.getParameter("tenProjectOld");
 		String description = request.getParameter("motaProject");

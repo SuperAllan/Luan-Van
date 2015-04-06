@@ -1,5 +1,6 @@
 package vn.com.luanvan.form;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +38,7 @@ import vn.com.luanvan.model.Xephangmoitruong;
 
 public class ExcelBuilder extends AbstractExcelView{
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void buildExcelDocument(Map<String, Object> model,
 			HSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response)
@@ -45,7 +47,8 @@ public class ExcelBuilder extends AbstractExcelView{
 		@SuppressWarnings("unchecked")
 		List<DocumentExcel> lists = (List<DocumentExcel>) model.get("listSheep");
 		String fileName = lists.get(0).getNameOfProject();
-		response.setHeader("Content-Disposition", "inline; filename="+fileName+".xls");
+		response.setCharacterEncoding("UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename="+URLEncoder.encode(fileName, "UTF-8")+".xls");
 		// create a new Excel sheet
         // create style for header cells
         	createPhuLucI(lists.get(0), workbook);

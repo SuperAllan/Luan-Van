@@ -39,9 +39,11 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -98,9 +100,10 @@ public class DocumentController{
 	 * @param principal		
 	 * @return				Trả về trang pdfView với biến lists.
 	 */
-	@RequestMapping(value="/downloadPDF/project={projectName}", method = RequestMethod.GET)
+	@RequestMapping(value="/downloadPDF", method = RequestMethod.GET)
 	@ResponseStatus(value=HttpStatus.OK)
-	public ModelAndView downloadPFD(@PathVariable("projectName")String projectName, HttpServletRequest request, HttpServletResponse response, Principal principal){
+	public ModelAndView downloadPFD(HttpServletRequest request, HttpServletResponse response, Principal principal){
+		String projectName = request.getParameter("project");
 		Project project = projectDao.findProjectByName(principal.getName(), projectName); 
 		List<Object> lists = new ArrayList<Object>();
 		lists.add(project);
@@ -127,10 +130,8 @@ public class DocumentController{
 	 * @param principal
 	 * @return							Trả về trang excelView với biến listSheep
 	 */
-	@RequestMapping(value="/downloadExcel/project={projectName}", method = RequestMethod.GET)
-	@ResponseStatus(value=HttpStatus.OK)
-	public ModelAndView downloadExcel(@PathVariable("projectName")String projectName,HttpServletRequest request, HttpServletResponse response, Principal principal){
-	
+	@RequestMapping(value="/downloadExcel", method = RequestMethod.GET, produces="text/plain; charset=utf-8")
+	public ModelAndView downloadExcel(@RequestParam("project") String projectName, HttpServletRequest request, HttpServletResponse response, Principal principal){
 		Project project = projectDao.findProjectByName(principal.getName(), projectName);
 		int projectid = project.getProjectid();
 		int mucLuongNhaNuoc = project.getLuongcoban();

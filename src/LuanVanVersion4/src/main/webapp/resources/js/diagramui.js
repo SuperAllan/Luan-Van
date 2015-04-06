@@ -43,7 +43,7 @@ var lineV2 = new joint.shapes.basic.Rect({
 	attrs: { rect: { fill: '#d43f3a', stroke: 'none'} }
 });
 
-//$(document).ready(function() {
+$(document).ready(function() {
 //	divProperties(true, "#aaaaaa");
 //	// Begin loading diagram
 //	if ($("#path").html() && $("#path").html() != "") {
@@ -65,7 +65,8 @@ var lineV2 = new joint.shapes.basic.Rect({
 //			}
 //		});
 //	});
-//});
+	$('#body-assignUI').perfectScrollbar();
+});
 paperUI.on('cell:pointerdblclick', function(cellView, x, y) {
 	enableInput(cellView);
 });

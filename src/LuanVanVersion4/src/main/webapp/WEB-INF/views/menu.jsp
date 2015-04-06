@@ -254,8 +254,3 @@
 		</div>
 	</div>
 </div>
-<script>
-	function formSubmitMenu() {
-		document.getElementById("logoutFormMenu").submit();
-	}
-</script>

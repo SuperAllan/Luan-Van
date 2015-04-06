@@ -7,3 +7,7 @@ $(document).ready(function(){
 		window.location.href = "/luanvan";
 	});
 });
+
+function formSubmitMenu() {
+	document.getElementById("logoutFormMenu").submit();
+}

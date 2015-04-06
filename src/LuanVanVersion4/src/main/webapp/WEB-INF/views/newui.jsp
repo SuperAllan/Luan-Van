@@ -16,7 +16,7 @@
 <link href="<c:url value="/resources/css/diagram.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/jointshapesumlcustom.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/diagramui.css" />" rel="stylesheet">
-<link href="<c:url value="/resources/css/joint.shapes.ui.custom.css" />" rel="stylesheet"> 
+<link href="<c:url value="/resources/css/joint.shapes.ui.custom.css" />" rel="stylesheet">
 </head>
 <body>
 <input type="hidden" id="nameProject" value="${project.tenproject}" />
@@ -235,14 +235,6 @@
 			</div>
 			<div class="modal-body" >
 				<div class="row" id="body-assignUI" style="padding-left: 20px;">
-					<c:forEach items="${nhomUC}" var="list">
-						<div class="form-group">${list.tennhom}</div>
-							<c:forEach items="${list.usecases}" var="list2">
-								<div class="form-group">
-									<label><input type="checkbox" class="checkbox-assignUI" value="${list2.usecaseid}" /> ${list2.nameofuc}</label>
-								</div>
-							</c:forEach>
-					</c:forEach>
 				</div>
 			</div>
 			<div class="modal-footer" >

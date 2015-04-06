@@ -34,8 +34,9 @@
 				Các loại tập tin có thể tải lên hoặc tải xuống: pdf, docx, xls, tập tin ảnh (svg) ...
 			</div>
 		</div>
-	<sec:authorize access="isAnonymous()">
+	
 		<div class="form-register-home col-md-4">
+			<sec:authorize access="isAnonymous()">
 				<form action="/luanvan/dangky" method="POST" role="form" id="form-dang-ky">
 					<div class="form-group">
 						<div class="input-group">
@@ -109,8 +110,9 @@
 				   	 </form>
 			   	 </c:if>
 			 </span>
-		</div>
-	</sec:authorize>
+		</sec:authorize>
+	</div>
+	
 		<div class="col-md-12">
 			<div class="header-in-content-home">Các tính năng</div>
 			<div class="col-md-12">
