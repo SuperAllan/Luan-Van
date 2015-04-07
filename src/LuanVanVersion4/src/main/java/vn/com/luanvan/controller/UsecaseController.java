@@ -48,6 +48,7 @@ public class UsecaseController{
 		User user = userDao.findUserbyUserName(principal.getName());
 		model.addAttribute("project", project);
 		model.addAttribute("user", user);
+		model.addAttribute("nameDiagram", request.getParameter("nameDiagram"));
 		return "detail-usecase";
 	}
 	

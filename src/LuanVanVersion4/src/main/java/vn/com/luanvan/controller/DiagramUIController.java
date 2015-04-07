@@ -19,6 +19,7 @@ import vn.com.luanvan.dao.UIDao;
 import vn.com.luanvan.dao.UIUsecaseDao;
 import vn.com.luanvan.dao.UsecaseDao;
 import vn.com.luanvan.dao.UserDao;
+import vn.com.luanvan.model.Nhomuc;
 import vn.com.luanvan.model.Project;
 import vn.com.luanvan.model.UI;
 import vn.com.luanvan.model.UIUsecase;
@@ -218,43 +219,54 @@ public class DiagramUIController {
 	
 		// Lay du an hien tai
 		Project project = projectDao.findProjectByName(principal.getName(), nameProject);
-		UI ui = uiDao.getUIByName(nameui, project.getProjectid());
-		List<Usecase> usecases = usecaseDao.getUsecaseByProject(project.getProjectid());
-		String result = "{\"usecase\":[";
-		if (usecases.size() > 0) {
-			for (int i = 0; i < usecases.size() - 1; i++) {
-				if (usecases.get(i).getNameofuc() != null) {
-					result += "{ \"name\" : \"" + usecases.get(i).getNameofuc() + "\",";
-				} else {
-					result += "{ \"name\" : \"\",";
-				}
-				if (usecases.get(i).getUsecaseid() != 0) {
-					result += "\"id\" : \"" + usecases.get(i).getUsecaseid() + "\",";
-					if (uiUsecaseDao.hasUsecaseIDOfUIID(usecases.get(i).getUsecaseid(), ui.getUiid())) {
-						result += "\"checked\" : \"1\"},";
-					} else {
-						result += "\"checked\" : \"0\"},";
+		int projectid = project.getProjectid();
+		
+		UI ui = uiDao.getUIByName(nameui, projectid);
+		int uiid = ui.getUiid();
+		
+		List<Nhomuc> nhomUCs = nhomucDao.getNhomucByProject(projectid);
+		int sizeNhomUCs = nhomUCs.size();
+		
+		String result = "{\"nhomucs\":[";
+		if (sizeNhomUCs > 0) {
+			for (int j = 0; j < sizeNhomUCs; j++) {
+				Nhomuc nhomUc = nhomUCs.get(j);
+				int nhomUcId = nhomUc.getNhomucid();
+				result += "{\"name\": \"" + nhomUc.getTennhom() + "\", \"usecases\":[";
+				List<Usecase> usecases = usecaseDao.getUsecaseByProjectNhomUC(projectid, nhomUcId);
+				int sizeUsecases = usecases.size();
+				if (sizeUsecases > 0) {
+					for (int i = 0; i < sizeUsecases; i++) {
+						Usecase uc = usecases.get(i);
+						int ucid = uc.getUsecaseid();
+						if (uc.getNhomuc().getNhomucid() == nhomUcId) {
+							if (uc.getNameofuc() != null) {
+								result += "{ \"name\" : \"" + uc.getNameofuc() + "\",";
+							} else {
+								result += "{ \"name\" : \"\",";
+							}
+							result += "\"id\" : \"" + ucid + "\",";
+							if (uiUsecaseDao.hasUsecaseIDOfUIID(ucid, uiid)) {
+								if (i != sizeUsecases - 1) {
+									result += "\"checked\" : \"1\"},";
+								} else {
+									result += "\"checked\" : \"1\"}";
+								}
+							} else {
+								if (i != sizeUsecases - 1) {
+									result += "\"checked\" : \"0\"},";
+								} else {
+									result += "\"checked\" : \"0\"}";
+								}
+							}
+						}
 					}
-				} else {
-					result += "\"id\" : \"\",";
-					result += "\"checked\" : \"0\"},";
 				}
-			}
-			if (usecases.get(usecases.size() - 1).getNameofuc() != null) {
-				result += "{ \"name\" : \"" + usecases.get(usecases.size() - 1).getNameofuc() + "\",";
-			} else {
-				result += "{ \"name\" : \"\",";
-			}
-			if (usecases.get(usecases.size() - 1).getUsecaseid() != 0) {
-				result += "\"id\" : \"" + usecases.get(usecases.size() - 1).getUsecaseid() + "\",";
-				if (uiUsecaseDao.hasUsecaseIDOfUIID(usecases.get(usecases.size() - 1).getUsecaseid(), ui.getUiid())) {
-					result += "\"checked\" : \"1\"}";
+				if (sizeNhomUCs - 1 != j) {
+					result += "]},";
 				} else {
-					result += "\"checked\" : \"0\"}";
+					result += "]}";
 				}
-			} else {
-				result += "\"id\" : \"\",";
-				result += "\"checked\" : \"0\"}";
 			}
 		}
 		result += "]}";

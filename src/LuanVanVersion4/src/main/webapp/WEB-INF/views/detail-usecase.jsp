@@ -17,34 +17,61 @@
 }
 
 </style>
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".formatNameDiagram").each(function(){
+		if($(this).text().length > 40){
+		var formatTitle = $.trim($(this).text()).substring(0,40).split(" ").join(" ") + "...";
+		$(this).text(formatTitle);
+		}
+	});
+	
+	$(".formatNameProject").each(function(){
+		if($(this).text().length > 40){
+		var formatTitle = $.trim($(this).text()).substring(0,40).split(" ").join(" ") + "...";
+		$(this).text(formatTitle);
+		}
+	});
+});
+</script>
 <title>Chi tiết Use-case</title>
 </head>
 <body style="height: 100%; width: 100%;" onload="searchUsecase('', ${project.projectid})">
 <input type="hidden" id="usecaseFromDiagram" value="${usecaseid}"/>
-<div class="container-fluid" style="background: #fff;">
-	<div class="col-md-3">
-		<div style="margin-left: -15px; margin-right: -15px; padding-top: 20px;">
-			<div class="panel panel-default" style="margin-bottom: 0px;">
-			    <div class="panel-heading">
-			    <h3 class="panel-title text-center">Danh sách các Use-case</h3>
-			    </div>
+<div class="container-fluid">
+	<div class="panel panel-info content-home">
+			<div class="panel-heading" >
+				<div id="header-background" style="font-size: 16px;">
+					<a href="${contextPath}/">Ước lượng và thu thập yêu cầu </a>/<a href="${contextPath}/background"> Các dự án </a>/
+					<a href="${contextPath}/detailProject?name=${project.tenproject}"> Dự án: <strong class="formatNameProject">${project.tenproject}</strong></a>
+					<a  href="${contextPath}/diagram/viewdiagram?nameProject=${project.tenproject}&nameDiagram=${nameDiagram}"> / Sơ đồ: <strong class="formatNameDiagram">${nameDiagram}</strong></a><span>/ Đặt câu hỏi và upload tập tin</span>
+				</div>
 			</div>
-			
-			<div class="panel-side-search" style="background: #BDBDC4">
-				<div  style="padding: 6px 12px; ">
-					<input style="border-radius: 4px; height: 34px;" type="search" id="input" class="form-control text-center"  title="Search" onkeyup="searchUsecase(this.value, ${project.projectid})" placeholder="Nhập nội dung tìm kiếm">
-				</div> 
-			</div>
-			<div id="danhSachUsecase" style="posibtion: relative; overflow: hidden; height: 500px; width: 100%;">
-					<!-- Danh sach cac use case  -->
+			<div class="panel-body">
+				<div class="col-md-3">
+				<div style="margin-left: -15px; margin-right: -15px; padding-top: 20px;">
+					<div class="panel panel-default" style="margin-bottom: 0px;">
+					    <div class="panel-heading" style="background: #ececec; border-radius: 0px;  box-shadow: none;">
+					    <h3 class="panel-title text-center">Danh sách các Use-case</h3>
+					    </div>
+					</div>
 					
+					<div class="panel-side-search" style="background: #BDBDC4">
+						<div  style="padding: 6px 12px; ">
+							<input style="border-radius: 4px; height: 34px;" type="search" id="input" class="form-control text-center"  title="Search" onkeyup="searchUsecase(this.value, ${project.projectid})" placeholder="Nhập nội dung tìm kiếm">
+						</div> 
+					</div>
+					<div id="danhSachUsecase" style="overflow: hidden; height: 500px; width: 100%;">
+							<!-- Danh sach cac use case  -->
+						</div>
+					</div>
+				</div>
+				<div class="col-md-9">
+					<div id="resultDetail" style="background: write !important; padding-top: 20px;">
+								<h1>Chọn một Use-case để xem chi tiết</h1>		
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
-	<div class="col-md-9">
-		<div id="resultDetail" style="background: write !important; padding-top: 20px;">
-					<h1>Chọn một Use-case để xem chi tiết</h1>		
-		</div>
 	</div>
 </div>
 <!-- Insert footer.jsp -->

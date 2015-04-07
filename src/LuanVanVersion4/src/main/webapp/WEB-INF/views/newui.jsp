@@ -269,7 +269,6 @@
 <script src="<c:url value="/resources/js/diagram.js" />" ></script>
 <script src="<c:url value="/resources/js/xml2json.js" />" ></script>
 <script src="<c:url value="/resources/js/jointshapesumlcustom.js"/>"></script>
-<script src="<c:url value="/resources/js/detail-project.js" />"></script>
 <script src="<c:url value="/resources/js/diagramui.js" />"></script>
 <script src="<c:url value="/resources/js/joint.shapes.ui.custom.js" />"></script>
 <script type="text/javascript">

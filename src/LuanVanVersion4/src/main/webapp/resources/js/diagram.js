@@ -19,18 +19,6 @@ var hasBlankPointerDownDiagram = null;
 var selectViewDiagram = null;
 // End declare variable
 
-//$(document).ready(function() {
-//	// Begin loading diagram
-//	if ($("#path").html() && $("#path").html() != "") {
-//		graph.fromJSON(JSON.parse(decodeURIComponent(window.atob($("#path").html()))));
-//	}
-//	if ($("#name-diagram-show").html() != "") {
-//		$("#a-rename-diagram").show("fade");
-//	} else {
-//		$("#a-rename-diagram").hide("fade");
-//	}
-//	// End loading diagram
-//});
 $(document).ready(function(){
 	$(".formatNameProject").each(function(){
 		if($(this).text().length > 70){
@@ -490,7 +478,7 @@ paper.on('cell:pointerdblclick ', function(cellView, evt, x, y) {
 					$("#description-modal-usecase").val("");
 				}
 				$("#level-modal-usecase").val(object.usecase.mucdo);
-				$("#a-question-upload-file").attr("href", "/luanvan/detailUsecase?name=" + $("#nameProject").val() + "&usecaseid=" + cellView.model.attributes.created);
+				$("#a-question-upload-file").attr("href", "/luanvan/detailUsecase?name=" + $("#nameProject").val() + "&usecaseid=" + cellView.model.attributes.created +"&nameDiagram="+ $("#name-diagram-show").html());
 				if (object.usecase.tinhtien == "0") {
 					$("#pay-money-modal-usecase").prop("checked", false);
 				} else {

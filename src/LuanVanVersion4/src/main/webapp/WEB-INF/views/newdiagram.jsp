@@ -99,8 +99,8 @@ $(document).ready(function(){
 	</div>
 	<div id="properties-diagram">
 		<%-- <a href="${contextPath}/detailProject?name=${project.tenproject}"><i class="glyphicon glyphicon-home"></i> Thông tin chi tiết</a> --%>
-		<a class="btn-default" data-toggle="modal" href="#modal-new-diagram"><i class="glyphicon glyphicon-plus-sign"></i> Tạo mới sơ đồ</a>
-		<a class="btn-default" data-toggle="modal" href="#modal-exportSVG"><i class="glyphicon glyphicon-picture"></i> Xuất ảnh</a>
+		<a class="btn-default" id="a-new-diagram"><i class="glyphicon glyphicon-plus-sign"></i> Tạo mới sơ đồ</a>
+		<a class="btn-default" id="a-export-svg"><i class="glyphicon glyphicon-picture"></i> Xuất ảnh</a>
 		<a class="btn-default" id="view-list-diagram" data-toggle="modal" href="#modal-list-diagram"><i class="glyphicon glyphicon-th-large"></i> Xem danh sách sơ đồ</a>
 		<a class="btn-default" id="saveDiagram" style="background: #5cb85c; color: white;"><i class="glyphicon glyphicon-floppy-saved"></i> Lưu</a>
 		<!-- <a data-toggle="modal" href='#modal-scoreActor' id="scoreActor">TAW</a>
@@ -363,7 +363,6 @@ $(document).ready(function(){
 <script src="<c:url value="/resources/js/diagram.js" />" ></script>
 <script src="<c:url value="/resources/js/xml2json.js" />" ></script>
 <script src="<c:url value="/resources/js/jointshapesumlcustom.js"/>"></script>
-<script src="<c:url value="/resources/js/detail-project.js" />"></script>
 <%-- <script src="<c:url value="/resources/js/diagramui.js" />"></script> --%>
 <script src="<c:url value="/resources/js/joint.shapes.ui.custom.js" />"></script>
 <script type="text/javascript">

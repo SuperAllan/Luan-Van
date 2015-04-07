@@ -42,7 +42,7 @@
 				<td style="border: none;">${list.trongso}</td>
 				<td style="border: none;"><input type="number" class="form-control" name="giaTriXepHang" value="${listXepHangKyThuat[status.index].giatrixephang}" min="0" max="5" style="width: 50px; text-align: center;" required="required"></td>
 				<td class="ketQuaFromKyThuat" style="border: none;">${ketQuaFromKyThuat[status.index]}</td>
-				<td style="border: none;"><textarea name="ghiChuKyThuat" class="form-control" rows="1">${listXepHangKyThuat[status.index].ghichu}</textarea></td>
+				<td style="border: none;"><textarea name="ghiChuKyThuat" class="form-control" rows="1" style="resize: vertical;" onkeyup="textAreaAdjust(this)">${listXepHangKyThuat[status.index].ghichu}</textarea></td>
 			</tr>
 		</c:forEach>	
 		</tbody>

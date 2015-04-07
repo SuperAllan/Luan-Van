@@ -3,7 +3,6 @@ package vn.com.luanvan.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder.In;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import vn.com.luanvan.dao.UsecaseDao;
-import vn.com.luanvan.model.Actor;
 import vn.com.luanvan.model.Bmt;
 import vn.com.luanvan.model.Usecase;
 @Repository
@@ -146,5 +144,15 @@ public class UsecaseDaoImpl implements UsecaseDao {
 			query.setParameter("noidung", "%"+noidung+"%");
 		}
 		return query.list(); 
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<Usecase> getUsecaseByProjectNhomUC(int projectId, int nhomUCID) {
+		String sql = "from Usecase as b where b.project.projectid = :projectid and b.nhomuc.nhomucid = :nhomUCID";
+		Query query = sessionFactory.getCurrentSession().createQuery(sql);
+		query.setParameter("projectid", projectId);
+		query.setParameter("nhomUCID", nhomUCID);
+		return query.list();
 	}
 }

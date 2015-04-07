@@ -102,7 +102,7 @@ function deleteFile(bienThis){
 <legend>${usecase.nameofuc}</legend>
 	<input type="hidden" id="usecaseID" name="usecaseID" value="${usecase.usecaseid}">
 	<div class="form-group">
-		<textarea id="listCauHoi" rows="17" cols="135" onchange="checkChangeValue()" name="listCauHoi" placeholder="Thu thập câu hỏi, ghi chú, các vấn đề liên quan tới khách hàng.">${usecase.cauhoi}</textarea>
+		<textarea id="listCauHoi" rows="17" style="width: 100%; resize: vertical;" onchange="checkChangeValue()" name="listCauHoi" placeholder="Thu thập câu hỏi, ghi chú, các vấn đề liên quan tới khách hàng.">${usecase.cauhoi}</textarea>
 	</div>
 	<button type="submit" class="btn btn-primary btn-lg" id="buttonSubmit">Cập nhật</button>
 			

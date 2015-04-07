@@ -24,12 +24,12 @@ var dragDropElementUI = false;
 var choosedElement = false;
 
 var lineH1 = new joint.shapes.basic.Rect({
-	size: { width: 960, height: 1},
+	size: { width: 1500, height: 1},
 	attrs: { rect: { fill: '#d43f3a', stroke: 'none'} }
 });
 
 var lineH2 = new joint.shapes.basic.Rect({
-	size: { width: 960, height: 1},
+	size: { width: 1500, height: 1},
 	attrs: { rect: { fill: '#d43f3a', stroke: 'none'} }
 });
 
@@ -43,30 +43,6 @@ var lineV2 = new joint.shapes.basic.Rect({
 	attrs: { rect: { fill: '#d43f3a', stroke: 'none'} }
 });
 
-$(document).ready(function() {
-//	divProperties(true, "#aaaaaa");
-//	// Begin loading diagram
-//	if ($("#path").html() && $("#path").html() != "") {
-//		graphUI.fromJSON(JSON.parse(decodeURIComponent(window.atob($("#path").html()))));
-//	}
-//	if ($("#name-ui-show").html() != "") {
-//		$("#a-rename-ui").show("fade");
-//	} else {
-//		$("#a-rename-ui").hide("fade");
-//	}
-//	// End loading diagram
-//});
-//$(document).ready(function(){
-//	$(document).ready(function(){
-//		$(".formatNameProject").each(function(){
-//			if($(this).text().length > 70){
-//			var formatTitle = $.trim($(this).text()).substring(0,70).split(" ").join(" ") + "...";
-//			$(this).text(formatTitle);
-//			}
-//		});
-//	});
-	$('#body-assignUI').perfectScrollbar();
-});
 paperUI.on('cell:pointerdblclick', function(cellView, x, y) {
 	enableInput(cellView);
 });
@@ -77,7 +53,7 @@ paperUI.on('blank:pointerdown', function(cellView, x, y) {
 	divProperties(true, '#aaaaaa');
 	cellViewPointerDown = null;
 	$("#properties-design-ui").hide("fade");
-	if (!hasCopyUI) {
+	if (!hasCopyUI && !hasResizeUI) {
 		listSelectView = [];
 		hasBlankPointerDown = true;
 		selectView = new joint.shapes.basic.Rect({
@@ -609,16 +585,22 @@ $("#exportSVGUI").on('click', function() {
     
     paperUI.setDimensions(w, h);
 });
-graphUI.on('change', function() {
-	setIconSaveUI('notsaved');
+graphUI.on('change', function(cellView) {
+	if (cellView.attributes.type != "selectView") {
+		setIconSaveUI('notsaved');
+	}
 });
 
 graphUI.on('add', function(cellView) {
-	setIconSaveUI('notsaved');
+	if (cellView.attributes.type != "selectView") {
+		setIconSaveUI('notsaved');
+	}
 });
 
 graphUI.on('remove', function(cellView) {
-	setIconSaveUI('notsaved');
+	if (cellView.attributes.type != "selectView") {
+		setIconSaveUI('notsaved');
+	}
 });
 
 function setIconSaveUI(value) {
@@ -694,6 +676,7 @@ $("#create-name-UI").on('click', function() {
 				$("#modal-newUI").modal('hide');
 				$("#a-rename-ui").show('fade');
 				$("#saveDiagramUI").trigger('click');
+				graphUI.clear();
 			}
 		},
 		error: function() {
@@ -776,7 +759,7 @@ $("#viewListUI").on("click", function() {
 });
 
 $("#btn-svgUI").on('click', function() {
-	$("#input-rename-ui").val("");
+	$("#nameFileSVGUI").val("");
 	$("#modal-exportSVGUI").modal('show');
 });
 
@@ -848,29 +831,43 @@ $(document).keydown(function(event) {
 
 $("#assign-usecase-design-ui").on('click', function() {
 	if ($("#name-ui-show").html() != "") { 
+		$("#body-assignUI").html("Đang tải danh sách use-cases ...");
+		$("#modal-assignUI").modal("show");
 		$.ajax({
 			url: "/luanvan/diagramui/loaduiusecase",
 			data: {
 				nameProject : $("#nameProject").val(), nameui : $("#name-ui-show").html()
 			},
 			success: function(result){
+				console.log(result);
 				var object = $.parseJSON(result);
 				var str = "";
-				for (var i = 0; i < object.usecase.length; i++) {
-					if (object.usecase[i].checked == "1") {
-						str += '<div class="form-group" style="word-break: break-all;">';
-						str += '<label><input type="checkbox" class="checkbox-assignUI" checked="checked" value="' + object.usecase[i].id + '" /> ' 
-							+ object.usecase[i].name + '</label>';
-						str += '</div>';
-					} else {
-						str += '<div class="form-group" style="word-break: break-all;">';
-						str += '<label><input type="checkbox" class="checkbox-assignUI" value="' + object.usecase[i].id + '" /> ' 
-							+ object.usecase[i].name + '</label>';
-						str += '</div>';
-					}	
+				for (var j = 0; j < object.nhomucs.length; j++) {
+					str += '<div><Label class="text-primary">Nhóm ' + object.nhomucs[j].name + '</Label>';
+					for (var i = 0; i < object.nhomucs[j].usecases.length; i++) {
+						var id = object.nhomucs[j].usecases[i].id;
+						var name = object.nhomucs[j].usecases[i].name;
+						if (object.nhomucs[j].usecases[i].checked == "1") {
+							str += '<div class="form-group" style="word-break: break-word;">';
+							str += '<label class="text-danger"><input type="checkbox" class="checkbox-assignUI" checked="checked" value="' + id + '" /> ' + name + '</label>';
+							str += '</div>';
+						} else {
+							str += '<div class="form-group" style="word-break: break-word;">';
+							str += '<label><input type="checkbox" class="checkbox-assignUI" value="' + id + '" /> ' + name + '</label>';
+							str += '</div>';
+						}	
+					}
+					str += "</div>";
 				}
 				$("#body-assignUI").html(str);
 				$("#modal-assignUI").modal("show");
+				$(".checkbox-assignUI").on('click', function() {
+					if ($(this).parent().hasClass("text-danger")) {
+						$(this).parent().attr("class", "");
+					} else {
+						$(this).parent().attr("class", "text-danger");
+					}
+				});
 			},
 			error: function() {
 				alert("Không thể tải usecase để gán vào giao diện");

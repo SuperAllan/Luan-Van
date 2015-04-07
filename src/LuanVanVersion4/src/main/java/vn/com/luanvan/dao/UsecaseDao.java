@@ -31,4 +31,6 @@ public interface UsecaseDao {
 	List<Usecase> getUsecaseByProject(int ProjectId);
 	
 	List<Usecase> searchUsecase(String noidung, int projectID);
+	
+	List<Usecase> getUsecaseByProjectNhomUC(int ProjectId, int nhomUCID);
 }

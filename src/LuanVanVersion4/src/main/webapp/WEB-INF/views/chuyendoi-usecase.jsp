@@ -57,7 +57,7 @@
 								</c:forEach>
 							</td>
 						 	<td>
-						 		<textarea class="form-control" rows="1" name="listMoTaUC">${listData2.motauc}</textarea>
+						 		<textarea class="form-control" rows="1" name="listMoTaUC" onkeyup="textAreaAdjust(this)" style="resize: vertical;">${listData2.motauc}</textarea>
 						 	</td>
 						 	<td>
 						 		<select class="form-control" name="listBMT">
