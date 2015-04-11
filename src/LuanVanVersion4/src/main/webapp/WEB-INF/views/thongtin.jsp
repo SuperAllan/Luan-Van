@@ -19,7 +19,7 @@
 			
 			<div class="form-group">
 				<label>Mô tả dự án:</label>
-				<textarea class="form-control" name="motaProject" rows="4">${project.motaproject}</textarea>
+				<textarea class="form-control" name="motaProject" rows="4" style="resize: vertical;">${project.motaproject}</textarea>
 			</div>
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
        			<c:choose>

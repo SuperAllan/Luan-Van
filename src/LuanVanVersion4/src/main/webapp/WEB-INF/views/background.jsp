@@ -137,7 +137,7 @@
 								  	</div>
 								  	<div class="form-group">
 								  		<label>Địa chỉ:</label>
-								  		<textarea name="address"  class="form-control" rows="3" >${user.address}</textarea>
+								  		<textarea name="address"  class="form-control" rows="3">${user.address}</textarea>
 								  	</div>
 								  	<button type="submit" class="btn btn-default btn-primary">Cập nhật</button>
 							  </form>
@@ -174,7 +174,7 @@
 			</div>
 			<div class="form-group">
 				<label class="index">Mô tả dự án (Tùy chọn):</label>
-				<textarea class="form-control" placeholder="Mô tả dự án" name="description" rows="3" style="resize: vertical;"></textarea>
+				<textarea class="form-control" placeholder="Mô tả dự án" name="description" rows="3"></textarea>
 				<span class="help-block text-info">Hãy giới thiệu hoặc mô tả ngắn gọn mục tiêu mà dự án bạn hướng tới. Bạn có thể để trống mục này.</span>
 			</div>
       </div>

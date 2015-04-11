@@ -15,25 +15,7 @@
   background: #40cc75;
   border-color: #2eab5d;
 }
-
 </style>
-<script type="text/javascript">
-$(document).ready(function(){
-	$(".formatNameDiagram").each(function(){
-		if($(this).text().length > 40){
-		var formatTitle = $.trim($(this).text()).substring(0,40).split(" ").join(" ") + "...";
-		$(this).text(formatTitle);
-		}
-	});
-	
-	$(".formatNameProject").each(function(){
-		if($(this).text().length > 40){
-		var formatTitle = $.trim($(this).text()).substring(0,40).split(" ").join(" ") + "...";
-		$(this).text(formatTitle);
-		}
-	});
-});
-</script>
 <title>Chi tiết Use-case</title>
 </head>
 <body style="height: 100%; width: 100%;" onload="searchUsecase('', ${project.projectid})">

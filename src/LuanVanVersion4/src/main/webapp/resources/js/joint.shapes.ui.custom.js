@@ -11,7 +11,12 @@ joint.shapes.ui.Button = joint.shapes.basic.Generic.extend({
     defaults: joint.util.deepSupplement({
         type: 'ui.Button',
         size: { width: 100, height: 30 },
-        name: 'Button'
+        name: 'Button',
+        attrs: {
+            rect: { width: 100, height: 30, fill: "#eeeeee", stroke: "black", 'stroke-dasharray': "none", 'stroke-width': 2 },
+            text: { x: 50, y: 20, fill: 'black', 'text-anchor': 'middle', 'font-family': 'Arial', 'font-size': 16 }
+        },
+        connect: []
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
 
@@ -21,20 +26,15 @@ joint.shapes.ui.ButtonView = joint.dia.ElementView.extend({
         '<div class="ui-button">',
             '<button class="delete">x</button>',
             '<input class="name" type="text"/>',
-            '<div><i class="glyphicon glyphicon-fullscreen"></i></div>',
+            '<div class="resize"><i class="glyphicon glyphicon-fullscreen"></i></div>',
             '<button class="copy">+</button>',
+            '<button class="link"><i class="glyphicon glyphicon-link"></i>sdfdf</button>',
         '</div>'
     ].join(''),
 
     initialize: function() {
         _.bindAll(this, 'updateButtonView');
         joint.dia.ElementView.prototype.initialize.apply(this, arguments);
-
-        this.model.attr({
-            rect: { width: 100, height: 30, rx: 0, ry: 0, fill: "#eeeeee", stroke: "black", 'stroke-dasharray': "none", 'stroke-width': 2 },
-            text: { fill: 'black', x: 50, y: 20, 'text-anchor': 'middle', 'font-family': 'Arial', 'font-size': 16 }
-        });
-
         this.$box = $(_.template(this.template)());
         // Prevent paper from handling pointerdown.
         this.$box.find('input').on('mousedown click', function(evt) { evt.stopPropagation(); });
@@ -92,6 +92,9 @@ joint.shapes.ui.Div = joint.shapes.basic.Generic.extend({
         type: 'ui.Div',
         size: {
         	width: 200, height: 200	
+        },
+        attrs: {
+            rect: { width: 200, height: 200, rx: 0, ry: 0, 'stroke-width': 2, stroke: 'black', fill: 'transparent' }
         }
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
@@ -101,7 +104,7 @@ joint.shapes.ui.DivView = joint.dia.ElementView.extend({
     template : [
         '<div class="ui-div">',
             '<button class="delete">x</button>',
-            '<div><i class="glyphicon glyphicon-fullscreen"></i></div>',
+            '<div class="resize"><i class="glyphicon glyphicon-fullscreen"></i></div>',
             '<button class="copy">+</button>',
         '</div>'
     ].join(''),
@@ -109,10 +112,6 @@ joint.shapes.ui.DivView = joint.dia.ElementView.extend({
     initialize: function() {
         _.bindAll(this, 'updateDivView');
         joint.dia.ElementView.prototype.initialize.apply(this, arguments);
-
-        this.model.attr({
-            rect: { width: 200, height: 200, rx: 0, ry: 0, 'stroke-width': 2, stroke: 'black', fill: 'transparent' }
-        });
 
         this.$box = $(_.template(this.template)());
         this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
@@ -159,6 +158,10 @@ joint.shapes.ui.TextBox = joint.shapes.basic.Generic.extend({
         type: 'ui.TextBox',
         size: { width: 150, height: 30 },
         name: 'TextBox',
+        attrs: {
+            rect: { width: 150, height: 30, rx: 0, ry: 0, fill: "#ffffff", stroke: "black", 'stroke-dasharray': "none", 'stroke-width': 2 },
+            text: { fill: 'black', y: 20, 'text-anchor': 'left', x: 4, 'font-family': 'Arial', 'font-size': 16 }
+        }
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
 
@@ -168,7 +171,7 @@ joint.shapes.ui.TextBoxView = joint.dia.ElementView.extend({
         '<div class="ui-textbox">',
             '<button class="delete">x</button>',
             '<input class="name" type="text" />',
-            '<div><i class="glyphicon glyphicon-fullscreen"></i></div>',
+            '<div class="resize"><i class="glyphicon glyphicon-fullscreen"></i></div>',
             '<button class="copy">+</button>',
         '</div>'
     ].join(''),
@@ -176,11 +179,6 @@ joint.shapes.ui.TextBoxView = joint.dia.ElementView.extend({
     initialize: function() {
         _.bindAll(this, 'updateTextBoxView');
         joint.dia.ElementView.prototype.initialize.apply(this, arguments);
-
-        this.model.attr({
-            rect: { width: 150, height: 30, rx: 0, ry: 0, fill: "#ffffff", stroke: "black", 'stroke-dasharray': "none", 'stroke-width': 2 },
-            text: { fill: 'black', y: 20, 'text-anchor': 'left', x: 4, 'font-family': 'Arial', 'font-size': 16 }
-        });
 
         this.$box = $(_.template(this.template)());
         // Prevent paper from handling pointerdown.
@@ -241,7 +239,11 @@ joint.shapes.ui.TextArea = joint.shapes.basic.Generic.extend({
     defaults: joint.util.deepSupplement({
         type: 'ui.TextArea',
         size: { width: 150, height: 60 },
-        name: 'TextArea'
+        name: 'TextArea',
+        attrs: {
+            rect: { width: 150, height: 60, rx: 0, ry: 0, fill: "#ffffff", stroke: "black", 'stroke-dasharray': "none", 'stroke-width': 2 },
+            text: { fill: 'black', 'text-anchor': 'left', y: 20, x: 4, 'font-family': 'Arial', 'font-size': 16 }
+        }
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
 
@@ -251,7 +253,7 @@ joint.shapes.ui.TextAreaView = joint.dia.ElementView.extend({
         '<div class="ui-textarea">',
             '<button class="delete">x</button>',
             '<textarea class="name" onkeyup="textAreaAdjust(this)"></textarea>',
-            '<div><i class="glyphicon glyphicon-fullscreen"></i></div>',
+            '<div class="resize"><i class="glyphicon glyphicon-fullscreen"></i></div>',
             '<button class="copy">+</button>',
         '</div>'
     ].join(''),
@@ -259,11 +261,6 @@ joint.shapes.ui.TextAreaView = joint.dia.ElementView.extend({
     initialize: function() {
         _.bindAll(this, 'updateTextAreaView');
         joint.dia.ElementView.prototype.initialize.apply(this, arguments);
-
-        this.model.attr({
-            rect: { width: 150, height: 60, rx: 0, ry: 0, fill: "#ffffff", stroke: "black", 'stroke-dasharray': "none", 'stroke-width': 2 },
-            text: { fill: 'black', 'text-anchor': 'left', y: 20, x: 4, 'font-family': 'Arial', 'font-size': 16 }
-        });
 
         this.$box = $(_.template(this.template)());
         // Prevent paper from handling pointerdown.
@@ -323,7 +320,10 @@ joint.shapes.ui.Label = joint.shapes.basic.Generic.extend({
     defaults: joint.util.deepSupplement({
         type: 'ui.Label',
         size: { width: 100, height: 30 },
-        name: 'Label'
+        name: 'Label',
+        attrs: {
+            text: { fill: 'black', y: 20, 'text-anchor': 'middle', x: 50, 'font-family': 'Arial', 'font-size': 16 }
+        }
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
 
@@ -340,10 +340,6 @@ joint.shapes.ui.LabelView = joint.dia.ElementView.extend({
     initialize: function() {
         _.bindAll(this, 'updateLabelView');
         joint.dia.ElementView.prototype.initialize.apply(this, arguments);
-
-        this.model.attr({
-            text: { fill: 'black', y: 20, 'text-anchor': 'middle', x: 50, 'font-family': 'Arial', 'font-size': 16 }
-        });
 
         this.$box = $(_.template(this.template)());
         // Prevent paper from handling pointerdown.
@@ -710,4 +706,86 @@ joint.shapes.ui.CheckboxView = joint.dia.ElementView.extend({
     removeCheckboxView: function() {
         this.$box.remove();
     }
+});
+
+joint.shapes.ui.SelectBox = joint.shapes.basic.Generic.extend({
+	 markup: [
+       '<g class="scalable">',
+           '<rect/>',
+           '<path/>',
+       '</g>',
+       '<text class="name">Select Box</text>'
+   ].join(''),
+
+   defaults: joint.util.deepSupplement({
+       type: 'ui.SelectBox',
+       size: { width: 150, height: 30 },
+       name: 'Select Box',
+       attrs: {
+           rect: { width: 150, height: 30, fill: "#eeeeee", stroke: "black", 'stroke-dasharray': "none", 'stroke-width': 2 },
+           text: { x: 10, y: 20, fill: 'black', 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 },
+           path: { d: "M 130 10 L 140 10 L 135 20 L 130 10", stroke: "black", 'stroke-width': "1", fill: "black" }
+       },
+       connect: []
+   }, joint.shapes.basic.Generic.prototype.defaults)
+});
+
+joint.shapes.ui.SelectBoxView = joint.dia.ElementView.extend({
+
+   template : [
+       '<div class="ui-selectbox">',
+           '<button class="delete">x</button>',
+           '<input class="name" type="text"/>',
+           '<div class="resize"><i class="glyphicon glyphicon-fullscreen"></i></div>',
+           '<button class="copy">+</button>',
+       '</div>'
+   ].join(''),
+
+   initialize: function() {
+       _.bindAll(this, 'updateSelectBoxView');
+       joint.dia.ElementView.prototype.initialize.apply(this, arguments);
+       this.$box = $(_.template(this.template)());
+       // Prevent paper from handling pointerdown.
+       this.$box.find('input').on('mousedown click', function(evt) { evt.stopPropagation(); });
+       // This is an example of reacting on the input change and storing the input data in the cell model.
+       this.$box.find('input').on('change', _.bind(function(evt) {
+           this.model.set('name', $(evt.target).val());
+           this.model.attr('text/html', $(evt.target).val());
+           $(evt.target).val("");
+       }, this));
+       this.$box.find('input').on('focus', _.bind(function(evt) {
+           this.model.attr('text/fill-opacity', 0);
+       }, this));
+       this.$box.find('input').on('focusout', _.bind(function(evt) {
+           this.model.attr('text/fill-opacity', 1);
+       }, this));
+       this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
+       // Update the box position whenever the underlying model changes.
+       this.model.on('change', this.updateSelectBoxView, this);
+       // Remove the box when the model gets removed from the graph.
+       this.model.on('remove', this.removeSelectBoxView, this);
+
+       this.updateSelectBoxView();
+   },
+   render: function() {
+       joint.dia.ElementView.prototype.render.apply(this, arguments);
+       this.paper.$el.prepend(this.$box);
+       this.updateSelectBoxView();
+       return this;
+   },
+   updateSelectBoxView: function() {
+       // Set the position and dimension of the box so that it covers the JointJS element.
+       var bbox = this.model.getBBox();
+       // Example of updating the HTML with a data stored in the cell model.
+       this.$box.css({
+           width: bbox.width,
+           height: bbox.height,
+           left: bbox.x,
+           top: bbox.y,
+           transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
+       });
+   },
+   removeSelectBoxView: function() {
+       this.$box.remove();
+   }
 });

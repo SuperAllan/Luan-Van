@@ -250,7 +250,7 @@ public class ExcelBuilder extends AbstractExcelView{
     			sheet2Row.getCell(3).setCellStyle(textMiddle);
     			sheet2Row.createCell(4).setCellValue(UC.getMotauc());
     			sheet2Row.getCell(4).setCellStyle(wrapText);
-    			if(UC.getTinhtien() == 1){
+    			if(UC.getTinhtien() == true){
     				sheet2Row.createCell(5).setCellValue("Bắt buộc");
     				sheet2Row.getCell(5).setCellStyle(textMiddle);
     			}else{

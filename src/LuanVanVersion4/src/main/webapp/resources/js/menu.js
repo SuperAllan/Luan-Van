@@ -6,6 +6,9 @@ $(document).ready(function(){
 	$("#menu").click(function() {
 		window.location.href = "/luanvan";
 	});
+	$('textarea').keyup(function(){
+		textAreaAdjust(this);
+	});
 });
 
 function formSubmitMenu() {

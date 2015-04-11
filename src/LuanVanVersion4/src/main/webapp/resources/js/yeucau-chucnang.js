@@ -25,10 +25,12 @@ $(document).ready(function() {
 	$('.removeFunctionFromData').on('click', function(){
 		$("#soLuong"+$(this).parent().parent().parent().attr("id")).val(parseInt($("#soLuong"+$(this).parent().parent().parent().attr("id")).val())-1);
 		$(this).parent().parent().remove();
+		countSTT();
 	});
     
 	$('.xoaNhomFromData').on('click',function(){
     	xoaNhom($(this).parent().parent().parent().attr("id"));
+    	countSTT();
     });
     
 	countSTT();
@@ -99,7 +101,7 @@ function xoaNhom(id){
 function themChucNang(id) {
 	var tr = "<tr>"+
 			"<td class='countSTT'></td>"+
-			"<td><textarea name='listChucNang' rows='1' style='resize: vertical;' class='form-control chucNang' onkeyup='textAreaAdjust(this)'  onblur='checkNameChucNang(this)' required='required' placeholder='Mô tả chức năng' data-bv-notempty='true' data-bv-notempty-message='Mô tả khác rỗng'></textarea></td>"+
+			"<td><textarea name='listChucNang' rows='1'  class='form-control chucNang' onkeyup='textAreaAdjust(this)'  onblur='checkNameChucNang(this)' required='required' placeholder='Mô tả chức năng' data-bv-notempty='true' data-bv-notempty-message='Mô tả khác rỗng'></textarea></td>"+
 			"<td>"+
 				"<select class='form-control' name='listPhanLoai'>";
 				$("#selectPhanLoai > option").each(function() {

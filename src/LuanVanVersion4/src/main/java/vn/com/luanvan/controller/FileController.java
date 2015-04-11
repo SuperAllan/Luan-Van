@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.Date;
 import java.util.Iterator;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 
 
 
@@ -118,6 +120,18 @@ public class FileController{
 		return "show-list-file";
     }
 	
+	
+	public static boolean isUnicode(String s) {
+		int length = s.length();
+		for (int i = 0; i < length; i++) {
+			char c = s.charAt(i);
+			if (c > 'z') {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	@RequestMapping(value="/downloadFile", method = RequestMethod.GET)
 	public void downloadFile(HttpServletResponse response, HttpServletRequest request) throws IOException{
 		//String locationSave = request.getSession().getServletContext().getRealPath("/") +File.separator+"resources"+File.separator+"files"+File.separator;
@@ -130,7 +144,12 @@ public class FileController{
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType(fileUC.getType());
 	    response.setContentLength((int) fileDownload.length());
-        response.setHeader("Content-Disposition", "attachment; filename="+URLEncoder.encode(fileUC.getName(), "UTF-8"));
+	    if(isUnicode(fileUC.getName()) == true){
+	    	response.setHeader("Content-Disposition", "attachment; filename="+URLEncoder.encode(fileUC.getName(), "UTF-8"));
+	    }else{
+	    	response.setHeader("Content-Disposition", "attachment; filename="+fileUC.getName());
+	    }
+        
         OutputStream outStream = response.getOutputStream();
         
         byte[] buffer = new byte[4096];

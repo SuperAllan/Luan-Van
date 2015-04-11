@@ -66,6 +66,7 @@
 			<a class="btn-default" id="btn-svgUI"><i class="glyphicon glyphicon-picture"></i> Xuất ảnh</a>
 			<a class="btn-default" id="viewListUI"><i class="glyphicon glyphicon-th-large"></i> Danh sách giao diện</a>
 			<a class="btn-default" id="assign-usecase-design-ui"><i class="glyphicon glyphicon-list"></i> Gán giao diện vào use case</a>
+			<a class="btn-default" id="screenflow-ui"><i class="glyphicon glyphicon-resize-horizontal"></i> Screenflow</a>
 			<a class="btn-default" id="saveDiagramUI" style="background: #5cb85c; color: white;"><i class="glyphicon glyphicon-floppy-saved"></i> Lưu</a>
 		</div>
 	</div>
@@ -141,28 +142,31 @@
 						<img id="div-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/div.svg"/>" alt="actor"/>
 					</div>
 					<div>
-						<img id="button-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/button.svg"/>" alt="actor"/>
+						<img id="button-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/button.svg"/>" alt="button"/>
 					</div>
 					<div>
-						<img id="label-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/label.svg"/>" alt="actor"/>
+						<img id="label-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/label.svg"/>" alt="label"/>
 					</div>
 					<div>
-						<img id="textarea-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/textarea.svg"/>" alt="actor"/>
+						<img id="textarea-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/textarea.svg"/>" alt="textarea"/>
 					</div>
 					<div>
-						<img id="textbox-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/textbox.svg"/>" alt="actor"/>
+						<img id="textbox-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/textbox.svg"/>" alt="textbox"/>
 					</div>
 					<div>
-						<img id="radio-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/radio.svg"/>" alt="actor"/>
+						<img id="radio-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/radio.svg"/>" alt="radio"/>
 					</div>
 					<div>
-						<img id="radio-checked-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/radiochecked.svg"/>" alt="actor"/>
+						<img id="radio-checked-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/radiochecked.svg"/>" alt="radiochecked"/>
 					</div>
 					<div>
-						<img id="checkbox-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/checkbox.svg"/>" alt="actor"/>
+						<img id="checkbox-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/checkbox.svg"/>" alt="checkbox"/>
 					</div>
 					<div>
-						<img id="checkbox-checked-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/checkboxchecked.svg"/>" alt="actor"/>
+						<img id="checkbox-checked-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/checkboxchecked.svg"/>" alt="checkboxchecked"/>
+					</div>
+					<div>
+						<img id="selectbox-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/selectbox.svg"/>" alt="selectbox"/>
 					</div>
 				</div>
 			</div>
@@ -216,7 +220,7 @@
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h4 class="modal-title"><i class="glyphicon glyphicon-th-large"></i> Danh sách các giao diện</h4>
 			</div>
-			<div class="modal-body" >
+			<div class="modal-body" style="height: 520px; overflow: auto;">
 				<div class="row" id="body-listUI">
 				</div>
 			</div>
@@ -231,9 +235,9 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title"><i class="glyphicon glyphicon-list"></i> Lựa chọn Use-case gán vào giao diện: <strong>${nameUI}</strong></h4>
+				<h4 class="modal-title"><i class="glyphicon glyphicon-list"></i> Lựa chọn Use-case gán vào giao diện: <label class="name-ui-change-ajax"></label></h4>
 			</div>
-			<div class="modal-body" >
+			<div class="modal-body" style="height: 450px; overflow: auto;">
 				<div class="row" id="body-assignUI" style="padding-left: 20px;">
 				</div>
 			</div>
@@ -265,6 +269,59 @@
 </div>
 <!-- End modal rename ui -->
 
+<!-- Begin modal link ui -->
+<div class="modal fade" id="modal-link-ui">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title"><i class="glyphicon glyphicon-link"></i> Kết nối thành phần của giao diện: <label class="name-ui-change-ajax"></label> đến các giao diện khác</h4>
+			</div>
+			<div class="modal-body">
+				<!-- <div class="row">
+					<div class="col-md-12">
+						<button class="btn btn-primary"><i class="glyphicon glyphicon-plus-sign"></i> Tạo mới kết nối</button>						
+					</div>
+				</div> -->
+				<div class="row">
+					<div class="col-md-12">
+						<h4 class="text-primary"><i class="glyphicon glyphicon-th-large"></i> Danh sách giao diện</h4>
+						<span class="help-block">Màu xanh là đang kết nối - màu đỏ là chưa kết nối</span>
+						<div id="list-link-ui"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End modal link ui -->
+
+<!-- Begin modal screenflow ui -->
+<div class="modal fade" id="modal-screenflow-ui">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title"><i class="glyphicon glyphicon-resize-horizontal"></i> Screenflow của giao diện: <label class="name-ui-change-ajax"></label></h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-4" id="screenflow-in-ui">
+					</div>
+					<div class="col-md-4">
+						<div class="col-md-2 text-center"><i class="glyphicon glyphicon-arrow-right"></i></div>
+						<div class="col-md-8 text-center"><label class="name-ui-change-ajax"></label></div>
+						<div class="col-md-2 text-center"><i class="glyphicon glyphicon-arrow-right"></i></div>
+					</div>
+					<div class="col-md-4" id="screenflow-out-ui">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End modal screenflow ui -->
+
 <script src="<c:url value="/resources/js/joint.nojquery.min.js" />" ></script>
 <script src="<c:url value="/resources/js/diagram.js" />" ></script>
 <script src="<c:url value="/resources/js/xml2json.js" />" ></script>
@@ -273,7 +330,6 @@
 <script src="<c:url value="/resources/js/joint.shapes.ui.custom.js" />"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		divProperties(true, "#aaaaaa");
 		// Begin loading diagram
 		if ($("#path").html() && $("#path").html() != "") {
 			graphUI.fromJSON(JSON.parse(decodeURIComponent(window.atob($("#path").html()))));

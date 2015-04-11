@@ -6,7 +6,8 @@
 .ui-radio-checked,
 .ui-radio,
 .ui-checkbox,
-.ui-checkbox-checked {
+.ui-checkbox-checked,
+.ui-selectbox {
     pointer-events: none;
    -webkit-user-select: none;
    position: absolute;
@@ -24,7 +25,9 @@
 .ui-radio-checked button,
 .ui-radio button,
 .ui-checkbox button,
-.ui-checkbox-checked button {
+.ui-checkbox-checked button,
+.ui-selectbox button,
+.ui-selectbox div {
    pointer-events: auto;
    position: absolute;
 }
@@ -36,13 +39,15 @@
 .ui-radio-checked input,
 .ui-radio input,
 .ui-checkbox input,
-.ui-checkbox-checked input {
+.ui-checkbox-checked input,
+.ui-selectbox input {
    pointer-events: none;
    position: absolute;
 }
 
 .ui-button button.delete,
 .ui-button button.copy,
+.ui-button button.link,
 .ui-div button.delete,
 .ui-div button.copy,
 .ui-textbox button.delete,
@@ -58,12 +63,14 @@
 .ui-checkbox button.delete,
 .ui-checkbox button.copy,
 .ui-checkbox-checked button.delete,
-.ui-checkbox-checked button.copy {
+.ui-checkbox-checked button.copy,
+.ui-selectbox button.delete,
+.ui-selectbox button.copy {
    border-radius: 20px;
    width: 15px;
    height: 15px;
    line-height: 15px;
-   top: -18px;
+   top: -20px;
    background-color: #0769AD;
    color: white;
    border: none;
@@ -81,7 +88,8 @@
 .ui-radio-checked button.delete,
 .ui-radio button.delete,
 .ui-checkbox button.delete,
-.ui-checkbox-checked button.delete {
+.ui-checkbox-checked button.delete,
+.ui-selectbox button.delete {
    left: -15px;
 }
 
@@ -93,8 +101,13 @@
 .ui-radio-checked button.copy,
 .ui-radio button.copy,
 .ui-checkbox button.copy,
-.ui-checkbox-checked button.copy {
-   right: -15px;
+.ui-checkbox-checked button.copy,
+.ui-selectbox button.copy {
+	right: -15px;
+}
+
+.ui-button button.link {
+	left: 47%;
 }
 
 .ui-button button.delete:hover,
@@ -105,7 +118,8 @@
 .ui-radio-checked button.delete:hover,
 .ui-radio button.delete:hover,
 .ui-checkbox button.delete:hover,
-.ui-checkbox-checked button.delete:hover {
+.ui-checkbox-checked button.delete:hover,
+.ui-selectbox button.delete:hover {
    width: 20px;
    height: 20px;
    line-height: 20px;
@@ -117,73 +131,27 @@
 .ui-radio-checked input,
 .ui-radio input,
 .ui-checkbox input,
-.ui-checkbox-checked input {
+.ui-checkbox-checked input,
+.ui-selectbox input {
    text-align: center;
    height: 23px;
    border: none;
    background: transparent;
    overflow:hidden;
    resize: none;
-}
-.ui-button input {
-   width: 100px;
-   height: 30px;
-   top: 0;
-}
-.ui-textbox input {
-   width: 150px;
-   height: 30px;
-   top: 0;
-}
-.ui-textarea textarea {
-   width: 150px;
-   height: 60px;
-   top: 0;
-}
-.ui-label input {
-   width: 100px;
-   height: 30px;
-   top: 0;
-}
-.ui-radio-checked input,
-.ui-radio input {
-   width: 150px;
-   height: 20px;
-   top: 0;
-}
-.ui-checkbox input,
-.ui-checkbox-checked input {
-   width: 150px;
-   height: 20px;
-   top: 0;
+   width: 100%;
+   height: 100%;
 }
 .ui-div div,
 .ui-button div,
 .ui-textarea div,
-.ui-textbox div {
+.ui-textbox div,
+.ui-selectbox div {
    width: 22px;
    height: 22px;
    text-align: center;
    display: none;
    color: #0769AD;
-}
-
-.ui-div div {
-   top: 200px;
-   left: 200px;
-}
-
-.ui-button div {
-   top: 30px;
-   left: 100px;
-}
-
-.ui-textarea div {
-   top: 60px;
-   left: 150px;
-}
-
-.ui-textbox div {
-   top: 30px;
-   left: 150px;
+   top: 101%;
+   left: 101%;
 }

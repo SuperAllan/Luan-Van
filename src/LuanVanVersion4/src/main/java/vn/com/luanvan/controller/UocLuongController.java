@@ -138,7 +138,7 @@ public class UocLuongController {
 	@RequestMapping(value="/updateChuyenDoiUsecase", method = RequestMethod.GET)
 	public String updateChuyenDoiUsecase(HttpServletRequest request, RedirectAttributes redirectAttributes, Principal principal,
 			@RequestParam("listNhomUCId") Integer[] listNhomUCId, @RequestParam("listNhomUCName") String[] listNhomUCName, @RequestParam("listUCId") Integer[] listUCId, 
-			@RequestParam("listUCName") String[] listUCName, @RequestParam("listMoTaUC") String[] listMoTaUC, @RequestParam("listBMT") Integer[] listBMT) throws UnsupportedEncodingException{
+			@RequestParam("listUCName") String[] listUCName, @RequestParam("listMoTaUC") String[] listMoTaUC, @RequestParam("listBMT") Integer[] listBMT, @RequestParam("listTinhTien") Boolean[] listTinhTien) throws UnsupportedEncodingException{
 		String tenProject = request.getParameter("tenProject");
 		Project project = projectDao.findProjectByName(principal.getName(), tenProject);
 		for(int i = 0; i < listNhomUCId.length; i++){
@@ -150,6 +150,7 @@ public class UocLuongController {
 			Usecase UC = usecaseDao.getUsecaseByID(listUCId[i]);
 			UC.setNameofuc(listUCName[i]);
 			UC.setMotauc(listMoTaUC[i]);
+			UC.setTinhtien(listTinhTien[i]);
 			Bmt bmt = bmtDao.getBmtById(listBMT[i]);
 			UC.setBmt(bmt);
 			usecaseDao.update(UC);

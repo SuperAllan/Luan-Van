@@ -5,8 +5,21 @@ $(document).ready(function(){
 	if ($("#usecaseFromDiagram").val() != "") {
 		showDetailUsecase($("#usecaseFromDiagram").val());
 	}
+	
+	$(".formatNameDiagram").each(function(){
+		if($(this).text().length > 40){
+		var formatTitle = $.trim($(this).text()).substring(0,40).split(" ").join(" ") + "...";
+		$(this).text(formatTitle);
+		}
+	});
+	
+	$(".formatNameProject").each(function(){
+		if($(this).text().length > 40){
+		var formatTitle = $.trim($(this).text()).substring(0,40).split(" ").join(" ") + "...";
+		$(this).text(formatTitle);
+		}
+	});
 });
-
 function checkChangeValue(){
 	$('#buttonSubmit').attr('disabled','');
 }

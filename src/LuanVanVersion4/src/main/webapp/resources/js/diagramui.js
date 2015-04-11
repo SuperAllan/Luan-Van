@@ -6,6 +6,7 @@ var cellViewCopyUI = null;
 var hasViewChangeBorder = null;
 var hasBlankPointerDown = null;
 var selectView = null;
+var validNavigation = false;
 
 // Khoi tao so do - 1 graph la 1 so do
 var graphUI = new joint.dia.Graph;
@@ -50,9 +51,7 @@ paperUI.on('cell:pointerdblclick', function(cellView, x, y) {
 paperUI.on('blank:pointerdown', function(cellView, x, y) {
 	hideAllToolUI();
 	disableInput(cellView);
-	divProperties(true, '#aaaaaa');
 	cellViewPointerDown = null;
-	$("#properties-design-ui").hide("fade");
 	if (!hasCopyUI && !hasResizeUI) {
 		listSelectView = [];
 		hasBlankPointerDown = true;
@@ -87,18 +86,14 @@ paperUI.on('cell:pointerup', function(cellView, evt, x, y) {
     	}
 });
 
-paperUI.on('cell:pointerclick', function(cellView, evt, px, py) {
-
-});
-
 paperUI.on('cell:pointerdown', function(cellView, evt, px, py) {
+	
+	console.log(cellView);
 	
 	listSelectView = [];
 	
 	$("#properties-design-ui").show("fade");
 	
-	divProperties(false, 'black');
-
 	displayToolUI(cellView);
 
 	cellViewPointerDown = cellView;
@@ -115,7 +110,7 @@ paperUI.on('cell:pointerdown', function(cellView, evt, px, py) {
 	$("#border-size-design-ui").val(cellViewPointerDown.model.attr('rect/stroke-width'));
 	$("#border-radius-design-ui").val(cellViewPointerDown.model.attr('rect/rx'));
 
-	cellView.$box.find(".glyphicon").on('mousedown', function() {
+	cellView.$box.find(".resize").on('mousedown', function() {
 		hasResizeUI = true;
 		cellViewResizeUI = cellView;
 	});
@@ -125,6 +120,52 @@ paperUI.on('cell:pointerdown', function(cellView, evt, px, py) {
 		cellViewCopyUI = cellView;
 	});
 
+	cellView.$box.find(".link").on('mousedown', function() {
+		$.ajax({
+			url: "/luanvan/diagramui/viewlistui",
+			data: "nameProject=" + $("#nameProject").val(),
+			success: function(result) {
+				var object = $.parseJSON(result);
+				var str = "";
+				for (var i = 0; i < object.ui.length; i++) {
+					if (object.ui[i].name != $("#name-ui-show").html()) {
+						str += '<div class="form-group">';
+						console.log(cellView.model.attributes.connect);
+						if (cellView.model.attributes.connect.indexOf(object.ui[i].name) != -1) {
+							str+= '<button class="btn btn-success" id="' + object.ui[i].name + '"><i class="glyphicon glyphicon-link"></i></button>';
+							str+= '<a href="/luanvan/diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + object.ui[i].name + '" target="_blank"> ' + object.ui[i].name + '</a>';
+						} else {
+							str+= '<button class="btn btn-danger" id="' + object.ui[i].name + '"><i class="glyphicon glyphicon-link"></i></button>';
+							str+= '<span> ' + object.ui[i].name + '</span>';
+						}
+				        str+= '</div>';
+					}
+				}
+				$("#list-link-ui").html(str);
+				$("#list-link-ui div button").on('click', function() {
+					if ($(this).hasClass("btn-success")) {
+						cellView.model.attributes.connect.pop(this.id);
+						$(this).removeClass("btn-success");
+						$(this).addClass("btn-danger");
+						$(this).parent().children('a').remove();
+						$(this).parent().append('<span> ' + this.id + '</span>');
+					} else {
+						cellView.model.attributes.connect.push(this.id);
+						$(this).parent().children('span').remove();
+						$(this).parent().append('<a href="/luanvan/diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + this.id + '" target="_blank"> ' + this.id + '</a>');
+						$(this).removeClass("btn-danger");
+						$(this).addClass("btn-success");
+					}
+					$("#saveDiagramUI").trigger('click');
+				});
+			},
+			error: function() {
+				alert("Không thể lấy danh sách các sơ đồ");
+			}
+		});
+		$("#modal-link-ui").modal('show');
+	});
+	
 	var cell = cellView.model;
 
     if (!cell.get('embeds') || cell.get('embeds').length === 0) {
@@ -187,7 +228,6 @@ $("#paperUI").on('mousemove', function(e) {
 });
 
 $("#paperUI").on('mouseup', function(e) {
-
 	if (hasBlankPointerDown) {
 		hasBlankPointerDown = false;
 		var listElements = paperUI.findViewsInArea({
@@ -218,9 +258,9 @@ $("#paperUI").on('mouseup', function(e) {
 	if (hasCopyUI && cellViewCopyUI) {
 		var cellNew = cellViewCopyUI.model.clone().set({position: {x: pos.x, y: pos.y}});
 		graphUI.addCell(cellNew);
-		moveIconResizeUI(cellNew.findView(paperUI), cellNew.attributes.size.width, cellNew.attributes.size.height);
-		changeInputUI(cellNew.findView(paperUI), cellNew.attributes.size.width, cellNew.attributes.size.height);
-		if (cellViewCopyUI.model.attributes.type == "ui.Button" 
+		//moveIconResizeUI(cellNew.findView(paperUI), cellNew.attributes.size.width, cellNew.attributes.size.height);
+		//changeInputUI(cellNew.findView(paperUI), cellNew.attributes.size.width, cellNew.attributes.size.height);
+		if (cellViewCopyUI.model.attributes.type == "ui.Button"  || cellViewCopyUI.model.attributes.type == "ui.SelectBox"
 			|| cellViewCopyUI.model.attributes.type == "ui.Textarea"
 			|| cellViewCopyUI.model.attributes.type == "ui.Textbox") {
 			moveTextButton(cellNew.findView(paperUI), cellNew.attributes.size.width, cellNew.attributes.size.height);
@@ -229,33 +269,6 @@ $("#paperUI").on('mouseup', function(e) {
 	}
 	if (dragDropElementUI) {
 		dragDropElementUI = false;
-//		if (choosedElement == "div-design-ui") {
-//			createDiv(pos.x, pos.y);
-//		}
-//		if (choosedElement == "button-design-ui") {
-//			createButton(pos.x, pos.y);
-//		}
-//		if (choosedElement == "label-design-ui") {
-//			createLabel(pos.x, pos.y);
-//		}
-//		if (choosedElement == "radio-design-ui") {
-//			createRadio(pos.x, pos.y);
-//		}
-//		if (choosedElement == "radio-checked-design-ui") {
-//			createRadioChecked(pos.x, pos.y);
-//		}
-//		if (choosedElement == "checkbox-design-ui") {
-//			createCheckbox(pos.x, pos.y);
-//		}
-//		if (choosedElement == "checkbox-checked-design-ui") {
-//			createCheckboxChecked(pos.x, pos.y);
-//		}
-//		if (choosedElement == "textarea-design-ui") {
-//			createTextArea(pos.x, pos.y);
-//		}
-//		if (choosedElement == "textbox-design-ui") {
-//			createTextBox(pos.x, pos.y);
-//		}
 	}
 });
 
@@ -373,45 +386,39 @@ function alignBorderAuto(cellView) {
 	}
 }
 
-function divProperties(boolean, color) {
-	$("#properties-design-ui input").each(function() {
-		$(this).prop('disabled', boolean);
-	});
-
-	$("#properties-design-ui select").each(function() {
-		$(this).prop('disabled', boolean);
-	});
-
-	$("#properties-design-ui span").each(function() {
-		$(this).css('color', color);
-	});
-}
-
 function resizeWidthHeightCell(cellView, width, height) {
 	if (cellView.model.attributes.type == "ui.Button") {
-		moveTextButton(cellView, width, height);
+		moveText(cellView, width, height);
 	}
-	moveIconResizeUI(cellView, width, height);
-	changeInputUI(cellView, width, height);
+	if (cellView.model.attributes.type == "ui.SelectBox") {
+		moveSelectBox(cellView, width, height);
+	}
+	moveRectSVG(cellView, width, height);
+	//changeInputUI(cellView, width, height);
 	cellView.model.resize(width, height);
 }
 
-// Di chuyen icon resize theo hinh 
-function moveIconResizeUI(cellView, width, height) {
-	cellView.$box.find(".glyphicon-fullscreen").parent().css("left", width + "px");
-	cellView.$box.find(".glyphicon-fullscreen").parent().css("top", height + "px");
-}
-
-// Di chuyen o nhap text, textarea theo hinh
-function changeInputUI(cellView, width, height) {
-	cellView.$box.find(".name").css("width", width);
-	cellView.$box.find(".name").css("height", height);
-	cellView.$box.find(".name").css("top", 0);
-}
+//// Di chuyen o nhap text, textarea theo hinh
+//function changeInputUI(cellView, width, height) {
+//	cellView.$box.find(".name").css("width", width);
+//	cellView.$box.find(".name").css("height", height);
+//	cellView.$box.find(".name").css("top", 0);
+//}
 
 // Di chuyen text button
-function moveTextButton(cellView, width, height) {
-	cellView.model.attr({ text: { x: width / 2, y: (height / 2) + 5 } });
+function moveText(cellView, width, height) {
+	cellView.model.attr({text: {x: width / 2, y: height / 2}});
+}
+
+// Di chuyen rect svg 
+function moveRectSVG(cellView, width, height) {
+	cellView.model.attr({rect: {width: width, height: height}});
+}
+
+// Di chuyen arrow select
+function moveSelectBox(cellView, width, height) {
+	cellView.model.attr({path: { d: "M " + (width - 20) + " " + (height/2 - 5) + " L " + (width - 10) + " " + (height/2 - 5) + " L " + (width - 15) + " " + (height/2 + 5) + " L " + (width - 20) + " " + (height/2 - 5) }});
+	cellView.model.attr({text: {y: height/2 + 5}});
 }
 
 // Tao mot button
@@ -419,6 +426,7 @@ function createButton(positionX, positionY) {
 	var button = new joint.shapes.ui.Button({
 		position: { x: positionX, y: positionY }
 	});
+	
 	graphUI.addCell(button);
 }
 
@@ -486,6 +494,14 @@ function createCheckbox(positionX, positionY) {
 	graphUI.addCell(checkbox);
 }
 
+//Tao mot selectbox
+function createSelectbox(positionX, positionY) {
+	var selectbox = new joint.shapes.ui.SelectBox({
+		position: { x: positionX, y: positionY }
+	});
+	graphUI.addCell(selectbox);
+}
+
 // Su dung hien thi cac button xung quanh doi tuong dang chon
 function displayToolUI(cellView) {
 
@@ -496,11 +512,13 @@ function displayToolUI(cellView) {
 		if (cellView.model.id == allCells[i].id) {
 			allCells[i].findView(paperUI).$box.find('.delete').show();
 			allCells[i].findView(paperUI).$box.find('.copy').show();
+			allCells[i].findView(paperUI).$box.find('.link').show();
 			allCells[i].findView(paperUI).$box.find('.glyphicon-fullscreen').parent().show();
 			allCells[i].findView(paperUI).$box.find('.delete').parent().css('border', '3px dashed #0769AD');
 		} else {
 			allCells[i].findView(paperUI).$box.find('.delete').hide();
 			allCells[i].findView(paperUI).$box.find('.copy').hide();
+			allCells[i].findView(paperUI).$box.find('.link').hide();
 			allCells[i].findView(paperUI).$box.find('.glyphicon-fullscreen').parent().hide();
 			allCells[i].findView(paperUI).$box.find('.delete').parent().css('border', 'none');
 		}
@@ -514,6 +532,7 @@ function hideAllToolUI() {
 	for (var i = 0; i < allCells.length; i++) {
 		allCells[i].findView(paperUI).$box.find('.delete').hide();
 		allCells[i].findView(paperUI).$box.find('.copy').hide();
+		allCells[i].findView(paperUI).$box.find('.link').hide();
 		allCells[i].findView(paperUI).$box.find('.glyphicon-fullscreen').parent().hide();
 		allCells[i].findView(paperUI).$box.find('.delete').parent().css('border', 'none');
 	}
@@ -585,7 +604,7 @@ $("#exportSVGUI").on('click', function() {
     
     paperUI.setDimensions(w, h);
 });
-graphUI.on('change', function(cellView) {
+graphUI.on('change:position change:attrs change:size change:embeds change:parent', function(cellView) {
 	if (cellView.attributes.type != "selectView") {
 		setIconSaveUI('notsaved');
 	}
@@ -603,16 +622,6 @@ graphUI.on('remove', function(cellView) {
 	}
 });
 
-function setIconSaveUI(value) {
-	if (value == "saved") {
-		$("#saveDiagramUI").attr("style", "background: #5cb85c; color: white;");
-		$("#saveDiagramUI").html("<i class='glyphicon glyphicon-floppy-saved'></i> Lưu");
-	} else {
-		$("#saveDiagramUI").attr("style", "background: #d9534f; color: white;");
-		$("#saveDiagramUI").html("<i class='glyphicon glyphicon-floppy-remove'></i> Lưu");
-	}
-}
-
 $("#saveDiagramUI").on('click', function() {
 	if ($("#name-ui-show").html() != "") {
 		var w = paperUI.options.width;
@@ -624,24 +633,13 @@ $("#saveDiagramUI").on('click', function() {
 		var image = window.btoa("data:image/svg+xml;utf8," + encodeURIComponent(svgXML));
 		paperUI.setDimensions(w, h);
 		$("#saveDiagramUI").prop("disabled", true);
-		$("#icon-not-save-UI").html("<img src='/luanvan/resources/img/icon-loading.gif' />");
-		if ($(".toggle-menu-detail-project").html() == iconLeft) {
-			$(".div-loading").css('width', "870px");
-			$(".div-loading").css('height', "800px");
-		} else {
-			$(".div-loading").css('width', "1050px");
-			$(".div-loading").css('height', "1000px");
-		}
-		$(".div-loading").show();
 		$.ajax({
 			url : "/luanvan/diagramui/savediagramui",
 			method: "post",
 			data: "nameProject=" + $("#nameProject").val() + "&path=" + window.btoa(encodeURIComponent(JSON.stringify(graphUI)))
 				+ "&nameui=" + $("#name-ui-show").html() + "&image=" + image,
 			success: function() {
-				$("#icon-not-save-UI").html("<i class=\"mdi-notification-event-busy\"></i>");
 				setIconSaveUI('saved');
-				$(".div-loading").hide();
 			},
 			error: function() {
 				alert("error");
@@ -660,7 +658,7 @@ $(function () {
 $("#new-design-ui").on('click', function() {
 	$("#input-nameUI").val("");
 	$("#modal-newUI").modal('show');
-	graphUI.clear();
+//	graphUI.clear();
 });
 
 $("#create-name-UI").on('click', function() {
@@ -675,8 +673,8 @@ $("#create-name-UI").on('click', function() {
 				$("#name-ui-show").show('fade');
 				$("#modal-newUI").modal('hide');
 				$("#a-rename-ui").show('fade');
-				$("#saveDiagramUI").trigger('click');
 				graphUI.clear();
+				$("#saveDiagramUI").trigger('click');
 			}
 		},
 		error: function() {
@@ -711,12 +709,12 @@ $("#viewListUI").on("click", function() {
 					url: "/luanvan/diagramui/deleteui",
 					data: "&nameProject=" + $("#nameProject").val() + "&nameui=" + nameui,
 					success: function(result) {
-						if ($("#name-ui-show").html() == nameDiagram || $("#body-list-ui").html() == "") {
+						if ($("#name-ui-show").html() == nameui || $("#body-list-ui").html() == "") {
 							$("#name-ui-show").html("");
 							$("#a-rename-ui").hide('fade');
-							setIconSave("saved");
 							graphUI.clear();
 						}
+						setIconSave("saved");
 					},
 					error: function() {
 						alert("error");
@@ -740,7 +738,6 @@ $("#viewListUI").on("click", function() {
 						graphUI.fromJSON(JSON.parse(decodeURIComponent(window.atob(result))));
 						$("#modal-listUI").modal('hide');
 						$("#name-ui-show").html(nameui);
-						divProperties(true, "#aaaaaa");
 						$("#saveDiagramUI").prop("disabled", true);
 						$("#properties-design-ui").hide("fade");
 					},
@@ -765,9 +762,7 @@ $("#btn-svgUI").on('click', function() {
 
 $("#btn-rename-ui").on('click', function() {
 	var nameuiOld = $("#name-ui-show").html();
-	console.log(nameuiOld);
 	var nameuiNew = $("#input-rename-ui").val();
-	console.log(nameuiNew);
 	$.ajax({
 		url: "/luanvan/diagramui/checknameui",
 		data: "nameProject=" + $("#nameProject").val() + "&nameui=" + nameuiNew,
@@ -780,6 +775,7 @@ $("#btn-rename-ui").on('click', function() {
 					data: "&nameProject=" + $("#nameProject").val() + "&nameuiOld=" + nameuiOld + "&nameuiNew=" + nameuiNew,
 					success: function(result) {
 						$("#name-ui-show").html(nameuiNew);
+						$("#saveDiagramUI").trigger('click');
 						$("#modal-rename-ui").modal('hide');
 					},
 					error: function() {
@@ -928,34 +924,89 @@ function drag(ev) {
 
 function drop(ev) {
     ev.preventDefault();
-    var pos = getClickPosition(ev);
-    var id = ev.dataTransfer.getData("id");
-    if (id == "div-design-ui") {
-		createDiv(pos.x, pos.y);
-	}
-	if (id == "button-design-ui") {
-		createButton(pos.x, pos.y);
-	}
-	if (id == "label-design-ui") {
-		createLabel(pos.x, pos.y);
-	}
-	if (id == "radio-design-ui") {
-		createRadio(pos.x, pos.y);
-	}
-	if (id == "radio-checked-design-ui") {
-		createRadioChecked(pos.x, pos.y);
-	}
-	if (id == "checkbox-design-ui") {
-		createCheckbox(pos.x, pos.y);
-	}
-	if (id == "checkbox-checked-design-ui") {
-		createCheckboxChecked(pos.x, pos.y);
-	}
-	if (id == "textarea-design-ui") {
-		createTextArea(pos.x, pos.y);
-	}
-	if (id == "textbox-design-ui") {
-		createTextBox(pos.x, pos.y);
-	}
+    if ($("#name-ui-show").html() != "") {
+	    var pos = getClickPosition(ev);
+	    var id = ev.dataTransfer.getData("id");
+	    if (id == "div-design-ui") {
+			createDiv(pos.x, pos.y);
+		}
+		if (id == "button-design-ui") {
+			createButton(pos.x, pos.y);
+		}
+		if (id == "label-design-ui") {
+			createLabel(pos.x, pos.y);
+		}
+		if (id == "radio-design-ui") {
+			createRadio(pos.x, pos.y);
+		}
+		if (id == "radio-checked-design-ui") {
+			createRadioChecked(pos.x, pos.y);
+		}
+		if (id == "checkbox-design-ui") {
+			createCheckbox(pos.x, pos.y);
+		}
+		if (id == "checkbox-checked-design-ui") {
+			createCheckboxChecked(pos.x, pos.y);
+		}
+		if (id == "textarea-design-ui") {
+			createTextArea(pos.x, pos.y);
+		}
+		if (id == "textbox-design-ui") {
+			createTextBox(pos.x, pos.y);
+		}
+		if (id == "selectbox-design-ui") {
+			createSelectbox(pos.x, pos.y);
+		}
+    } else {
+    	$("#modal-newUI").modal('show');
+    }
 }
 // End drag drop element to paper
+
+$("#screenflow-ui").on('click', function() {
+	$(".name-ui-change-ajax").html($("#name-ui-show").html());
+	$("#screenflow-in-ui").html("");
+	$("#screenflow-out-ui").html("");
+	$.ajax({
+		url: "/luanvan/diagramui/viewlistui",
+		data: "nameProject=" + $("#nameProject").val(),
+		success: function(result) {
+			var object = $.parseJSON(result);
+			var str = "";
+			for (var i = 0; i < object.ui.length; i++) {
+				var path = JSON.parse(decodeURIComponent(window.atob(object.ui[i].path)));
+				for (var j = 0; j < path.cells.length; j++) {
+					if (path.cells[j].type == "ui.Button") {
+						if (object.ui[i].name != $("#name-ui-show").html()) {
+							if (path.cells[j].connect.indexOf($("#name-ui-show").html()) != -1) {
+								var aTag = '<div class="form-group text-primary"><a href="/luanvan/diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + object.ui[i].name + '" target="_blank"> ' + object.ui[i].name + '</a></div>';
+								$("#screenflow-in-ui").append(aTag);
+							}
+						} else {
+							if (path.cells[j].connect.indexOf($("#name-ui-show").html()) == -1) {
+								for (var h = 0; h < path.cells[j].connect.length; h++) {
+									var aTag = '<div class="form-group text-success"><a href="/luanvan/diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + path.cells[j].connect[h] + '" target="_blank"> ' + path.cells[j].connect[h] + '</a></div>';
+									$("#screenflow-out-ui").append(aTag);
+								}
+							}
+						}
+					}
+				}
+			}
+			$("#modal-screenflow-ui").modal('show');
+		},
+		error: function() {
+			alert("error");
+		}
+	});
+});
+
+function setIconSaveUI(value) {
+	if (value == "saved") {
+		$("#saveDiagramUI").attr("style", "background: #5cb85c; color: white;");
+		$("#saveDiagramUI").html("<i class='glyphicon glyphicon-floppy-saved'></i> Lưu");
+	} else {
+		$("#saveDiagramUI").attr("style", "background: #d9534f; color: white;");
+		$("#saveDiagramUI").html("<i class='glyphicon glyphicon-floppy-remove'></i> Lưu");
+	}
+}

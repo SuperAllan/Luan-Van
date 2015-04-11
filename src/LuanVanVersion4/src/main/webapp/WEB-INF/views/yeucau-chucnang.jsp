@@ -67,7 +67,7 @@ CHỨC NĂNG CỦA PHẦN MỀM</h3>
 					 	<c:forEach items="${listData.chucnangs}" var="listData2">
 						 <tr>
 						 	<td class="countSTT"></td>
-						 	<td><textarea name="listChucNang" rows="1" class="form-control chucNang" style="resize: vertical;" required onkeyup="textAreaAdjust(this)" onblur="checkNameChucNang(this)">${listData2.motayeucau}</textarea></td>
+						 	<td><textarea name="listChucNang" rows="1" class="form-control chucNang" required onblur="checkNameChucNang(this)">${listData2.motayeucau}</textarea></td>
 						 	<td>
 								<select class="form-control" name="listPhanLoai">
 									<c:forEach var="list" items="${listPhanLoai}">

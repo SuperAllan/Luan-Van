@@ -169,7 +169,7 @@ $(document).ready(function(){
 				<input type="hidden" id="id-modal-actor" />
 				<div class="form-group">
 					<label for="">Mô tả</label>
-					<textarea class="form-control" onkeyup="textAreaAdjust(this)" id="description-modal-actor" rows="4"
+					<textarea class="form-control" onkeyup="textAreaAdjust(this)" style="resize: vertical;" id="description-modal-actor" rows="4"
 						placeholder="Nhập mô tả của tác nhân" autofocus ></textarea>
 				</div>
 				<div class="form-group">
@@ -207,7 +207,7 @@ $(document).ready(function(){
 				<input type="hidden" id="id-modal-usecase" />
 				<div class="form-group">
 					<label for="">Mô tả</label>
-					<textarea class="form-control" onkeyup="textAreaAdjust(this)" id="description-modal-usecase" rows="4"
+					<textarea class="form-control" onkeyup="textAreaAdjust(this)"  style="resize: vertical;" id="description-modal-usecase" rows="4"
 					placeholder="Nhập mô tả của trường hợp sử dụng"  autofocus></textarea>
 				</div>
 				<div class="form-group">

@@ -16,19 +16,19 @@
 		<table class="table table-hover tableChuyenDoi">
 			<thead>
 				<tr>
-					<th></th>
-					<th>Tên Use-case</th>
-					<th>Tác nhân chính</th>
-					<th>Tác nhân phụ</th>
-					<th>Mô tả Use-case</th>
-					<th>Mức độ cần thiết</th>
+					<th class="text-center">TT</th>
+					<th class="text-center">Tên Use-case</th>
+					<th class="text-center">Tác nhân chính</th>
+					<th class="text-center">Tác nhân phụ</th>
+					<th class="text-center">Mô tả Use-case</th>
+					<th class="text-center">Tính tiền</th>
+					<th class="text-center">Mức độ</th>
 				</tr>
 			</thead>
-			
 			<c:forEach items="${listNhomUC}" var="listData">
 				<tbody>
 					 <tr>
-					 	<td colspan="6">
+					 	<td colspan="7">
 					 		<input type="hidden" name="listNhomUCId" value="${listData.nhomucid}" required="required">
 					 		<input type="text" name="listNhomUCName" class="form-control-bs nhomUCName" onblur="checkNhomUCName(this)" value="${listData.tennhom}" required="required">
 					 	</td>
@@ -40,7 +40,7 @@
 						 	</td>
 						 	<td>
 							 	<input type="hidden" name="listUCId" value="${listData2.usecaseid}">
-							 	<textarea name="listUCName" style="resize: vertical;" onkeyup="textAreaAdjust(this)" rows="1" class="form-control" required >${listData2.nameofuc}</textarea>
+							 	<textarea name="listUCName" rows="1" class="form-control" required >${listData2.nameofuc}</textarea>
 							</td>
 						 	<td>
 								<c:forEach items="${listData2.phanloais}" var="listData3">
@@ -57,7 +57,21 @@
 								</c:forEach>
 							</td>
 						 	<td>
-						 		<textarea class="form-control" rows="1" name="listMoTaUC" onkeyup="textAreaAdjust(this)" style="resize: vertical;">${listData2.motauc}</textarea>
+						 		<textarea class="form-control" rows="1" name="listMoTaUC">${listData2.motauc}</textarea>
+						 	</td>
+						 	<td class="text-center">
+						 		<select class="form-control" name="listTinhTien">
+							 		<c:choose>
+							 			<c:when test="${listData2.tinhtien == true}">
+							 				<option value="true" selected>Có</option>
+							 				<option value="false">Không</option>
+							 			</c:when>
+							 			<c:otherwise>
+							 				<option value="true">Có</option>
+							 				<option value="false" selected>Không</option>
+							 			</c:otherwise>
+							 		</c:choose>
+						 		</select>
 						 	</td>
 						 	<td>
 						 		<select class="form-control" name="listBMT">

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import vn.com.luanvan.dao.NhomucDao;
 import vn.com.luanvan.dao.ProjectDao;
@@ -44,7 +45,7 @@ public class DiagramUIController {
 	NhomucDao nhomucDao;
 	@Autowired
 	private HttpServletRequest request;
-
+	
 	@RequestMapping(value = "/diagram/newdiagramui")
 	public String newDiagram(Principal principal, Model model) {
 		String projectName = (String) request.getParameter("nameProject");
@@ -141,6 +142,11 @@ public class DiagramUIController {
 				} else {
 					result += "{ \"name\" : \"\",";
 				}
+				if (uis.get(i).getPath() != null) {
+					result += "\"path\" : \"" + uis.get(i).getPath() + "\",";
+				} else {
+					result += "\"path\" : \"\",";
+				}
 				if (uis.get(i).getImage() != null) {
 					result += "\"image\" : \"" + uis.get(i).getImage() + "\"},";
 				} else {
@@ -151,6 +157,11 @@ public class DiagramUIController {
 				result += "{ \"name\" : \"" + uis.get(uis.size() - 1).getNameui() + "\",";
 			} else {
 				result += "{ \"name\" : \"\",";
+			}
+			if (uis.get(uis.size() - 1).getPath() != null) {
+				result += "\"path\" : \"" + uis.get(uis.size() - 1).getPath() + "\",";
+			} else {
+				result += "\"path\" : \"\",";
 			}
 			if (uis.get(uis.size() - 1).getImage() != null) {
 				result += "\"image\" : \"" + uis.get(uis.size() - 1).getImage() + "\"}";

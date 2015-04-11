@@ -393,7 +393,7 @@ public class DiagramController {
 		
 		Usecase usecase = new Usecase();
 		usecase.setBmt(bmtDao.getBmtById(1));
-		usecase.setTinhtien(1);
+		usecase.setTinhtien(true);
 		usecase.setNameofuc(nameUsecase);
 		usecase.setProject(project);
 		if (!nhomucDao.hasNhomuc(nameDiagram, project.getProjectid())) {
@@ -467,9 +467,9 @@ public class DiagramController {
 		uc.setMotauc(description);
 		uc.setBmt(btmDao.getBmtById(Integer.parseInt(level)));
 		if (payMoney.contains("true")) {
-			uc.setTinhtien(1);
+			uc.setTinhtien(true);
 		} else {
-			uc.setTinhtien(0);
+			uc.setTinhtien(false);
 		}
 		if (!group.equals("")) {
 			if (!nhomucDao.hasNhomuc(group, project.getProjectid())) {
@@ -711,31 +711,31 @@ public class DiagramController {
 			String type = u.getBmt().getTen().split("-")[0];
 			String level = u.getBmt().getTen().split("-")[1];
 			
-			if (type.equals("B ") && u.getTinhtien() == 1) {
+			if (type.equals("B ") && u.getTinhtien() == true) {
 				typeB ++;
-				if (level.equals(" Đơn giản") && u.getTinhtien() == 1) {
+				if (level.equals(" Đơn giản") && u.getTinhtien() == true) {
 					typeBSimple ++;
-				} else if (level.equals(" Trung bình") && u.getTinhtien() == 1){
+				} else if (level.equals(" Trung bình") && u.getTinhtien() == true){
 					typeBAverage ++;
-				} else if (level.equals(" Phức tạp") && u.getTinhtien() == 1) {
+				} else if (level.equals(" Phức tạp") && u.getTinhtien() == true) {
 					typeBComplex ++;
 				}
-			} else if (type.equals("M ") && u.getTinhtien() == 1){
+			} else if (type.equals("M ") && u.getTinhtien() == true){
 				typeM ++;
-				if (level.equals(" Đơn giản") && u.getTinhtien() == 1) {
+				if (level.equals(" Đơn giản") && u.getTinhtien() == true) {
 					typeMSimple ++;
-				} else if (level.equals(" Trung bình") && u.getTinhtien() == 1){
+				} else if (level.equals(" Trung bình") && u.getTinhtien() == true){
 					typeMAverage ++;
-				} else if (level.equals(" Phức tạp") && u.getTinhtien() == 1) {
+				} else if (level.equals(" Phức tạp") && u.getTinhtien() == true) {
 					typeMComplex ++;
 				}
-			} else if (type.equals("T ") && u.getTinhtien() == 1) {
+			} else if (type.equals("T ") && u.getTinhtien() == true) {
 				typeT ++;
-				if (level.equals(" Đơn giản") && u.getTinhtien() == 1) {
+				if (level.equals(" Đơn giản") && u.getTinhtien() == true) {
 					typeTSimple ++;
-				} else if (level.equals(" Trung bình") && u.getTinhtien() == 1){
+				} else if (level.equals(" Trung bình") && u.getTinhtien() == true){
 					typeTAverage ++;
-				} else if (level.equals(" Phức tạp") && u.getTinhtien() == 1) {
+				} else if (level.equals(" Phức tạp") && u.getTinhtien() == true) {
 					typeTComplex ++;
 				}
 			}

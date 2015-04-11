@@ -37,7 +37,7 @@ public class Usecase implements java.io.Serializable {
 	private String nameofuc;
 	private String motauc;
 	private String cauhoi;
-	private int tinhtien;
+	private boolean tinhtien;
 	private List<FileUC> files = new ArrayList<FileUC>();
 	private Set<Phanloai> phanloais = new HashSet<Phanloai>(0);
 	private Set<Chucnang> chucnangs = new HashSet<Chucnang>(0);
@@ -45,7 +45,7 @@ public class Usecase implements java.io.Serializable {
 	public Usecase() {
 	}
 
-	public Usecase(Bmt bmt, Nhomuc nhomuc, Project project, String nameofuc, String motauc, int tinhtien) {
+	public Usecase(Bmt bmt, Nhomuc nhomuc, Project project, String nameofuc, String motauc, boolean tinhtien) {
 		this.bmt = bmt;
 		this.nhomuc = nhomuc;
 		this.project = project;
@@ -55,7 +55,7 @@ public class Usecase implements java.io.Serializable {
 	}
 
 	public Usecase(Bmt bmt, Nhomuc nhomuc, Project project, String nameofuc, String motauc,
-			String cauhoi, int tinhtien, List<FileUC> files, Set<Phanloai> phanloais, Set<Chucnang> chucnangs) {
+			String cauhoi, boolean tinhtien, List<FileUC> files, Set<Phanloai> phanloais, Set<Chucnang> chucnangs) {
 		this.bmt = bmt;
 //		this.mucdo = mucdo;
 //		this.mucdocanthiet = mucdocanthiet;
@@ -139,11 +139,11 @@ public class Usecase implements java.io.Serializable {
 	}
 
 	@Column(name = "TINHTIEN", nullable = false)
-	public int getTinhtien() {
+	public boolean getTinhtien() {
 		return this.tinhtien;
 	}
 
-	public void setTinhtien(int tinhtien) {
+	public void setTinhtien(boolean tinhtien) {
 		this.tinhtien = tinhtien;
 	}
 

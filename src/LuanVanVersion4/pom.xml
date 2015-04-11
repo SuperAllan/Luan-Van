@@ -235,6 +235,13 @@
 			<version>3.9</version>
 		</dependency>
 	   
+	   <dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml-schemas</artifactId>
+			<version>3.9</version>
+		</dependency>
+	   
+	   
 	   <!-- ho tro cho phan xuat tai lieu --> 
 	    <dependency>
 			<groupId>com.lowagie</groupId>

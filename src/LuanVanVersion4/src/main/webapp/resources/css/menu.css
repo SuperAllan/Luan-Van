@@ -1,3 +1,7 @@
+textarea{
+	resize: vertical;
+	overflow: hidden;
+}
 #header-background span {
 	color: #eee !important;
 }
