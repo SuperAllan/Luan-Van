@@ -65,14 +65,14 @@
 			<td class="text-center">6</td>
 			<td>Tính điểm AUCP</td>
 			<td class="text-center text-bold">AUCP = UUCP*TCF*EF</td>
-			<td id="AUCP" class="text-right">${((tongDiemActor + tongDiemTungUsecase) * ((tongKetQuaFromKyThuat * 0.01) + 0.6) * (1.4 + (-0.03 * tongKetQuaFromMoiTruong)))} </td>
+			<td id="AUCP" class="text-right ">${((tongDiemActor + tongDiemTungUsecase) * ((tongKetQuaFromKyThuat * 0.01) + 0.6) * (1.4 + (-0.03 * tongKetQuaFromMoiTruong)))} </td>
 			<td>Giá trị điểm trường hợp sử dụng sau khi hiệu chỉnh</td>
 		</tr>
 		<tr>
 			<td class="text-center text-bold">II</td>
 			<td class="text-bold">Nội suy thời gian lao động (P)</td>
 			<td class="text-center text-bold">P=người/giờ/AUCP</td>
-			<td id="noiSuyP" class="text-right">${tinhNoiSuy}</td>
+			<td id="noiSuyP" class="text-right formatKetQua">${tinhNoiSuy}</td>
 			<td></td>
 		</tr>
 		<tr>
@@ -92,7 +92,7 @@
 													</c:forEach>
 												</select> *AUCP
 			</td>
-			<td id="noLucE" class="text-right"></td>
+			<td id="noLucE" class="text-right formatKetQua"></td>
 			<td></td>
 		</tr>
 		<tr>

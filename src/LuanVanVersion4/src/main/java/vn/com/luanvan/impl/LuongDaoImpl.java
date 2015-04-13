@@ -5,11 +5,10 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import com.mysql.fabric.xmlrpc.base.Array;
 
 import vn.com.luanvan.dao.LuongDao;
 import vn.com.luanvan.model.Giatriluong;
@@ -20,6 +19,7 @@ public class LuongDaoImpl implements LuongDao{
 	@Autowired
 	SessionFactory sessionFactory;
 	
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Luong> getListLuong() {
 		String hql = "FROM Luong";
@@ -111,6 +111,14 @@ public class LuongDaoImpl implements LuongDao{
 			CP1Gio.add(temp);
 		}
 		return CP1Gio;
+	}
+
+	@Transactional
+	public Luong findLuongByBac(int bac) {
+		String hql = "FROM Luong WHERE bac= :bac";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("bac", bac);
+		return (Luong) query.list().get(0);
 	}
 	
 }

@@ -245,7 +245,7 @@ public class UocLuongController {
 		int luongNhaNuoc = Integer.parseInt(request.getParameter("mucLuongNhaNuoc"));
 		project.setLuongcoban(luongNhaNuoc);
 		String bacLuong = request.getParameter("chooseBacLuong");
-		project.setBacluong(Integer.parseInt(bacLuong));
+		project.setLuong(luongDao.findLuongByBac(Integer.parseInt(bacLuong)));
 		giaTriLuongDao.delete(project.getProjectid());
 		for(int i = 0; i < luongIdForBangLuong.length; i++){
 			GiatriluongId giaTriId = new GiatriluongId();

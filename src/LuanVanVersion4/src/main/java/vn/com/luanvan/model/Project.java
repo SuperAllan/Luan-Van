@@ -41,7 +41,7 @@ public class Project implements java.io.Serializable {
 	private String sodo;
 	private int luongcoban;
 	private Trongsonoluc trongsonoluc;
-	private int bacluong;
+	private Luong luong;
 	private Set<Phichucnang> phichucnangs = new HashSet<Phichucnang>(0);
 	private Set<Xephangmoitruong> xephangmoitruong = new HashSet<Xephangmoitruong>(0);
 	private Set<Chucnang> chucnangs = new HashSet<Chucnang>(0);
@@ -56,17 +56,17 @@ public class Project implements java.io.Serializable {
 	}
 
 	public Project( User user, int trangthai, Date ngaytao,
-			String tenproject, int luongcoban, Trongsonoluc trongsonoluc, int bacluong) {
+			String tenproject, int luongcoban, Trongsonoluc trongsonoluc, Luong luong) {
 		this.user = user;
 		this.trangthai = trangthai;
 		this.ngaytao = ngaytao;
 		this.tenproject = tenproject;
 		this.luongcoban = luongcoban;
 		this.trongsonoluc = trongsonoluc;
-		this.bacluong = bacluong;
+		this.luong = luong;
 	}
 
-	public Project( User user, int trangthai, Date ngaytao, int luongcoban, Trongsonoluc trongsonoluc, int bacluong,
+	public Project( User user, int trangthai, Date ngaytao, int luongcoban, Trongsonoluc trongsonoluc, Luong luong,
 			String tenproject, Set<Phichucnang> phichucnangs, Set<Xephangmoitruong> xephangnhoms,
 			Set<Chucnang> chucnangs, Set<Usecase> usecases, Set<Actor> actors,Set<Xephangkythuat> xephangkythuats) {
 		this.user = user;
@@ -80,7 +80,7 @@ public class Project implements java.io.Serializable {
 		this.xephangkythuats = xephangkythuats;
 		this.luongcoban = luongcoban;
 		this.trongsonoluc = trongsonoluc;
-		this.bacluong = bacluong;
+		this.luong = luong;
 		this.actors = actors;
 	}
 
@@ -240,14 +240,14 @@ public class Project implements java.io.Serializable {
 	public void setTrongsonoluc(Trongsonoluc trongso) {
 		this.trongsonoluc = trongso;
 	}
-	
-	@Column(name = "BACLUONG",columnDefinition = "int default 1")
-	public int getBacluong() {
-		return this.bacluong;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "LUONGID")
+	public Luong getLuong() {
+		return this.luong;
 	}
 
-	public void setBacluong(int bacluong) {
-		this.bacluong = bacluong;
+	public void setLuong(Luong luong) {
+		this.luong = luong;
 	}
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "project")

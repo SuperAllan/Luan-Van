@@ -323,24 +323,9 @@
 <!-- End modal screenflow ui -->
 
 <script src="<c:url value="/resources/js/joint.nojquery.min.js" />" ></script>
-<script src="<c:url value="/resources/js/diagram.js" />" ></script>
+<script src="<c:url value="/resources/js/global.js" />" ></script>
 <script src="<c:url value="/resources/js/xml2json.js" />" ></script>
 <script src="<c:url value="/resources/js/jointshapesumlcustom.js"/>"></script>
 <script src="<c:url value="/resources/js/diagramui.js" />"></script>
-<script src="<c:url value="/resources/js/joint.shapes.ui.custom.js" />"></script>
-<script type="text/javascript">
-	$(document).ready(function() {
-		// Begin loading diagram
-		if ($("#path").html() && $("#path").html() != "") {
-			graphUI.fromJSON(JSON.parse(decodeURIComponent(window.atob($("#path").html()))));
-		}
-		if ($("#name-ui-show").html() != "") {
-			$("#a-rename-ui").show("fade");
-		} else {
-			$("#a-rename-ui").hide("fade");
-		}
-		// End loading diagram
-		});
-</script>
 </body>
 </html>

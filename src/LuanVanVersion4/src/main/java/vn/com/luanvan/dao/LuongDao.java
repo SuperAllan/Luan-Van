@@ -22,5 +22,5 @@ public interface LuongDao{
 	
 	List<Integer> TinhCP1Gio(int mucLuongNhaNuoc, List<Luong> luongs, List<Giatriluong> list);
 	
-	
+	Luong findLuongByBac(int bac);
 }

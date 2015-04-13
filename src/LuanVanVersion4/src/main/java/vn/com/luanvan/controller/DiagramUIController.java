@@ -62,10 +62,14 @@ public class DiagramUIController {
 	@RequestMapping(value = "/diagramui/viewdiagramui")
 	public String viewDiagram(Principal principal, Model model) {
 		String projectName = (String) request.getParameter("nameProject");
-		String username = principal.getName();
-		Project project = projectDao.findProjectByName(username, projectName);
-		
 		String nameUI = (String) request.getParameter("nameUI");
+		String username = principal.getName();
+		Project project;
+		try{
+			project = projectDao.findProjectByName(username, projectName);
+		}catch(Exception e){
+			return "404";
+		}
 		UI ui = uiDao.getUIByName(nameUI, project.getProjectid());
 		if (ui != null) {
 			model.addAttribute("path", ui.getPath());

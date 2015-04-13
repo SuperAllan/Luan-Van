@@ -46,18 +46,13 @@
 				        </div>
 				        <div class="tab-Li tab-pane fade" id="tabXuatFile">
 					        <div class="form-group" style="margin-top: 100px;">
-					        	<div class="form-group" style="display: inline; margin-left: 100px;">
+					        	<div class="form-group" style="display: inline; margin-left: 250px;" id="downloadWord">
 						        	<a href="${contextPath}/downloadDoc?project=${project.tenproject}">
 						        		<img alt="Xuất File .docx" style="width: 30px; height: 40px;" src="${contextPath}/resources/img/word.png">
 						        		<span>Xuất File Docx</span>
 						        	</a>
 					        	</div>
-					        	<div class="form-group" style="display: inline; margin-left: 100px;">
-					        		<a href="${contextPath}/downloadPDF?project=${project.tenproject}">
-						        		<img alt="Xuất File .pdf" style="width: 40px; height: 40px;" src="${contextPath}/resources/img/pdf.jpg">
-						        		<span>Xuất File PDF</span>
-					        		</a>
-					        	</div>
+					        	
 					        	<div class="form-group" style="display: inline; margin-left: 100px;" id="downloadExcel">
 					        		<a href="${contextPath}/downloadExcel?project=${project.tenproject}">
 						        		<img alt="Xuất File .xls" style="width: 40px; height: 40px;" src="${contextPath}/resources/img/excel.png">

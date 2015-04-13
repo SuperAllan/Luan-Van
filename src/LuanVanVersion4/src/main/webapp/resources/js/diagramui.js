@@ -6,8 +6,8 @@ var cellViewCopyUI = null;
 var hasViewChangeBorder = null;
 var hasBlankPointerDown = null;
 var selectView = null;
-var validNavigation = false;
-
+var dragDropElementUI = false;
+var choosedElement = false;
 // Khoi tao so do - 1 graph la 1 so do
 var graphUI = new joint.dia.Graph;
 
@@ -21,8 +21,7 @@ var paperUI = new joint.dia.Paper({
     gridSize: 1
 });
 
-var dragDropElementUI = false;
-var choosedElement = false;
+
 
 var lineH1 = new joint.shapes.basic.Rect({
 	size: { width: 1500, height: 1},
@@ -42,6 +41,19 @@ var lineV1 = new joint.shapes.basic.Rect({
 var lineV2 = new joint.shapes.basic.Rect({
 	size: { width: 1, height: 1000},
 	attrs: { rect: { fill: '#d43f3a', stroke: 'none'} }
+});
+
+$(document).ready(function() {
+	// Begin loading ui
+	if ($("#path").html() && $("#path").html() != "") {
+		graphUI.fromJSON(JSON.parse(decodeURIComponent(window.atob($("#path").html()))));
+	}
+	if ($("#name-ui-show").html() != "") {
+		$("#a-rename-ui").show("fade");
+	} else {
+		$("#a-rename-ui").hide("fade");
+	}
+	// End loading ui
 });
 
 paperUI.on('cell:pointerdblclick', function(cellView, x, y) {
@@ -88,8 +100,6 @@ paperUI.on('cell:pointerup', function(cellView, evt, x, y) {
 
 paperUI.on('cell:pointerdown', function(cellView, evt, px, py) {
 	
-	console.log(cellView);
-	
 	listSelectView = [];
 	
 	$("#properties-design-ui").show("fade");
@@ -130,7 +140,6 @@ paperUI.on('cell:pointerdown', function(cellView, evt, px, py) {
 				for (var i = 0; i < object.ui.length; i++) {
 					if (object.ui[i].name != $("#name-ui-show").html()) {
 						str += '<div class="form-group">';
-						console.log(cellView.model.attributes.connect);
 						if (cellView.model.attributes.connect.indexOf(object.ui[i].name) != -1) {
 							str+= '<button class="btn btn-success" id="' + object.ui[i].name + '"><i class="glyphicon glyphicon-link"></i></button>';
 							str+= '<a href="/luanvan/diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + object.ui[i].name + '" target="_blank"> ' + object.ui[i].name + '</a>';
@@ -258,13 +267,6 @@ $("#paperUI").on('mouseup', function(e) {
 	if (hasCopyUI && cellViewCopyUI) {
 		var cellNew = cellViewCopyUI.model.clone().set({position: {x: pos.x, y: pos.y}});
 		graphUI.addCell(cellNew);
-		//moveIconResizeUI(cellNew.findView(paperUI), cellNew.attributes.size.width, cellNew.attributes.size.height);
-		//changeInputUI(cellNew.findView(paperUI), cellNew.attributes.size.width, cellNew.attributes.size.height);
-		if (cellViewCopyUI.model.attributes.type == "ui.Button"  || cellViewCopyUI.model.attributes.type == "ui.SelectBox"
-			|| cellViewCopyUI.model.attributes.type == "ui.Textarea"
-			|| cellViewCopyUI.model.attributes.type == "ui.Textbox") {
-			moveTextButton(cellNew.findView(paperUI), cellNew.attributes.size.width, cellNew.attributes.size.height);
-		}
 		hasCopyUI = false;
 	}
 	if (dragDropElementUI) {
@@ -394,16 +396,8 @@ function resizeWidthHeightCell(cellView, width, height) {
 		moveSelectBox(cellView, width, height);
 	}
 	moveRectSVG(cellView, width, height);
-	//changeInputUI(cellView, width, height);
 	cellView.model.resize(width, height);
 }
-
-//// Di chuyen o nhap text, textarea theo hinh
-//function changeInputUI(cellView, width, height) {
-//	cellView.$box.find(".name").css("width", width);
-//	cellView.$box.find(".name").css("height", height);
-//	cellView.$box.find(".name").css("top", 0);
-//}
 
 // Di chuyen text button
 function moveText(cellView, width, height) {
@@ -650,15 +644,9 @@ $("#saveDiagramUI").on('click', function() {
 	}
 });
 
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-  $("").hide();
-})
-
 $("#new-design-ui").on('click', function() {
 	$("#input-nameUI").val("");
 	$("#modal-newUI").modal('show');
-//	graphUI.clear();
 });
 
 $("#create-name-UI").on('click', function() {
@@ -835,7 +823,6 @@ $("#assign-usecase-design-ui").on('click', function() {
 				nameProject : $("#nameProject").val(), nameui : $("#name-ui-show").html()
 			},
 			success: function(result){
-				console.log(result);
 				var object = $.parseJSON(result);
 				var str = "";
 				for (var j = 0; j < object.nhomucs.length; j++) {
@@ -895,23 +882,6 @@ $("#btn-assignUI").on('click', function() {
 		}
 	});
 });
-
-$("#open-design-ui").on('click', function() {
-	$("#openFileUI").trigger('click');
-});
-
-$("#openFileUI").on('click', function(evt) {
-	var file = evt.target.files[0];
-	if (file) {
-		var reader = new FileReader();
-		reader.readAsText(file);
-		reader.onload = function(e) {
-			var content = e.target.result;
-			
-		}
-	}
-});
-
 
 //Begin drag drop element to paper
 function allowDrop(ev) {

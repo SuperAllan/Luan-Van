@@ -21,8 +21,8 @@
 		<intercept-url pattern="/updateBangLuong**" access="isAuthenticated()" />
 		<intercept-url pattern="/updateGiaTriPhanMem**" access="isAuthenticated()" />
 		<intercept-url pattern="/diagram**" access="isAuthenticated()" />
+		<intercept-url pattern="/diagramui**" access="isAuthenticated()" />
 		<intercept-url pattern="/detailUsecase**" access="isAuthenticated()" />
-		<intercept-url pattern="/downloadPDF**" access="isAuthenticated()" />
 		<intercept-url pattern="/downloadDoc**" access="isAuthenticated()" />
 		<intercept-url pattern="/downloadExcel**" access="isAuthenticated()" />
 		<access-denied-handler error-page="/403" />

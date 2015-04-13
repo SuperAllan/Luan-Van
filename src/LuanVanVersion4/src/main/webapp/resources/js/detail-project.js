@@ -1,3 +1,5 @@
+var iconRight = '<i class="glyphicon glyphicon-chevron-right"></i>';
+var iconLeft = '<i class="glyphicon glyphicon-chevron-left"></i>';
 $(document).ready(function(){
 	$('#downloadExcel').click(function(){
 		var href = $('#downloadExcel > a').attr('href');
@@ -13,6 +15,23 @@ $(document).ready(function(){
 			}
 		}else{
 			$('#downloadExcel > a').attr('href', href);
+		}
+	});
+	
+	$('#downloadWord').click(function(){
+		var href = $('#downloadWord > a').attr('href');
+		if($('#luongNhaNuoc').val() < 1){
+			$('#downloadWord > a').attr('href', "#");
+			var isConfirm  = confirm('Bạn chưa tính bảng lương. Vui lòng tính bảng lương trước.');
+			if(isConfirm == true){
+				removeClassActive();
+				$("#uocLuong").addClass("active");
+				$("#tabUocLuong").addClass("in active")
+				$("#bangLuong").addClass("active");
+				$("#tabBangLuong").addClass("in active");
+			}
+		}else{
+			$('#downloadWord > a').attr('href', href);
 		}
 	});
 	
@@ -101,4 +120,19 @@ function removeClassActive() {
 		$(this).removeClass("active");
 	});
 }
+
+//Begin toggle menu left details project
+$(".toggle-menu-detail-project").on('click', function() {
+	$("#menu-detail-project").toggle("fade");
+	if ($(this).html() == iconRight) {
+		$(this).html(iconLeft);
+		$(".wrapper-tab-content-detail-project").addClass("col-md-10");
+		$(".wrapper-tab-content-detail-project").removeClass("col-md-12");
+	} else {
+		$(this).html(iconRight);
+		$(".wrapper-tab-content-detail-project").addClass("col-md-12");
+		$(".wrapper-tab-content-detail-project").removeClass("col-md-10");
+	}
+});
+// End toggle menu left details project
 

@@ -31,6 +31,7 @@ import vn.com.luanvan.model.Luong;
 import vn.com.luanvan.model.Nhomchucnang;
 import vn.com.luanvan.model.Nhomuc;
 import vn.com.luanvan.model.Phanloai;
+import vn.com.luanvan.model.Project;
 import vn.com.luanvan.model.Trongsonoluc;
 import vn.com.luanvan.model.Usecase;
 import vn.com.luanvan.model.Xephangkythuat;
@@ -209,8 +210,8 @@ public class ExcelBuilder extends AbstractExcelView{
     	sheet1Row5.createCell(2).setCellValue("Tác nhân chính");
     	sheet1Row5.createCell(3).setCellValue("Tác nhân phụ");
     	sheet1Row5.createCell(4).setCellValue("Mô tả Use-case");
-    	sheet1Row5.createCell(5).setCellValue("Mức độ cần thiết");
-    	sheet1Row5.createCell(6).setCellValue("Mức độ");
+    	sheet1Row5.createCell(5).setCellValue("Tính tiền");
+    	sheet1Row5.createCell(6).setCellValue("Mức độ cần thiết");
     	sheet1Row5.getCell(0).setCellStyle(styleBlue);
     	sheet1Row5.getCell(1).setCellStyle(styleBlue);
     	sheet1Row5.getCell(2).setCellStyle(styleBlue);
@@ -251,10 +252,10 @@ public class ExcelBuilder extends AbstractExcelView{
     			sheet2Row.createCell(4).setCellValue(UC.getMotauc());
     			sheet2Row.getCell(4).setCellStyle(wrapText);
     			if(UC.getTinhtien() == true){
-    				sheet2Row.createCell(5).setCellValue("Bắt buộc");
+    				sheet2Row.createCell(5).setCellValue("Có");
     				sheet2Row.getCell(5).setCellStyle(textMiddle);
     			}else{
-    				sheet2Row.createCell(5).setCellValue("");
+    				sheet2Row.createCell(5).setCellValue("Không");
     			}
     			sheet2Row.createCell(6).setCellValue(UC.getBmt().getTen());
     			sheet2Row.getCell(6).setCellStyle(textMiddle);
@@ -268,8 +269,8 @@ public class ExcelBuilder extends AbstractExcelView{
     	sheet.setColumnWidth(2, 5300);
     	sheet.setColumnWidth(3, 5300);
     	sheet.setColumnWidth(4, 8700);
-    	sheet.setColumnWidth(5, 4200);
-    	sheet.setColumnWidth(6, 2900);
+    	sheet.setColumnWidth(5, 2100);
+    	sheet.setColumnWidth(6, 3200);
 	}
 	
 	@SuppressWarnings({ "static-access", "deprecation", "unchecked" })
@@ -737,6 +738,10 @@ public class ExcelBuilder extends AbstractExcelView{
 		CellStyle textCenter = workbook.createCellStyle();
         textCenter.setAlignment(textCenter.ALIGN_CENTER);
         
+        CellStyle textCenterGreen = workbook.createCellStyle();
+        textCenterGreen.setAlignment(textCenterGreen.ALIGN_CENTER);
+        textCenterGreen.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+        
         CellStyle textCenterBold = workbook.createCellStyle();
         textCenterBold.setAlignment(textCenterBold.ALIGN_CENTER);
         textCenterBold.setFont(fontBold);
@@ -791,15 +796,29 @@ public class ExcelBuilder extends AbstractExcelView{
     	List<Integer> listLuongCoBan = (List<Integer>) listObject.get(7);
     	List<Integer> listLuongPhu = (List<Integer>) listObject.get(8);
     	int mucLuongNhaNuoc = (Integer) listObject.get(9);
+    	Project project =  (Project) listObject.get(10);
     	int countRow = 6;
 		for(int i = 0; i < luongs.size(); i++){
     		HSSFRow sheetRow = hssfSheet.createRow(countRow);
     		sheetRow.createCell(0).setCellValue(luongs.get(i).getLuongid());
-    		sheetRow.getCell(0).setCellStyle(textCenter);
+    		if(project.getLuong().getBac() == luongs.get(i).getBac()){
+    			sheetRow.getCell(0).setCellStyle(textCenterGreen);
+    		}else{
+    			sheetRow.getCell(0).setCellStyle(textCenter);
+    		}
+    		
     		sheetRow.createCell(1).setCellValue(luongs.get(i).getBac());
-    		sheetRow.getCell(1).setCellStyle(textCenter);
+    		if(project.getLuong().getBac() == luongs.get(i).getBac()){
+    			sheetRow.getCell(1).setCellStyle(textCenterGreen);
+    		}else{
+    			sheetRow.getCell(1).setCellStyle(textCenter);
+    		}
     		sheetRow.createCell(2).setCellValue(luongs.get(i).getHeso());
-    		sheetRow.getCell(2).setCellStyle(textCenter);
+    		if(project.getLuong().getBac() == luongs.get(i).getBac()){
+    			sheetRow.getCell(2).setCellStyle(textCenterGreen);
+    		}else{
+    			sheetRow.getCell(2).setCellStyle(textCenter);
+    		}
     		if(listLuongCoBan.size() != 0){
     		sheetRow.createCell(3).setCellValue(listLuongCoBan.get(i));
     		sheetRow.getCell(3).setCellStyle(formatSeparator);

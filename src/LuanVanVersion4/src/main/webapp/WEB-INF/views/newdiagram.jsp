@@ -15,45 +15,6 @@
 <link href="<c:url value="/resources/css/joint.nojquery.min.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/diagram.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/jointshapesumlcustom.css" />" rel="stylesheet">
-<link href="<c:url value="/resources/css/diagramui.css" />" rel="stylesheet">
-<link href="<c:url value="/resources/css/joint.shapes.ui.custom.css" />" rel="stylesheet">
-<!-- Perfect scroll -->
-<script src="<c:url value="/resources/js/perfect-scrollbar.min.js" />" ></script>
-<link href="<c:url value="/resources/css/perfect-scrollbar.min.css" />" rel="stylesheet">
-
-<script type="text/javascript">
-	//var dmp = new diff_match_patch();
-	function searchUsecaseActor(value){
-		if(value == '' || value == ' ' || value == null){
-			$('.forSearch').each(function(){
-				$(this).css("display", "");
-			});
-		}else{
-			value = $.trim(value.toUpperCase());
-			
-			$('.forSearch').each(function(){
-				var temp = $.trim($(this).text().toUpperCase());
-				//var match = dmp.match_main(temp, value, 1);
-				if(temp.indexOf(value) > -1){
-					$(this).css("display", "");
-				}else{
-					$(this).css("display", "none");
-				}
-			});
-		}
-	}
-$(document).ready(function(){
-	$('#scrollBar').perfectScrollbar();
-});	
-</script>
-<style type="text/css">
-	.ps-scrollbar-x-rail{
-		display: none;
-	}
-	.ps-scrollbar-y-rail{
-		display: none;
-	}
-</style>
 </head>
 <body>
 <input type="hidden" id="nameProject" value="${project.tenproject}" />
@@ -98,13 +59,10 @@ $(document).ready(function(){
 		</div>
 	</div>
 	<div id="properties-diagram">
-		<%-- <a href="${contextPath}/detailProject?name=${project.tenproject}"><i class="glyphicon glyphicon-home"></i> Thông tin chi tiết</a> --%>
 		<a class="btn-default" id="a-new-diagram"><i class="glyphicon glyphicon-plus-sign"></i> Tạo mới sơ đồ</a>
 		<a class="btn-default" id="a-export-svg"><i class="glyphicon glyphicon-picture"></i> Xuất ảnh</a>
 		<a class="btn-default" id="view-list-diagram" data-toggle="modal" href="#modal-list-diagram"><i class="glyphicon glyphicon-th-large"></i> Xem danh sách sơ đồ</a>
 		<a class="btn-default" id="saveDiagram" style="background: #5cb85c; color: white;"><i class="glyphicon glyphicon-floppy-saved"></i> Lưu</a>
-		<!-- <a data-toggle="modal" href='#modal-scoreActor' id="scoreActor">TAW</a>
-		<a data-toggle="modal" href='#modal-scoreUsecase' id="scoreUsecase">TBF</a> -->
 	</div>
 	<div id="content-diagram">
 		<div id="list-element-diagram">
@@ -360,24 +318,10 @@ $(document).ready(function(){
 
 
 <script src="<c:url value="/resources/js/joint.nojquery.min.js" />" ></script>
-<script src="<c:url value="/resources/js/diagram.js" />" ></script>
-<script src="<c:url value="/resources/js/xml2json.js" />" ></script>
 <script src="<c:url value="/resources/js/jointshapesumlcustom.js"/>"></script>
-<%-- <script src="<c:url value="/resources/js/diagramui.js" />"></script> --%>
-<script src="<c:url value="/resources/js/joint.shapes.ui.custom.js" />"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-	// Begin loading diagram
-	if ($("#path").html() && $("#path").html() != "") {
-		graph.fromJSON(JSON.parse(decodeURIComponent(window.atob($("#path").html()))));
-	}
-	if ($("#name-diagram-show").html() != "") {
-		$("#a-rename-diagram").show("fade");
-	} else {
-		$("#a-rename-diagram").hide("fade");
-	}
-	// End loading diagram
-});
-</script>
+<script src="<c:url value="/resources/js/xml2json.js" />" ></script>
+<script src="<c:url value="/resources/js/global.js" />" ></script>
+<script src="<c:url value="/resources/js/diagram.js" />" ></script>
+
 </body>
 </html>

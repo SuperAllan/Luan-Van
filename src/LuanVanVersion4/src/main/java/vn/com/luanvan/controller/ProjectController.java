@@ -119,6 +119,7 @@ public class ProjectController {
 			project.setTrangthai(0);
 			Trongsonoluc trongSo = trongsonolucDao.findByGiaTri(1);
 			project.setTrongsonoluc(trongSo);
+			project.setLuong(luongDao.findLuongByBac(1));
 			User user = new User();
 			user.setUsername(username);
 			project.setUser(user);
@@ -140,7 +141,12 @@ public class ProjectController {
 		//String projectName = (String) request.getParameter("name");
 		DecimalFormat df = new DecimalFormat("#.#");
 		String username = principal.getName();
-		Project project = projectDao.findProjectByName(username, projectName);
+		Project project;
+		try{
+		project = projectDao.findProjectByName(username, projectName);
+		}catch(Exception e){
+			return "404";
+		}
 		int projectid = project.getProjectid();
 		User user = userDao.findUserbyUserName(username);
 		//Biến cho trang thiết kế giao diện

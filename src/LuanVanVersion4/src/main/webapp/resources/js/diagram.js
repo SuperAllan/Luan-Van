@@ -8,8 +8,6 @@ var paper = new joint.dia.Paper({
     model: graph,
     gridSize: 1
 });
-var iconRight = '<i class="glyphicon glyphicon-chevron-right"></i>';
-var iconLeft = '<i class="glyphicon glyphicon-chevron-left"></i>';
 var chooseElement = "";
 var elementDown = null;
 var hasDrawing = false;
@@ -26,7 +24,39 @@ $(document).ready(function(){
 		$(this).text(formatTitle);
 		}
 	});
+	// Begin loading diagram
+	if ($("#path").html() && $("#path").html() != "") {
+		graph.fromJSON(JSON.parse(decodeURIComponent(window.atob($("#path").html()))));
+	}
+	if ($("#name-diagram-show").html() != "") {
+		$("#a-rename-diagram").show("fade");
+	} else {
+		$("#a-rename-diagram").hide("fade");
+	}
+	// End loading diagram
 });
+
+//var dmp = new diff_match_patch();
+function searchUsecaseActor(value){
+	if(value == '' || value == ' ' || value == null){
+		$('.forSearch').each(function(){
+			$(this).css("display", "");
+		});
+	}else{
+		value = $.trim(value.toUpperCase());
+		
+		$('.forSearch').each(function(){
+			var temp = $.trim($(this).text().toUpperCase());
+			//var match = dmp.match_main(temp, value, 1);
+			if(temp.indexOf(value) > -1){
+				$(this).css("display", "");
+			}else{
+				$(this).css("display", "none");
+			}
+		});
+	}
+}
+
 // Begin set icon save
 function setIconSave(value) {
 	if (value == "saved") {
@@ -119,21 +149,12 @@ $("#saveDiagram").on('click', function() {
 				
 				var uc = allElement[i].attributes.name + "=";
 				uc += allElement[i].attributes.created + "=";
-//				uc += allElement[i].attributes.description + "=";
-//				uc += allElement[i].attributes.level + "=";
-//				uc += allElement[i].attributes.payMoney + "=";
-//				uc += allElement[i].attributes.group;
-				
 				ucs.push(uc);
 			}
 			if (allElement[i].attributes.type == "uml.Actor") {
 				
 				var actor = allElement[i].attributes.name + "=";
 				actor += allElement[i].attributes.created + "="
-//				actor += allElement[i].attributes.description + "=";
-//				actor += allElement[i].attributes.level + "=";
-//				actor += allElement[i].attributes.role;
-				
 				actors.push(actor);
 			}
 		}
@@ -342,29 +363,6 @@ $(".toggle-element-view").on('click', function() {
 	}
 });
 
-// Begin toggle menu left details project
-$(".toggle-menu-detail-project").on('click', function() {
-	$("#menu-detail-project").toggle("fade");
-	if ($(this).html() == iconRight) {
-		$(this).html(iconLeft);
-		$("#paper").addClass("paper-scroll");
-		$("#paper").removeClass("paper-no-scroll");
-		$("#paperUI").addClass("paper-scroll");
-		$("#paperUI").removeClass("paper-no-scroll");
-		$(".wrapper-tab-content-detail-project").addClass("col-md-10");
-		$(".wrapper-tab-content-detail-project").removeClass("col-md-12");
-	} else {
-		$(this).html(iconRight);
-		$("#paper").addClass("paper-no-scroll");
-		$("#paper").removeClass("paper-scroll");
-		$("#paperUI").addClass("paper-no-scroll");
-		$("#paperUI").removeClass("paper-remove-scroll");
-		$(".wrapper-tab-content-detail-project").addClass("col-md-12");
-		$(".wrapper-tab-content-detail-project").removeClass("col-md-10");
-	}
-});
-// End toggle menu left details project
-
 function removeRoleActorNew(idActor, idUsecase) {
 	$.ajax({
 		type: "post",
@@ -455,7 +453,6 @@ paper.on('cell:pointerdblclick ', function(cellView, evt, x, y) {
 					}
 					phanLoai += '</select></div>';
 				}
-//				getRelationshipActor(cellView.model);
 				$("#listUCOfActor").html(phanLoai);
 				$("#modal-actor").modal('show');
 			},
@@ -623,13 +620,6 @@ function getRelationshipUsecase(model) {
 // Save information of usecase
 $("#saveInfoUC").on('click', function(){
 	setIconSave("saved");
-//	var UC = graph.getCell($("#id-modal-usecase").val());
-//	UC.attributes.description = $("#description-modal-usecase").val();
-//	UC.attributes.level = $("#level-modal-usecase").val();
-//	UC.attributes.payMoney = $("#pay-money-modal-usecase").prop("checked");
-//	UC.attributes.group = $("#input-group-modal-usecase").val();
-//	$("#modal-usecase").modal('hide');
-//	//$("#saveDiagram").trigger('click');
 	var group = $("#name-diagram-show").html();
 	if ($("#input-group-modal-usecase").val() != "") {
 		group = $("#input-group-modal-usecase").val();
@@ -653,17 +643,10 @@ $("#saveInfoUC").on('click', function(){
 //Save information of usecase
 $("#saveInfoActor").on('click', function(){
 	setIconSave("saved");
-//	var actor = graph.getCell($("#id-modal-actor").val());
-//	actor.attributes.description = $("#description-modal-actor").val();
-//	actor.attributes.level = $("#level-modal-actor").val();
-//	actor.attributes.role = "";
 	var role = "";
 	$(".select-role").each(function() {
 		role += $(this).val() + "_" + this.id + "/";
 	});
-//	$("#modal-actor").modal('hide');
-//	//$("#saveDiagram").trigger('click');
-	console.log(role);
 	$.ajax({
 		url: "/luanvan/diagram/saveinfoactor",
 		type: "post",
@@ -946,8 +929,6 @@ $("#paper").on('mouseup', function(e) {
 						alert("Không thể cập nhật thông tin quyền của tác nhân");
 					}
 				});
-				//getRelationshipActor(viewTarget[0].model);
-				//getRelationshipUsecase(graph.getCell(link.attributes.source.id));
 			} else if (viewTarget[0].model.attributes.type == "uml.Usecase" && object.attributes.type == "uml.Actor") {
 				$.ajax({
 					type: "post",
@@ -960,12 +941,7 @@ $("#paper").on('mouseup', function(e) {
 						alert("Không thể cập nhật thông tin quyền của tác nhân");
 					}
 				});
-				//getRelationshipActor(graph.getCell(link.attributes.source.id));
-				//getRelationshipUsecase(viewTarget[0].model);
 			}
-			
-//			$("#saveInfoActor").trigger('click');
-//			$("#saveInfoUC").trigger('click');
 		}
 		
 		link = null;
@@ -1037,28 +1013,6 @@ function createUsecase(positionX, positionY) {
 		position: { x: positionX, y: positionY }
 	});
 	graph.addCell(usecase);
-}
-
-// Nguon: http://www.kirupa.com/html5/getting_mouse_click_position.htm
-function getClickPosition(e) {
-    var parentPosition = getPosition(e.currentTarget);
-    var xPosition = e.clientX - parentPosition.x;
-    var yPosition = e.clientY - parentPosition.y;
-    return { x: xPosition, y: yPosition };
-}
-
-// Nguon: http://www.kirupa.com/html5/getting_mouse_click_position.htm
-function getPosition(element) {
-    var xPosition = 0;
-    var yPosition = 0;
-      
-    while (element) {
-        xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
-        yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
-        element = element.offsetParent;
-    }
- 
-    return { x: xPosition, y: yPosition };
 }
 
 // Xu ly enter trong textarea
@@ -1146,129 +1100,6 @@ $("#readFile").change(function(evt) {
 		}
 	}
 });
-
-$("#scoreActor").click(function() {
-	$.ajax({
-		url : "/luanvan/diagram/scoreactor",
-		method: "post",
-		data: "nameProject=" + $("#nameProject").val(),
-		success: function(result) {
-			var kq = result.split("_");
-			$("#numberActorSimple").text(kq[0]);
-			$("#numberActorAverage").text(kq[1]);
-			$("#numberActorComplex").text(kq[2]);
-			$("#scoreActorSimple").text(kq[0]);
-			$("#scoreActorAverage").text(kq[1] * 2);
-			$("#scoreActorComplex").text(kq[2] * 3);
-			$("#TAW").text(parseInt(kq[0]) + parseInt(kq[1] * 2) + parseInt(kq[2] * 3));
-		},
-		error: function() {
-			alert("error");
-		}
-	});
-});
-
-$("#scoreUsecase").click(function() {
-	$.ajax({
-		url : "/luanvan/diagram/scoreusecase",
-		method: "post",
-		data: "nameProject=" + $("#nameProject").val(),
-		success: function(result) {
-			var kq = result.split("_");
-			$("#numberTypeB").text(kq[0]);
-			$("#numberTypeM").text(kq[1]);
-			$("#numberTypeT").text(kq[2]);
-			$("#numberTypeBSimple").text(kq[3]);
-			$("#numberTypeBAverage").text(kq[4]);
-			$("#numberTypeBComplex").text(kq[5]);
-			$("#numberTypeMSimple").text(kq[6]);
-			$("#numberTypeMAverage").text(kq[7]);
-			$("#numberTypeMComplex").text(kq[8]);
-			$("#numberTypeTSimple").text(kq[9]);
-			$("#numberTypeTAverage").text(kq[10]);
-			$("#numberTypeTComplex").text(kq[11]);
-			$("#scoreTypeBSimple").text(kq[12]);
-			$("#scoreTypeBAverage").text(kq[13]);
-			$("#scoreTypeBComplex").text(kq[14]);
-			$("#scoreTypeMSimple").text(kq[15]);
-			$("#scoreTypeMAverage").text(kq[16]);
-			$("#scoreTypeMComplex").text(kq[17]);
-			$("#scoreTypeTSimple").text(kq[18]);
-			$("#scoreTypeTAverage").text(kq[19]);
-			$("#scoreTypeTComplex").text(kq[20]);
-			
-			$("#sumNumberUC").text(parseInt($("#numberTypeB").text()) + parseInt($("#numberTypeM").text()) + parseInt($("#numberTypeT").text()));
-			$("#sumScoreTypeB").text(parseFloat($("#scoreTypeBSimple").text()) + parseFloat($("#scoreTypeBAverage").text()) + parseFloat($("#scoreTypeBComplex").text()));
-			$("#sumScoreTypeM").text(parseFloat($("#scoreTypeMSimple").text()) + parseFloat($("#scoreTypeMAverage").text()) + parseFloat($("#scoreTypeMComplex").text()));
-			$("#sumScoreTypeT").text(parseFloat($("#scoreTypeTSimple").text()) + parseFloat($("#scoreTypeTAverage").text()) + parseFloat($("#scoreTypeTComplex").text()));
-			
-			$("#TBF").text(parseFloat($("#sumScoreTypeB").text()) + parseFloat($("#sumScoreTypeM").text()) + parseFloat($("#sumScoreTypeT").text()));
-		},
-		error: function() {
-			alert("error");
-		}
-	});
-});
-
-//$("#list-diagram").on("click", function() {
-//	$.ajax({
-//		url: "/luanvan/diagram/viewlistdiagram",
-//		data: "nameProject=" + $("#nameProject").val(),
-//		success: function(result) {
-//			var object = $.parseJSON(result);
-//			var str = "";
-//			for (var i = 0; i < object.diagram.length; i++) {
-//				str += '<div class="col-md-4"><div class="thumbnail"><div style="border: 1px solid #ddd;">';
-//				str += '<img width="254" height="200" src="' + window.atob(object.diagram[i].image) + '" /></div>';
-//				str += '<div class="caption">';
-//		        str+= '<h3>' + object.diagram[i].name + '</h3>';
-//		        str+= '<button class="btn btn-primary edit-details-diagram" id="' + object.diagram[i].name + '" style="font-size: 20px;"><i class="glyphicon glyphicon-pencil"></i></button>';
-//		        str+= '<button class="btn btn-danger delete-details-diagram" id="' + object.diagram[i].name + '" style="font-size: 20px;"><i class="glyphicon glyphicon-trash"></i></button>';
-//		        str+= '</div></div></div>';
-//			}
-//			
-//			$("#body-list-diagram").html(str);
-//			
-//			// Delete element when click button delete
-//			$(".delete-details-diagram").on('click', function() {
-//				$(this).parent().parent().parent().hide("fade");
-//				var namediagram = $(this).attr("id");
-//				$.ajax({
-//					url: "/luanvan/diagram/deletediagram",
-//					data: "nameProject=" + $("#nameProject").val() + "&namediagram=" + namediagram,
-//					success: function(result) {
-//					},
-//					error: function() {
-//						alert("error");
-//					}
-//				});
-//			});
-//			
-//			//Edit diagram when click button edit
-//			$(".edit-details-diagram").on('click', function() {
-//				var namediagram = $(this).attr("id");
-//				$("#name-diagram-show").html(namediagram);
-//				$.ajax({
-//					url: "/luanvan/diagram/loaddiagram",
-//					data: "nameProject=" + $("#nameProject").val() + "&namediagram=" + namediagram,
-//					success: function(result) {
-//						graph.fromJSON(JSON.parse(decodeURIComponent(window.atob(result))));
-//						$("#modal-list-diagram").modal('hide');
-//						$("#name-diagram-show").html(namediagram);
-//						$("#a-rename-diagram").show('fade');
-//					},
-//					error: function() {
-//						alert("error");
-//					}
-//				});
-//			});
-//		},
-//		error: function() {
-//			alert("error");
-//		}
-//	});
-//	$("#modal-list-diagram").modal('show');
-//});
 
 //Xu ly khi nhan phim
 $(document).keydown(function(event) {

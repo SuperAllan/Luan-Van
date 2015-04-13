@@ -41,11 +41,11 @@
 			<tr class="text-center" style="vertical-align: middle;">
 				<td style="border: none;">
 					<c:choose>
-						<c:when test="${project.bacluong == 0 && status.index == 0}">
+						<c:when test="${project.luong.bac == 0 && status.index == 0}">
 							<input type="radio" name="chooseBacLuong" value="${show.bac}" checked>
 							<input type="hidden" value="${ketQuaCP1Gio[status.index]}" id="CP1GioForBacLuong${show.bac}">
 						</c:when>
-						<c:when test="${project.bacluong == show.bac}">
+						<c:when test="${project.luong.bac == show.bac}">
 							<input type="radio" name="chooseBacLuong" value="${show.bac}" checked>
 							<input type="hidden" value="${ketQuaCP1Gio[status.index]}" id="CP1GioForBacLuong${show.bac}">
 						</c:when>

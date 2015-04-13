@@ -111,12 +111,20 @@ public class DiagramController {
 	@RequestMapping(value = "/diagram/viewdiagram")
 	public String viewDiagram(Principal principal, Model model) {
 		String projectName = (String) request.getParameter("nameProject");
+		String nameDiagram = (String) request.getParameter("nameDiagram");
 		String username = principal.getName();
-		Project project = projectDao.findProjectByName(username, projectName);
+		Project project;
+		Diagram diagram;
+		try{
+			project = projectDao.findProjectByName(username, projectName);
+			diagram = diagramDao.getDiagramByName(nameDiagram, project.getProjectid());
+		}catch(Exception e){
+			return "404";
+		}
 		List<Actor> actors = actorDao.getActorByProject(project.getProjectid());
 		List<Usecase> usecases = usecaseDao.getUsecaseByProject(project.getProjectid());
-		String nameDiagram = (String) request.getParameter("nameDiagram");
-		Diagram diagram = diagramDao.getDiagramByName(nameDiagram, project.getProjectid());
+		
+		
 		if (diagram != null) {
 			model.addAttribute("path", diagram.getPath());
 			model.addAttribute("nameDiagram", nameDiagram);

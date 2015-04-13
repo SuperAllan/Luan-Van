@@ -1,11 +1,15 @@
 package vn.com.luanvan.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigInteger;
+import java.net.URLEncoder;
 import java.security.Principal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -131,24 +135,18 @@ public class DocumentController{
 	@Autowired
 	private NhomucDao nhomucDao;
 	
-	/**
-	 * Hàm xuất file PDF 
-	 * @param projectName	Tên của dự án
-	 * @param request		
-	 * @param response	
-	 * @param principal		
-	 * @return				Trả về trang pdfView với biến lists.
-	 */
-	@RequestMapping(value="/downloadPDF", method = RequestMethod.GET)
-	@ResponseStatus(value=HttpStatus.OK)
-	public ModelAndView downloadPFD(HttpServletRequest request, HttpServletResponse response, Principal principal){
-		String projectName = request.getParameter("project");
-		Project project = projectDao.findProjectByName(principal.getName(), projectName); 
-		List<Object> lists = new ArrayList<Object>();
-		lists.add(project);
-		return new ModelAndView("pdfView", "lists", lists); 
 
+	public static boolean isUnicode(String s) {
+		int length = s.length();
+		for (int i = 0; i < length; i++) {
+			char c = s.charAt(i);
+			if (c > 'z') {
+				return true;
+			}
+		}
+		return false;
 	}
+	
 	
 	@Autowired(required = false)
 	@SuppressWarnings({ "unused" })
@@ -167,7 +165,6 @@ public class DocumentController{
 		Date currentDate = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 		XWPFDocument document = new XWPFDocument(new FileInputStream(path+"resources/document/Template.docx"));
-		
 		XWPFParagraph paragraph = document.createParagraph();
 		paragraph.setAlignment(ParagraphAlignment.CENTER);
 		XWPFParagraph paragraphRight = document.createParagraph();
@@ -235,6 +232,23 @@ public class DocumentController{
 		createTime.setFontFamily(Times);
 		createTime.setFontSize(12);
 		paragraph.isPageBreak();
+		XWPFParagraph heading1TongQuan = document.createParagraph();
+		heading1TongQuan.setStyle("Heading1");
+		XWPFRun contentTongQuan = heading1TongQuan.createRun();
+		contentTongQuan.setText("1. Tổng quan");
+		XWPFParagraph contentGioiThiet = document.createParagraph();
+		XWPFRun runGioiThieu = contentGioiThiet.createRun();
+		runGioiThieu.setBold(true);
+		runGioiThieu.setFontFamily(Times);
+		runGioiThieu.setFontSize(13);
+		runGioiThieu.setText("Tên phần mềm cần lập dự toán: "+project.getTenproject());
+		runGioiThieu.addBreak();
+		runGioiThieu.setText("Giới thiệu:");
+		runGioiThieu.addBreak();
+		XWPFRun runGioiThieu2 = contentGioiThiet.createRun();
+		runGioiThieu2.setText(project.getMotaproject());
+		runGioiThieu2.setFontFamily(Times);
+		runGioiThieu.setFontSize(13);
 		
 		XWPFParagraph heading1ChucNang = document.createParagraph();
 		heading1ChucNang.setStyle("Heading1");
@@ -545,7 +559,7 @@ public class DocumentController{
 		List<Loaiactor> loaiActor = loaiactorDao.getAll();
 		List<Integer> countActor = actorDao.countActor(projectID);
 		List<Integer> diemActor = actorDao.tinhDiemTungActor(projectID, loaiActor);
-		List<Integer> listRowTacNhanRemoved = new ArrayList<Integer>();
+		int tongDiemActor = actorDao.tinhTongDiem(projectID, loaiActor);
 		// May need to call this method, not sure 
 		for(int i = 0; i < loaiActor.size(); i++){
 			XWPFTableRow rowTacNhan = tableTacNhan.createRow();
@@ -598,6 +612,35 @@ public class DocumentController{
 			rh.setFontSize(13);
 			rh.setFontFamily(Times);
 		}
+		//row tong cong trong bang tinh toan tac nhan (row cuoi cung)
+		XWPFTableRow rowTacNhan = tableTacNhan.createRow();
+		XWPFParagraph paraTN = rowTacNhan.getCell(1).getParagraphs().get(0);
+		paraTN.setAlignment(ParagraphAlignment.CENTER);
+		paraTN.setSpacingBefore(120);
+        XWPFRun rhTN = paraTN.createRun();
+        rhTN.setFontSize(13);
+        rhTN.setBold(true);
+        rhTN.setFontFamily(Times);
+        rhTN.setText("Cộng (1+2+3)");
+		
+		paraTN = rowTacNhan.getCell(2).getParagraphs().get(0);
+		paraTN.setAlignment(ParagraphAlignment.CENTER);
+		paraTN.setSpacingBefore(120);
+		rhTN = paraTN.createRun();
+		rhTN.setFontSize(13);
+		rhTN.setBold(true);
+		rhTN.setFontFamily(Times);
+		rhTN.setText("TAW");
+		
+		paraTN = rowTacNhan.getCell(5).getParagraphs().get(0);
+		paraTN.setAlignment(ParagraphAlignment.CENTER);
+		paraTN.setSpacingBefore(120);
+		rhTN = paraTN.createRun();
+		rhTN.setFontSize(13);
+		rhTN.setBold(true);
+		rhTN.setFontFamily(Times);
+		rhTN.setText(String.valueOf(tongDiemActor));
+		
 		
 		// Tao bang truong hop su dung
 		XWPFParagraph heading2TruongHop = document.createParagraph();
@@ -1017,7 +1060,7 @@ public class DocumentController{
  				rhMT.setText(String.valueOf(noiSuy));
  			}
  		}
- 		
+ 		DecimalFormat formatter = new DecimalFormat("#,###.#####");
  		//Tao bang luong
  		XWPFParagraph heading2Luong = document.createParagraph();
  		heading2Luong.setStyle("Heading2");
@@ -1090,7 +1133,7 @@ public class DocumentController{
  	        XWPFRun rhMT = paraMT.createRun();
  	        rhMT.setFontSize(13);
  	        rhMT.setFontFamily(Times);
- 	        if(project.getBacluong() == listLuong.get(i).getBac()){
+ 	        if(project.getLuong().getBac() == listLuong.get(i).getBac()){
  	        	rhMT.setColor("00FF00");
  	        }
  	        rhMT.setText(String.valueOf(listLuong.get(i).getBac()));
@@ -1101,34 +1144,262 @@ public class DocumentController{
  		        rhMT = paraMT.createRun();
  		        rhMT.setFontSize(13);
  		        rhMT.setFontFamily(Times);
- 		        if(project.getBacluong() == listLuong.get(i).getBac()){
+ 		        if(project.getLuong().getBac() == listLuong.get(i).getBac()){
  	 	        	rhMT.setColor("00FF00");
  	 	        }
  		        switch(j){
- 		        	case 1: rhMT.setText(String.valueOf(listLuong.get(i).getHeso())); break;
- 		        	case 2: rhMT.setText(String.valueOf(luongCoBan.get(i))); break;
- 		        	case 3: rhMT.setText(String.valueOf(listGiaTriLuong.get(i).getLuongtangthem())); break;
- 		        	case 4: rhMT.setText(String.valueOf(luongPhu.get(i))); break;
- 		        	case 5: rhMT.setText(String.valueOf(listGiaTriLuong.get(i).getPckhuvuc())); break;
- 		        	case 6: rhMT.setText(String.valueOf(listGiaTriLuong.get(i).getPcluudong())); break;
- 		        	case 7: rhMT.setText(String.valueOf(cpkg.get(i))); break;
- 		        	case 8: rhMT.setText(String.valueOf(baoHiem.get(i))); break;
- 		        	case 9: rhMT.setText(String.valueOf(tong.get(i))); break;
- 		        	case 10: rhMT.setText(String.valueOf(cp1Ngay.get(i))); break;
- 		        	case 11: rhMT.setText(String.valueOf(cp1Gio.get(i))); break;
+ 		        	case 1: rhMT.setText(formatter.format(listLuong.get(i).getHeso())); break;
+ 		        	case 2: rhMT.setText(formatter.format(luongCoBan.get(i))); break;
+ 		        	case 3: rhMT.setText(formatter.format(listGiaTriLuong.get(i).getLuongtangthem())); break;
+ 		        	case 4: rhMT.setText(formatter.format(luongPhu.get(i))); break;
+ 		        	case 5: rhMT.setText(formatter.format(listGiaTriLuong.get(i).getPckhuvuc())); break;
+ 		        	case 6: rhMT.setText(formatter.format(listGiaTriLuong.get(i).getPcluudong())); break;
+ 		        	case 7: rhMT.setText(formatter.format(cpkg.get(i))); break;
+ 		        	case 8: rhMT.setText(formatter.format(baoHiem.get(i))); break;
+ 		        	case 9: rhMT.setText(formatter.format(tong.get(i))); break;
+ 		        	case 10: rhMT.setText(formatter.format(cp1Ngay.get(i))); break;
+ 		        	case 11: rhMT.setText(formatter.format(cp1Gio.get(i))); break;
  		        	default: break;
  		        }
  		        
  	        }
-			
-	        
-	        
  		}
  		
-		FileOutputStream out = new FileOutputStream(
-				   new File("D:/create_table.docx"));
-		document.write(out);
-		out.close();
+ 		//Tao bang giá trị phần mềm
+ 		XWPFParagraph heading2GiaTri = document.createParagraph();
+ 		heading2GiaTri.setStyle("Heading2");
+ 		XWPFRun runGiaTri = heading2GiaTri.createRun();
+ 		runGiaTri.setText("2.8 Bảng tính toán giá trị phần mềm");
+ 		XWPFTable tableGiaTri= document.createTable(1,3);
+ 		tableGiaTri.getCTTbl().addNewTblPr().addNewTblW().setW(BigInteger.valueOf(10000));
+ 		XWPFTableRow row0GiaTri = tableGiaTri.getRow(0);
+ 		List<XWPFTableCell> cell0GiaTri = row0GiaTri.getTableCells();
+ 		for(int i = 0; i < cell0GiaTri.size(); i++){
+ 		    XWPFParagraph paraGiaTri = row0GiaTri.getCell(i).getParagraphs().get(0);
+ 		    paraGiaTri.setAlignment(ParagraphAlignment.CENTER);
+ 		    paraGiaTri.setSpacingBefore(120);
+ 		    paraGiaTri.setSpacingAfter(120);
+ 	        XWPFRun rhGiaTri = paraGiaTri.createRun();
+ 	        rhGiaTri.setBold(true);
+ 	        rhGiaTri.setFontSize(13);
+ 	        rhGiaTri.setFontFamily(Times);
+ 			if(i == 0){
+ 				rhGiaTri.setText("Hạng mục");
+ 			}else
+ 			if(i == 1){
+ 				rhGiaTri.setText("Diễn giải");
+ 			}else{
+ 				rhGiaTri.setText("Giá trị");
+ 			}
+ 		}
+ 		float AUCP = (float) ((tongDiemActor+tongDiemBMT) * (0.6+(0.01*ketQuaKyThuat)) * (1.4+(-0.03*ketQuaMoiTruong)));
+        int G = (int) (1.4 * noiSuy * (project.getTrongsonoluc().getGiatri()*AUCP) * cp1Gio.get(project.getLuong().getBac()-1));
+ 		XWPFTableRow row = tableGiaTri.createRow();
+		XWPFParagraph paraGiaTri = row.getCell(0).getParagraphs().get(0);
+		paraGiaTri.setAlignment(ParagraphAlignment.LEFT);
+		paraGiaTri.setSpacingBefore(120);
+        XWPFRun rhGiaTri = paraGiaTri.createRun();
+        rhGiaTri.setFontSize(13);
+        rhGiaTri.setFontFamily(Times);
+        rhGiaTri.setBold(true);
+        rhGiaTri.setText("Tính điểm trường hợp sử dụng (Use-cases)");
+        for(int i = 0; i < 10; i++){
+        	XWPFTableRow rowGiaTri = tableGiaTri.createRow();
+        	XWPFParagraph paraGT = rowGiaTri.getCell(0).getParagraphs().get(0);
+    		paraGT.setAlignment(ParagraphAlignment.LEFT);
+    		paraGT.setSpacingBefore(120);
+            XWPFRun rhGT = paraGT.createRun();
+            rhGT.setFontSize(13);
+            rhGT.setFontFamily(Times);
+            switch(i){
+            	case 0: rhGT.setText("Điểm actor (TAW)"); break;
+            	case 1: rhGT.setText("Điểm Use-cases (TBF)"); break;
+            	case 2: rhGT.setText("Tính điểm UUCP"); break;
+            	case 3: rhGT.setText("Hệ số phức tạp về KT-CN (TCF)"); break;
+            	case 4: rhGT.setText("Hệ số phức tạp về môi trường (EF)"); break;
+            	case 5: rhGT.setText("Tính điểm AUCP"); break;
+            	case 6: rhGT.setText("Nội suy thời gian lao động"); rhGT.setBold(true); break;
+            	case 7: rhGT.setText("Giá trị nỗ lực thực tế (E)"); rhGT.setBold(true); break;
+            	case 8: rhGT.setText("Mức lương lao động bình quân (H)"); rhGT.setBold(true); break;
+            	case 9: rhGT.setText("Định giá phần mềm nội bộ (G)"); rhGT.setBold(true); break;
+            	default: break;
+            }
+            paraGT = rowGiaTri.getCell(1).getParagraphs().get(0);
+    		paraGT.setAlignment(ParagraphAlignment.CENTER);
+    		paraGT.setSpacingBefore(120);
+            rhGT = paraGT.createRun();
+            rhGT.setFontSize(13);
+            rhGT.setFontFamily(Times);
+            switch(i){
+            	case 0: rhGT.setText("Phụ lục III"); break;
+            	case 1: rhGT.setText("Phụ lục IV"); break;
+            	case 2: rhGT.setText("UUCP=TAW + TBF"); break;
+            	case 3: rhGT.setText("TCF=0.6+(0.01*TFW)"); break;
+            	case 4: rhGT.setText("EF=1.4+(-0.03*EFW)"); break;
+            	case 5: rhGT.setText("AUCP = UUCP*TCF*EF"); break;
+            	case 6: rhGT.setText("P=người/giờ/AUCP"); break;
+            	case 7: rhGT.setText("E="+project.getTrongsonoluc().getMota()+"*AUCP"); break;
+            	case 8: rhGT.setText("H=người/giờ"); break;
+            	case 9: rhGT.setText("G=1.4*E*P*H"); rhGT.setBold(true); break;
+            	default: break;
+            }
+            paraGT = rowGiaTri.getCell(2).getParagraphs().get(0);
+    		paraGT.setAlignment(ParagraphAlignment.RIGHT);
+    		paraGT.setSpacingBefore(120);
+            rhGT = paraGT.createRun();
+            rhGT.setFontSize(13);
+            rhGT.setFontFamily(Times);
+            switch(i){
+            	case 0: rhGT.setText(formatter.format(tongDiemActor)); break;
+            	case 1: rhGT.setText(formatter.format(tongDiemBMT)); break;
+            	case 2: rhGT.setText(formatter.format(tongDiemActor+tongDiemBMT)); break;
+            	case 3: rhGT.setText(formatter.format(0.6+(0.01*ketQuaKyThuat))); break;
+            	case 4: rhGT.setText(formatter.format(1.4+((-0.03)*ketQuaMoiTruong))); break;
+            	case 5: rhGT.setText(formatter.format(AUCP)); break;
+            	case 6: rhGT.setText(formatter.format(noiSuy)); break;
+            	case 7: rhGT.setText(formatter.format(project.getTrongsonoluc().getGiatri()*AUCP)); break;
+            	case 8: rhGT.setText(formatter.format(cp1Gio.get(project.getLuong().getBac()-1))); break;
+            	case 9: rhGT.setText(formatter.format(G)); rhGT.setBold(true); break;
+            	default: break;
+            }
+        }
+        //Tao bang tong hop chi phi
+ 		XWPFParagraph heading2TongHop = document.createParagraph();
+ 		heading2TongHop.setStyle("Heading2");
+ 		XWPFRun runTongHop = heading2TongHop.createRun();
+ 		runTongHop.setText("2.9	Bảng tổng hợp chi phí phần mềm");
+ 		XWPFTable tableTongHop= document.createTable(1,5);
+ 		tableTongHop.getCTTbl().addNewTblPr().addNewTblW().setW(BigInteger.valueOf(10000));
+ 		XWPFTableRow row0TongHop = tableTongHop.getRow(0);
+ 		List<XWPFTableCell> cell0TongHop = row0TongHop.getTableCells();
+ 		for(int i = 0; i < cell0TongHop.size(); i++){
+ 		    XWPFParagraph paraTongHop = row0TongHop.getCell(i).getParagraphs().get(0);
+ 		    paraTongHop.setAlignment(ParagraphAlignment.CENTER);
+ 		    paraTongHop.setSpacingBefore(120);
+ 		    paraTongHop.setSpacingAfter(120);
+ 	        XWPFRun rhTongHop = paraTongHop.createRun();
+ 	        rhTongHop.setBold(true);
+ 	        rhTongHop.setFontSize(13);
+ 	        rhTongHop.setFontFamily(Times);
+ 			if(i == 0){
+ 				rhTongHop.setText("TT");
+ 			}else
+ 			if(i == 1){
+ 				rhTongHop.setText("Khoản mục chi phí");
+ 			}else
+ 			if(i == 2){
+ 				rhTongHop.setText("Cách tính");
+ 			}else
+ 			if(i == 3){
+ 				rhTongHop.setText("Giá trị");
+ 			}else{
+ 				rhTongHop.setText("Ký hiệu");
+ 			}
+ 		}
+ 		stt = 0;
+ 		int C = (int) (G*0.65);
+        int TL = (int) ((G+C)*0.06);
+ 		for(int i = 0; i < 4; i++){
+ 			stt++;
+        	XWPFTableRow rowTongHop = tableTongHop.createRow();
+        	XWPFParagraph paraTongHop = rowTongHop.getCell(0).getParagraphs().get(0);
+        	paraTongHop.setAlignment(ParagraphAlignment.CENTER);
+        	paraTongHop.setSpacingBefore(120);
+            XWPFRun rhTongHop = paraTongHop.createRun();
+            rhTongHop.setFontSize(13);
+            rhTongHop.setFontFamily(Times);
+            rhTongHop.setText(String.valueOf(stt));
+            
+            paraTongHop = rowTongHop.getCell(1).getParagraphs().get(0);
+            paraTongHop.setAlignment(ParagraphAlignment.LEFT);
+            paraTongHop.setSpacingBefore(120);
+            rhTongHop = paraTongHop.createRun();
+            rhTongHop.setFontSize(13);
+            rhTongHop.setFontFamily(Times);
+            switch(i){
+            	case 0: rhTongHop.setText("Giá trị phần mềm"); break;
+            	case 1: rhTongHop.setText("Chi phí chung"); break;
+            	case 2: rhTongHop.setText("Thu nhập chịu thuế tính trước"); break;
+            	case 3: rhTongHop.setText("Chi phí phần mềm"); break;
+            	default: break;
+            }
+            paraTongHop = rowTongHop.getCell(2).getParagraphs().get(0);
+            paraTongHop.setAlignment(ParagraphAlignment.CENTER);
+            paraTongHop.setSpacingBefore(120);
+            rhTongHop = paraTongHop.createRun();
+            rhTongHop.setFontSize(13);
+            rhTongHop.setFontFamily(Times);
+            switch(i){
+            	case 0: rhTongHop.setText("1.4 x E x P x H"); break;
+            	case 1: rhTongHop.setText("G*65%"); break;
+            	case 2: rhTongHop.setText("(G+C)x 6%"); break;
+            	case 3: rhTongHop.setText("G+C+TL"); break;
+            	default: break;
+            }
+            paraTongHop = rowTongHop.getCell(3).getParagraphs().get(0);
+            paraTongHop.setAlignment(ParagraphAlignment.RIGHT);
+            paraTongHop.setSpacingBefore(120);
+            rhTongHop = paraTongHop.createRun();
+            rhTongHop.setFontSize(13);
+            rhTongHop.setFontFamily(Times);
+            
+            switch(i){
+            	case 0: rhTongHop.setText(formatter.format(G)); break;
+            	case 1: rhTongHop.setText(formatter.format(C)); break;
+            	case 2: rhTongHop.setText(formatter.format(TL)); break;
+            	case 3: rhTongHop.setText(formatter.format(G+C+TL)); break;
+            	default: break;
+            }
+            paraTongHop = rowTongHop.getCell(4).getParagraphs().get(0);
+            paraTongHop.setAlignment(ParagraphAlignment.CENTER);
+            paraTongHop.setSpacingBefore(120);
+            rhTongHop = paraTongHop.createRun();
+            rhTongHop.setFontSize(13);
+            rhTongHop.setFontFamily(Times);
+            switch(i){
+            	case 0: rhTongHop.setText("G"); break;
+            	case 1: rhTongHop.setText("C"); break;
+            	case 2: rhTongHop.setText("TL"); break;
+            	case 3: rhTongHop.setText("GPM"); break;
+            	default: break;
+            }
+        }
+ 		XWPFTableRow rowTongHop = tableTongHop.createRow();
+    	XWPFParagraph paraTongHop = rowTongHop.getCell(1).getParagraphs().get(0);
+    	paraTongHop.setAlignment(ParagraphAlignment.LEFT);
+    	paraTongHop.setSpacingBefore(120);
+        XWPFRun rhTongHop = paraTongHop.createRun();
+        rhTongHop.setFontSize(13);
+        rhTongHop.setFontFamily(Times);
+        rhTongHop.setBold(true);
+        rhTongHop.setText("Tổng cộng");
+        
+        paraTongHop = rowTongHop.getCell(3).getParagraphs().get(0);
+    	paraTongHop.setAlignment(ParagraphAlignment.RIGHT);
+    	paraTongHop.setSpacingBefore(120);
+        rhTongHop = paraTongHop.createRun();
+        rhTongHop.setFontSize(13);
+        rhTongHop.setFontFamily(Times);
+        rhTongHop.setBold(true);
+        rhTongHop.setText(formatter.format(G+C+TL));
+        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		//FileOutputStream out = new FileOutputStream(
+		//		   new File("D:/create_table.docx"));
+		document.write(outByteStream);
+		byte [] outArray = outByteStream.toByteArray();
+		response.setContentType("application/word");
+		response.setContentLength(outArray.length);
+		response.setHeader("Expires:", "0"); // eliminates browser caching
+		response.setHeader("Content-Disposition", "attachment; filename="+project.getTenproject()+".docx");
+		 if(isUnicode(project.getTenproject()) == true){
+			 response.setHeader("Content-Disposition", "attachment; filename="+URLEncoder.encode(project.getTenproject(), "UTF-8")+".docx");
+		    }else{
+		    	response.setHeader("Content-Disposition", "attachment; filename="+project.getTenproject()+".docx");
+		    }
+		OutputStream outStream = response.getOutputStream();
+		outStream.write(outArray);
+		outStream.flush();
+		//out.close();
 		
 	}
 	
@@ -1181,6 +1452,7 @@ public class DocumentController{
 		phuLuc6.add(xepHangMoiTruongDao.TongKetQuaMoiTruong(projectid));
 		phuLuc6.add(xepHangMoiTruongDao.TongOnDinh(projectid));
 		listSheep.add(new DocumentExcel("Phụ lục VI", "BẢNG TÍNH TOÁN HỆ SỐ PHỨC VỀ MÔI TRƯỜNG", project.getTenproject(), phuLuc6));
+	
 		List<Object> bangLuong = new ArrayList<Object>();
 		List<Luong> luongs = luongDao.getListLuong();
 		List<Giatriluong> listGiaTri = giaTriLuongDao.getListGiaTriLuong(projectid);
@@ -1194,6 +1466,7 @@ public class DocumentController{
 		bangLuong.add(luongDao.TinhLuongCoBan(mucLuongNhaNuoc, luongs));
 		bangLuong.add(luongDao.TinhLuongPhu(mucLuongNhaNuoc, luongs));
 		bangLuong.add(mucLuongNhaNuoc);
+		bangLuong.add(project);
 		listSheep.add(new DocumentExcel("BẢNG LƯƠNG", "", project.getTenproject(), bangLuong));
 		
 		List<Object> phuLuc7 = new ArrayList<Object>();
@@ -1203,7 +1476,7 @@ public class DocumentController{
 		phuLuc7.add(xepHangMoiTruongDao.TongKetQuaMoiTruong(projectid));
 		phuLuc7.add(xepHangMoiTruongDao.tinhNoiSuyLaoDong(projectid));
 		phuLuc7.add(project.getTrongsonoluc());
-		phuLuc7.add(luongDao.TinhCP1Gio(mucLuongNhaNuoc, luongs, listGiaTri).get(project.getBacluong()-1));
+		phuLuc7.add(luongDao.TinhCP1Gio(mucLuongNhaNuoc, luongs, listGiaTri).get(project.getLuong().getBac()-1));
 		listSheep.add(new DocumentExcel("Phụ lục VII", "BẢNG TÍNH TOÁN GIÁ TRỊ PHẦN MỀM", project.getTenproject(), phuLuc7));
 		
 		List<Object> phuLuc8 = new ArrayList<Object>();
@@ -1213,7 +1486,7 @@ public class DocumentController{
 		phuLuc8.add(xepHangMoiTruongDao.TongKetQuaMoiTruong(projectid));
 		phuLuc8.add(xepHangMoiTruongDao.tinhNoiSuyLaoDong(projectid));
 		phuLuc8.add(project.getTrongsonoluc());
-		phuLuc8.add(luongDao.TinhCP1Gio(mucLuongNhaNuoc, luongs, listGiaTri).get(project.getBacluong()-1));
+		phuLuc8.add(luongDao.TinhCP1Gio(mucLuongNhaNuoc, luongs, listGiaTri).get(project.getLuong().getBac()-1));
 		listSheep.add(new DocumentExcel("Phụ lục VIII", "BẢNG TỔNG HỢP CHI PHÍ PHẦN MỀM", project.getTenproject(), phuLuc8));
 		return new ModelAndView("excelView", "listSheep", listSheep);
 		

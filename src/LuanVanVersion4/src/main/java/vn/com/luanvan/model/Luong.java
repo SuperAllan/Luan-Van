@@ -29,6 +29,7 @@ public class Luong implements java.io.Serializable {
 	private int bac;
 	private float heso;
 	private Set<Giatriluong> giatriluongs = new HashSet<Giatriluong>(0);
+	private Set<Project> projects = new HashSet<Project>(0);
 	
 	public Luong() {
 	}
@@ -76,8 +77,17 @@ public class Luong implements java.io.Serializable {
 	public Set<Giatriluong> getGiatriluongs() {
 		return this.giatriluongs;
 	}
+	
 	public void setGiatriluongs(Set<Giatriluong> giatriluongs) {
 		this.giatriluongs = giatriluongs;
+	}
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "luong")
+	public Set<Project> getProjects() {
+		return projects;
+	}
+	public void setProjects(Set<Project> projects) {
+		this.projects = projects;
 	}
 
 }
