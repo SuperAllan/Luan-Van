@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import vn.com.luanvan.dao.GiaTriLuongDao;
 import vn.com.luanvan.model.Giatriluong;
-import vn.com.luanvan.model.Xephangkythuat;
 
 @Repository
 public class GiaTriLuongDaoImpl implements GiaTriLuongDao{
@@ -31,6 +30,7 @@ public class GiaTriLuongDaoImpl implements GiaTriLuongDao{
 		sessionFactory.getCurrentSession().save(giatri);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Giatriluong> getListGiaTriLuong(Integer projectid) {
 			String hql = "FROM Giatriluong as a where a.project.projectid = :projectid";

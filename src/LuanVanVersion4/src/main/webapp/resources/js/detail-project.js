@@ -1,6 +1,7 @@
 var iconRight = '<i class="glyphicon glyphicon-chevron-right"></i>';
 var iconLeft = '<i class="glyphicon glyphicon-chevron-left"></i>';
 $(document).ready(function(){
+	
 	$('#downloadExcel').click(function(){
 		var href = $('#downloadExcel > a').attr('href');
 		if($('#luongNhaNuoc').val() < 1){
@@ -70,6 +71,17 @@ $(document).ready(function(){
 		$("#tabUocLuong").addClass("in active")
 		$("#chucNang").addClass("active");
 		$("#tabChucNang").addClass("in active")
+	}
+	
+	if ($("#UpdatePhiChucNangSuccess").text() != "") {
+		$(".classLi").each(function(){
+			$(this).removeClass("active");
+		});
+		$(".tab-Li").each(function(){
+			$(this).removeClass("in active");
+		});
+		$("#phiChucNang").addClass("active");
+		$("#tabPhiChucNang").addClass("in active");
 	}
 	
 	if ($("#updateKyThuatSuccess").text() != "") {

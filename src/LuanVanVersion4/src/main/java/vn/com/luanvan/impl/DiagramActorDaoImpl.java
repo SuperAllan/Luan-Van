@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import vn.com.luanvan.dao.DiagramActorDao;
-import vn.com.luanvan.model.Actor;
-import vn.com.luanvan.model.Diagram;
 import vn.com.luanvan.model.DiagramActor;
 @Repository
 public class DiagramActorDaoImpl implements DiagramActorDao {

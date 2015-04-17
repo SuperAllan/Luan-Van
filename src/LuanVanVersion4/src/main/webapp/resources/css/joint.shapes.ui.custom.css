@@ -7,7 +7,8 @@
 .ui-radio,
 .ui-checkbox,
 .ui-checkbox-checked,
-.ui-selectbox {
+.ui-selectbox,
+.ui-table {
     pointer-events: none;
    -webkit-user-select: none;
    position: absolute;
@@ -27,7 +28,9 @@
 .ui-checkbox button,
 .ui-checkbox-checked button,
 .ui-selectbox button,
-.ui-selectbox div {
+.ui-selectbox div,
+.ui-table button,
+.ui-table div {
    pointer-events: auto;
    position: absolute;
 }
@@ -65,7 +68,9 @@
 .ui-checkbox-checked button.delete,
 .ui-checkbox-checked button.copy,
 .ui-selectbox button.delete,
-.ui-selectbox button.copy {
+.ui-selectbox button.copy,
+.ui-table button.delete,
+.ui-table button.copy {
    border-radius: 20px;
    width: 15px;
    height: 15px;
@@ -89,7 +94,8 @@
 .ui-radio button.delete,
 .ui-checkbox button.delete,
 .ui-checkbox-checked button.delete,
-.ui-selectbox button.delete {
+.ui-selectbox button.delete,
+.ui-table button.delete {
    left: -15px;
 }
 
@@ -102,7 +108,8 @@
 .ui-radio button.copy,
 .ui-checkbox button.copy,
 .ui-checkbox-checked button.copy,
-.ui-selectbox button.copy {
+.ui-selectbox button.copy,
+.ui-table button.copy {
 	right: -15px;
 }
 
@@ -119,7 +126,8 @@
 .ui-radio button.delete:hover,
 .ui-checkbox button.delete:hover,
 .ui-checkbox-checked button.delete:hover,
-.ui-selectbox button.delete:hover {
+.ui-selectbox button.delete:hover,
+.ui-table button.delete:hover {
    width: 20px;
    height: 20px;
    line-height: 20px;
@@ -146,7 +154,8 @@
 .ui-button div,
 .ui-textarea div,
 .ui-textbox div,
-.ui-selectbox div {
+.ui-selectbox div,
+.ui-table div {
    width: 22px;
    height: 22px;
    text-align: center;

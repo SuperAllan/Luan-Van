@@ -52,7 +52,6 @@ public class UsecaseController{
 		return "detail-usecase";
 	}
 	
-	@SuppressWarnings("unused")
 	@RequestMapping(value="/showDetailUsecase", method = RequestMethod.GET)
 	public String showDetailUsecase(HttpServletRequest request, Principal principal, Model model){
 		String usecaseID = request.getParameter("usecaseid");

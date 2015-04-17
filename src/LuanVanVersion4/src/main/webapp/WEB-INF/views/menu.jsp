@@ -129,6 +129,14 @@
 			</div>
 	  	</c:if>
 	  	
+	  	<!-- alert yeu cau phi chuc nang -->
+	  	<c:if test="${not empty UpdatePhiChucNangSuccess}">
+		  	<div id="UpdatePhiChucNangSuccess" class="alert alert-success alert-menu message-custom">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				${UpdatePhiChucNangSuccess}
+			</div>
+	  	</c:if>
+	  	
 	  	<!-- alert chuyen doi usecase-->
 	    <c:if test="${not empty UpdateChuyenDoiSuccess}">
 		  	<div id="UpdateChuyenDoiSuccess" class="alert alert-success text-center alert-menu message-custom" >
@@ -191,14 +199,26 @@
 				Đăng nhập <span class="caret"></span></a>
 			<ul class="dropdown-menu">
 				<li>
-					<form  action="<c:url value='j_spring_security_check' />" method="POST" role="form" style="margin-bottom: 0; padding: 10px; width: 200px;">
+					<form  action="<c:url value='j_spring_security_check' />" method="POST" role="form" style="margin-bottom: 0; padding: 10px; width: 200px;" id="formLogIn">
 						<div class="form-group">
-							<input type="text" id="username" class="form-control-bs" name='username' placeholder="Tên tài khoản">
+							<input type="text" id="username" class="form-control-bs" name='username' placeholder="Tên tài khoản" required="required" autofocus="autofocus"
+								data-bv-notempty="true"
+								data-bv-notempty-message=" "
+						  		data-bv-stringlength="true"
+		              			data-bv-stringlength-min="6"
+		              			data-bv-stringlength-max="30"
+		              			data-bv-stringlength-message=" ">
 						</div>
 						<div class="form-group">
-							<input type="password" class="form-control-bs" name='password' placeholder="Mật khẩu">
-							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+							<input type="password" class="form-control-bs" name='password' placeholder="Mật khẩu" required="required"
+								data-bv-notempty="true"
+								data-bv-notempty-message=" "
+						  		data-bv-stringlength="true"
+		              			data-bv-stringlength-min="6"
+		              			data-bv-stringlength-max="30"
+		              			data-bv-stringlength-message=" ">
 						</div>
+						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 						<button type="submit" class="btn btn-info btn-block"><i class="glyphicon glyphicon-log-in"></i> Đăng nhập</button>
 					</form>
 				</li>

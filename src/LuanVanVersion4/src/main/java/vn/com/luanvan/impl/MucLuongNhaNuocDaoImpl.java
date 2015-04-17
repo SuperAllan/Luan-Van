@@ -16,6 +16,7 @@ public class MucLuongNhaNuocDaoImpl implements MucLuongNhaNuocDao{
 	@Autowired
 	private SessionFactory sessionFactory;
 	
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Mucluongnhanuoc> getList() {
 		String hql = " FROM Mucluongnhanuoc";

@@ -168,6 +168,9 @@
 					<div>
 						<img id="selectbox-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/selectbox.svg"/>" alt="selectbox"/>
 					</div>
+					<div>
+						<img id="table-design-ui" draggable="true" ondragstart="drag(event)" src="<c:url value="/resources/img/table.svg"/>" alt="table" width="120" height="60"/>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -325,7 +328,7 @@
 <script src="<c:url value="/resources/js/joint.nojquery.min.js" />" ></script>
 <script src="<c:url value="/resources/js/global.js" />" ></script>
 <script src="<c:url value="/resources/js/xml2json.js" />" ></script>
-<script src="<c:url value="/resources/js/jointshapesumlcustom.js"/>"></script>
+<script src="<c:url value="/resources/js/joint.shapes.ui.custom.js"/>"></script>
 <script src="<c:url value="/resources/js/diagramui.js" />"></script>
 </body>
 </html>

@@ -15,6 +15,7 @@ public class HeSoKyThuatDaoImpl implements HeSoKyThuatDao{
 	@Autowired
 	SessionFactory sessionFactory;
 	
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Hesokythuat> getListHeSoKyThuat() {
 		String hql = "FROM Hesokythuat";

@@ -35,7 +35,7 @@ a {
 #header-diagram a {
 	color: white !important;
 	text-decoration: none !important;
-	opacity: 0.7 !important;
+	opacity: 0.9 !important;
 }
 #header-diagram a:hover {
 	opacity: 1 !important;

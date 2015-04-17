@@ -20,4 +20,6 @@ public interface NhomucDao {
 	List<Nhomuc> getNhomucByProject(int projectId);
 	
 	Nhomuc getNhomucById(int nhomUCId);
+	
+	
 }

@@ -1,9 +1,7 @@
 package vn.com.luanvan.controller;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
@@ -33,6 +31,7 @@ import vn.com.luanvan.dao.MucLuongNhaNuocDao;
 import vn.com.luanvan.dao.NhomChucNangDao;
 import vn.com.luanvan.dao.NhomucDao;
 import vn.com.luanvan.dao.PhanLoaiChucNangDao;
+import vn.com.luanvan.dao.PhichucnangDao;
 import vn.com.luanvan.dao.ProjectDao;
 import vn.com.luanvan.dao.TrongsonolucDao;
 import vn.com.luanvan.dao.UsecaseDao;
@@ -51,32 +50,22 @@ import vn.com.luanvan.model.Luong;
 import vn.com.luanvan.model.Nhomchucnang;
 import vn.com.luanvan.model.Nhomuc;
 import vn.com.luanvan.model.Phanloai;
+import vn.com.luanvan.model.Phichucnang;
 import vn.com.luanvan.model.Project;
 import vn.com.luanvan.model.Usecase;
 import vn.com.luanvan.model.User;
 import vn.com.luanvan.model.Xephangkythuat;
-import vn.com.luanvan.model.XephangkythuatId;
 import vn.com.luanvan.model.Xephangmoitruong;
 
-import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import org.apache.poi.xwpf.usermodel.TextAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
-import org.apache.poi.xwpf.usermodel.VerticalAlign;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlException;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVerticalJc;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -85,9 +74,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.lowagie.text.Cell;
-import com.lowagie.text.Paragraph;
 
 
 @Controller
@@ -134,6 +120,8 @@ public class DocumentController{
 	private TrongsonolucDao trongsonolucDao;
 	@Autowired
 	private NhomucDao nhomucDao;
+	@Autowired
+	private PhichucnangDao phichucnangDao;
 	
 
 	public static boolean isUnicode(String s) {
@@ -149,7 +137,6 @@ public class DocumentController{
 	
 	
 	@Autowired(required = false)
-	@SuppressWarnings({ "unused" })
 	@RequestMapping(value="/downloadDoc", method = RequestMethod.GET)
 	@ResponseStatus(value=HttpStatus.OK)
 	public void downloadDoc(HttpServletRequest request, HttpServletResponse response, Principal principal) throws IOException, XmlException{
@@ -985,7 +972,7 @@ public class DocumentController{
             rhMT = paraMT.createRun();
             rhMT.setFontSize(13);
             rhMT.setFontFamily(Times);
-            rhMT.setText(String.valueOf(listMoiTruong.get(i).getMotahesomt()));
+            rhMT.setText(String.valueOf(listMoiTruong.get(i).getMotaheso()));
             
             paraMT = row.getCell(2).getParagraphs().get(0);
     		paraMT.setAlignment(ParagraphAlignment.CENTER);
@@ -1382,6 +1369,25 @@ public class DocumentController{
         rhTongHop.setFontFamily(Times);
         rhTongHop.setBold(true);
         rhTongHop.setText(formatter.format(G+C+TL));
+        
+        XWPFParagraph heading1PhiChucNang = document.createParagraph();
+        heading1PhiChucNang.setStyle("Heading1");
+		XWPFRun titlePhiChucNang= heading1PhiChucNang.createRun();
+		titlePhiChucNang.setText("3. Các yêu cầu phi chức năng");
+		XWPFParagraph contentPhiChucNang = document.createParagraph();
+		XWPFRun runPhiChucNang = contentPhiChucNang.createRun();
+		runPhiChucNang.setFontFamily(Times);
+		runPhiChucNang.setFontSize(13);
+		List<Phichucnang> listPhiChucNang = phichucnangDao.getListPhiChucNangByProjectID(projectID);
+		if(listPhiChucNang.size() > 0){
+			for(Phichucnang phi : listPhiChucNang){
+				runPhiChucNang.setText("- "+phi.getMotayeucau());
+				runPhiChucNang.addBreak();
+			}
+		}
+		
+		
+        //Ham download
         ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		//FileOutputStream out = new FileOutputStream(
 		//		   new File("D:/create_table.docx"));

@@ -13,8 +13,6 @@ public interface UserDao {
 
 	User findUserbyUserName(String username);
 	
-	void sendMail (User user);
-
 	boolean checkOldPassword (User user, String oldPass);
 	
 	boolean checkEmailInDatabase(String email);

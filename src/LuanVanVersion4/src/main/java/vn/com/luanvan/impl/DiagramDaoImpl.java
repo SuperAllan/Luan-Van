@@ -34,6 +34,7 @@ public class DiagramDaoImpl implements DiagramDao {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Diagram> getDiagramByProject(int projectID) {
 		String hql = "from Diagram as d where d.project.projectid = :projectID";

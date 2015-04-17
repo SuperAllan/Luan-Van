@@ -12,20 +12,11 @@ import org.springframework.stereotype.Repository;
 
 import vn.com.luanvan.dao.ChucNangDao;
 import vn.com.luanvan.model.Chucnang;
-import vn.com.luanvan.model.Nhomchucnang;
 import vn.com.luanvan.model.Project;
 @Repository
 public class ChucNangDaoImpl implements ChucNangDao{
 	@Autowired
 	private SessionFactory sessionFactory;
-	
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
 	
 	@Transactional
 	public void save(Chucnang chucnang) {
@@ -34,13 +25,17 @@ public class ChucNangDaoImpl implements ChucNangDao{
 	}
 
 	@Transactional
-	public void deleteData(Integer projectid) {
-		String hql = "DELETE Chucnang as a where a.project.projectid= :projectid";
-		Query query = sessionFactory.getCurrentSession().createQuery(hql);
-		query.setParameter("projectid", projectid);
-		query.executeUpdate();
+	public void update(Chucnang chucnang) {
+		sessionFactory.getCurrentSession().update(chucnang);
+		
 	}
 
+	@Transactional
+	public void delete(Chucnang chucnang) {
+		sessionFactory.getCurrentSession().delete(chucnang);
+	}
+	
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Chucnang> getChucNangFromData(Project project) {
 		String hql = "from Chucnang as a where a.project.projectid = :projectid";
@@ -49,6 +44,9 @@ public class ChucNangDaoImpl implements ChucNangDao{
 		return query.list();
 	}
 
-	
-	
+	@Transactional
+	public Chucnang findChucNangByID(int id) {
+		return (Chucnang) sessionFactory.getCurrentSession().get(Chucnang.class, id);
+	}
+
 }

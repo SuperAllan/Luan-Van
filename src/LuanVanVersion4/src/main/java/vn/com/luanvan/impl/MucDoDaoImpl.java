@@ -22,8 +22,9 @@ public class MucDoDaoImpl implements MucDoDao{
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-	@Transactional
 	
+	@SuppressWarnings("unchecked")
+	@Transactional
 	public List<Mucdo> getListMucDo() {
 		String hql="from Mucdo";
 		List<Mucdo> lists = sessionFactory.getCurrentSession().createQuery(hql).list();

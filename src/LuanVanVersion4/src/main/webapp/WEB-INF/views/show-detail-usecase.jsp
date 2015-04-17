@@ -132,6 +132,6 @@ function deleteFile(bienThis){
 
 <div class="form-group">
 	<input type="hidden" id="usecaseID" name="usecaseID" value="${usecase.usecaseid}">
-	<button onclick="showDialog()" class="btn btn-primary text-center" id="buttonUploadFile" style="width: 145px; height: 36px;"><span>Choose File</span></button>
+	<button onclick="showDialog()" class="btn btn-primary text-center" id="buttonUploadFile" style="width: 145px; height: 36px;"><span>Chọn tập tin</span></button>
 	<input type="file" name="file" id="file" style="display: none;">
 </div>

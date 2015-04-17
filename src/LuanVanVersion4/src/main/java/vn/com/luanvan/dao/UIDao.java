@@ -3,7 +3,6 @@ package vn.com.luanvan.dao;
 import java.util.List;
 
 import vn.com.luanvan.model.UI;
-import vn.com.luanvan.model.Usecase;
 
 public interface UIDao {
 	void add(UI ui);

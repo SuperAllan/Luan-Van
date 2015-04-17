@@ -3,17 +3,11 @@ package vn.com.luanvan.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMessage.RecipientType;
+
 
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,10 +19,8 @@ import vn.com.luanvan.model.User;
 public class UserDaoImpl implements UserDao {
 	@Autowired
 	private SessionFactory sessionFactory;
-	@Autowired
-    private JavaMailSender mailSender;
+
 	
-	    
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public boolean findByUserName(String username) {
@@ -82,22 +74,6 @@ public class UserDaoImpl implements UserDao {
 	
 	
 	@Transactional
-	public void sendMail(User user){
-		MimeMessage msg = mailSender.createMimeMessage();
-		try {
-			msg.addRecipients(RecipientType.TO, user.getEmail());
-			msg.setSubject("Đăng ký tài khoản", "UTF-8");
-			msg.setContent("<h3>Xin chào bạn đã đăng ký thành công tài khoản</h3> <br>"
-	        		+ "<h3>Tài khoản: "+user.getUsername() +"</h3><br>"
-	        		+"<a href=\"http://localhost:8080/luanvan/confirm/id="+user.getIdconfirm()+"\">Nhấn vào đây để kích hoạt</a>", "text/html; charset=UTF-8");
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		}
-        // sends the e-mail
-        mailSender.send(msg);
-	}
-	
-	@Transactional
 	public boolean checkOldPassword (User user, String oldPass){
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		if(encoder.matches(oldPass, user.getPassword())){
@@ -117,6 +93,7 @@ public class UserDaoImpl implements UserDao {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public User findUserByIdConfirm(String idconfirm) {
 		List<User> user = new ArrayList<User>();

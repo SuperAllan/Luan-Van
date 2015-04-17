@@ -32,6 +32,7 @@ public class UIDaoImpl implements UIDao {
 		sessionFactory.getCurrentSession().delete(ui);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<UI> getUIByProject(int projectID) {
 		String sql = "from UI as a where a.project.projectid = :id";

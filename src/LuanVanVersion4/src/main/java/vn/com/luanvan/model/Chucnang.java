@@ -27,7 +27,6 @@ public class Chucnang implements java.io.Serializable {
 	private Mucdo mucdo;
 	private Nhomchucnang nhomchucnang;
 	private Phanloaichucnang phanloaichucnang;
-	private Project project;
 	private Usecase usecase;
 	private String motayeucau;
 	private String ghichu;
@@ -36,21 +35,19 @@ public class Chucnang implements java.io.Serializable {
 	}
 
 	public Chucnang(Mucdo mucdo, Nhomchucnang nhomchucnang,
-			Phanloaichucnang phanloaichucnang, Project project, Usecase usecase) {
+			Phanloaichucnang phanloaichucnang, Usecase usecase) {
 		this.mucdo = mucdo;
 		this.nhomchucnang = nhomchucnang;
 		this.phanloaichucnang = phanloaichucnang;
-		this.project = project;
 		this.usecase = usecase;
 	}
 
 	public Chucnang(Mucdo mucdo, Nhomchucnang nhomchucnang,
-			Phanloaichucnang phanloaichucnang, Project project,
+			Phanloaichucnang phanloaichucnang, 
 			Usecase usecase, String motayeucau, String ghichu) {
 		this.mucdo = mucdo;
 		this.nhomchucnang = nhomchucnang;
 		this.phanloaichucnang = phanloaichucnang;
-		this.project = project;
 		this.usecase = usecase;
 		this.motayeucau = motayeucau;
 		this.ghichu = ghichu;
@@ -95,16 +92,6 @@ public class Chucnang implements java.io.Serializable {
 
 	public void setPhanloaichucnang(Phanloaichucnang phanloaichucnang) {
 		this.phanloaichucnang = phanloaichucnang;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PROJECTID", nullable = false)
-	public Project getProject() {
-		return this.project;
-	}
-
-	public void setProject(Project project) {
-		this.project = project;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

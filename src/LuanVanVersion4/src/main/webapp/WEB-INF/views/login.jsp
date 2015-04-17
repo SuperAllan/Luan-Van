@@ -3,9 +3,14 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
-<meta charset="utf-8">
-<title>Login Page</title>
+<title>Trang đăng nhập</title>
+<!-- Bootstrap vs iquery -->
 <link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
+<script src="<c:url value="/resources/js/jquery-1.11.2.min.js" />" ></script>
+
+<!-- BootstraoValidator -->
+<link href="<c:url value="/resources/css/bootstrapValidator.min.css" />" rel="stylesheet">
+
 <style>
 .error {
 	padding: 15px;
@@ -48,6 +53,12 @@
 	background: white;
 }
 </style>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#formLogInAgain').bootstrapValidator();
+	});
+	
+</script>
 </head>
 <body onload='document.loginForm.username.focus();' style="background: #357ebd;">
 
@@ -55,7 +66,7 @@
 		<span>Tài khoản hoặc mật khẩu của bạn không đúng, xin vui lòng đăng nhập lại phía dưới.</span>
 	</div>
 	<div id="form-login-again" class="col-md-4 col-md-offset-4">
-		<form name='loginForm' action="<c:url value='/j_spring_security_check' />" method='POST'>
+		<form name='loginForm' action="<c:url value='/j_spring_security_check' />" method='POST' id="formLogInAgain">
 			<legend>Đăng nhập</legend>
 			<div class="form-group">
 				<c:if test="${not empty error}">
@@ -67,12 +78,24 @@
 			</div>
 			<div class="form-group">
 				<label for="">Tài khoản</label>
-				<input type="text" class="form-control" name="username" placeholder="Nhập tài khoản">
+				<input type="text" class="form-control" name="username" placeholder="Nhập tài khoản"
+					data-bv-notempty="true"
+					data-bv-notempty-message="Tài khoản phải khác rỗng"
+			  		data-bv-stringlength="true"
+           			data-bv-stringlength-min="6"
+           			data-bv-stringlength-max="30"
+           			data-bv-stringlength-message="Tài khoản phải ít nhất là 6 ký tự và nhiều nhất là 30 ký tự">
 			</div>
 		
 			<div class="form-group">
 				<label for="">Mật khẩu</label>
-				<input type='password' class="form-control" name='password' placeholder="Nhập mật khẩu">
+				<input type='password' class="form-control" name='password' placeholder="Nhập mật khẩu"
+					data-bv-notempty="true"
+					data-bv-notempty-message="Mật khẩu phải khác rỗng"
+			  		data-bv-stringlength="true"
+           			data-bv-stringlength-min="6"
+           			data-bv-stringlength-max="30"
+           			data-bv-stringlength-message="Mật khẩu phải ít nhất là 6 ký tự và nhiều nhất là 30 ký tự">
 			</div>
 			
 			<input type="hidden" name="${_csrf.parameterName}"
@@ -84,7 +107,7 @@
  
 </body>
 <!-- Bootstrap vs iquery -->
-<script src="<c:url value="/resources/js/jquery-1.11.2.min.js" />" ></script>
+
 <script src="<c:url value="/resources/js/bootstrap.min.js" />" ></script>
-<link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
+<script src="<c:url value="/resources/js/bootstrapValidator.min.js" />" ></script>
 </html>

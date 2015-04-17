@@ -70,6 +70,7 @@ public class PhanloaiDaoImpl implements PhanloaiDao {
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Phanloai> getPhanLoaibyActor(int actorID) {
 		String hql = "FROM Phanloai as a WHERE a.actor.actorid = :actorID";

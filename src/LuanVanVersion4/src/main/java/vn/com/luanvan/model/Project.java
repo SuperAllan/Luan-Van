@@ -44,7 +44,6 @@ public class Project implements java.io.Serializable {
 	private Luong luong;
 	private Set<Phichucnang> phichucnangs = new HashSet<Phichucnang>(0);
 	private Set<Xephangmoitruong> xephangmoitruong = new HashSet<Xephangmoitruong>(0);
-	private Set<Chucnang> chucnangs = new HashSet<Chucnang>(0);
 	private Set<Nhomchucnang> nhomchucnangs = new HashSet<Nhomchucnang>(0);
 	private Set<Usecase> usecases = new HashSet<Usecase>(0);
 	private Set<Nhomuc> nhomucs = new HashSet<Nhomuc>(0);
@@ -68,14 +67,13 @@ public class Project implements java.io.Serializable {
 
 	public Project( User user, int trangthai, Date ngaytao, int luongcoban, Trongsonoluc trongsonoluc, Luong luong,
 			String tenproject, Set<Phichucnang> phichucnangs, Set<Xephangmoitruong> xephangnhoms,
-			Set<Chucnang> chucnangs, Set<Usecase> usecases, Set<Actor> actors,Set<Xephangkythuat> xephangkythuats) {
+			Set<Usecase> usecases, Set<Actor> actors,Set<Xephangkythuat> xephangkythuats) {
 		this.user = user;
 		this.trangthai = trangthai;
 		this.ngaytao = ngaytao;
 		this.tenproject = tenproject;
 		this.phichucnangs = phichucnangs;
 		this.xephangmoitruong = xephangnhoms;
-		this.chucnangs = chucnangs;
 		this.usecases = usecases;
 		this.xephangkythuats = xephangkythuats;
 		this.luongcoban = luongcoban;
@@ -151,15 +149,6 @@ public class Project implements java.io.Serializable {
 		this.xephangmoitruong = xephangnhoms;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = CascadeType.REMOVE)
-	public Set<Chucnang> getChucnangs() {
-		return this.chucnangs;
-	}
-
-	public void setChucnangs(Set<Chucnang> chucnangs) {
-		this.chucnangs = chucnangs;
-	}
-	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "project")
 	public Set<Nhomchucnang> getNhomchucnangs() {
 		return this.nhomchucnangs;

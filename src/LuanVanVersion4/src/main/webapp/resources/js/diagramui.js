@@ -93,9 +93,9 @@ paperUI.on('cell:pointerup', function(cellView, evt, x, y) {
         }
     }
      if (hasViewChangeBorder) {
-    		hasViewChangeBorder.model.attr('rect/stroke', 'black');
-    		hasViewChangeBorder = null;
-    	}
+		hasViewChangeBorder.model.attr('rect/stroke', 'black');
+		hasViewChangeBorder = null;
+	}
 });
 
 paperUI.on('cell:pointerdown', function(cellView, evt, px, py) {
@@ -193,8 +193,10 @@ paperUI.on('cell:pointermove', function(cellView, evt, x, y) {
 
 	$("#X-design-ui").val(x);
 	$("#Y-design-ui").val(y);
-	
-	alignBorderAuto(cellView);
+	console.log(cellView.model.attributes.embeds);
+	if (cellView.model.attributes.embeds == undefined) {
+		alignBorderAuto(cellView);
+	}
 
 	var cell = cellView.model;
     var cellViewsBelow = paperUI.findViewsFromPoint(cell.getBBox().center());
@@ -211,7 +213,7 @@ paperUI.on('cell:pointermove', function(cellView, evt, x, y) {
             cellViewBelow.model.attr('rect/stroke', 'blue');
             hasViewChangeBorder = cellViewBelow;
         }
-    } 
+    }
 });
 
 $("#paperUI").on('mousemove', function(e) {
@@ -247,9 +249,9 @@ $("#paperUI").on('mouseup', function(e) {
 		});
 		for (var i = 0; i < listElements.length; i++) {
 			if (listElements[i].model.attributes.type != 'selectView') {
-				listElements[i].$box.find('.delete').show();
-				listElements[i].$box.find('.copy').show();
-				listElements[i].$box.find('.glyphicon-fullscreen').parent().show();
+//				listElements[i].$box.find('.delete').show();
+//				listElements[i].$box.find('.copy').show();
+//				listElements[i].$box.find('.glyphicon-fullscreen').parent().show();
 				listElements[i].$box.find('.delete').parent().css('border', '3px dashed #0769AD');
 				listSelectView.push(listElements[i]);
 			}
@@ -395,13 +397,16 @@ function resizeWidthHeightCell(cellView, width, height) {
 	if (cellView.model.attributes.type == "ui.SelectBox") {
 		moveSelectBox(cellView, width, height);
 	}
+	if (cellView.model.attributes.type == "ui.Table") {
+		moveTable(cellView, width, height);
+	}
 	moveRectSVG(cellView, width, height);
 	cellView.model.resize(width, height);
 }
 
 // Di chuyen text button
 function moveText(cellView, width, height) {
-	cellView.model.attr({text: {x: width / 2, y: height / 2}});
+	cellView.model.attr({text: {x: width / 2, y: height / 2 + 5}});
 }
 
 // Di chuyen rect svg 
@@ -413,6 +418,19 @@ function moveRectSVG(cellView, width, height) {
 function moveSelectBox(cellView, width, height) {
 	cellView.model.attr({path: { d: "M " + (width - 20) + " " + (height/2 - 5) + " L " + (width - 10) + " " + (height/2 - 5) + " L " + (width - 15) + " " + (height/2 + 5) + " L " + (width - 20) + " " + (height/2 - 5) }});
 	cellView.model.attr({text: {y: height/2 + 5}});
+}
+
+// Di chuyen cac duong ke trong table
+function moveTable(cellView, width, height) {
+	cellView.model.attr({ ".line1": {x1: 0.25 * width, y1: 0, x2: 0.25 * width, y2: height}});
+	cellView.model.attr({ ".line2": {x1: 0.5 * width, y1: 0, x2: 0.5 * width, y2: height}});
+	cellView.model.attr({ ".line3": {x1: 0.75 * width, y1: 0, x2: 0.75 * width, y2: height}});
+	cellView.model.attr({ ".line4": {x1: 0, y1: (1/3)*height, x2: width, y2: (1/3)*height}});
+	cellView.model.attr({ ".line5": {x1: 0, y1: (2/3)*height, x2: width, y2: (2/3)*height}});
+	cellView.model.attr({ ".text1": {x: (1/8) * width - 5, y: (1/6) * height + 5}});
+	cellView.model.attr({ ".text2": {x: (3/8) * width - 5, y: (1/6) * height + 5}});
+	cellView.model.attr({ ".text3": {x: (5/8) * width - 5, y: (1/6) * height + 5}});
+	cellView.model.attr({ ".text4": {x: (7/8) * width - 5, y: (1/6) * height + 5}});
 }
 
 // Tao mot button
@@ -496,6 +514,14 @@ function createSelectbox(positionX, positionY) {
 	graphUI.addCell(selectbox);
 }
 
+//Tao mot table
+function createTable(positionX, positionY) {
+	var table = new joint.shapes.ui.Table({
+		position: { x: positionX, y: positionY }
+	});
+	graphUI.addCell(table);
+}
+
 // Su dung hien thi cac button xung quanh doi tuong dang chon
 function displayToolUI(cellView) {
 
@@ -555,11 +581,10 @@ graphUI.on('change:position', function(cell) {
     var paperW = paperUI.options.width;
     var paperH = paperUI.options.height;
     var cellBbox = cell.getBBox();
-
-    if (cellBbox.origin().x <= 0 || cellBbox.origin().y <= 0
+	if (cellBbox.origin().x <= 0 || cellBbox.origin().y <= 0
     	|| cellBbox.origin().x >= paperW - cell.attributes.size.width 
     	|| cellBbox.origin().y >= paperW - cell.attributes.size.height) {
-    	cell.set('position', cell.previous('position'));
+    		cell.set('position', cell.previous('position'));
     }
 });
 
@@ -926,6 +951,9 @@ function drop(ev) {
 		}
 		if (id == "selectbox-design-ui") {
 			createSelectbox(pos.x, pos.y);
+		}
+		if (id == "table-design-ui") {
+			createTable(pos.x, pos.y);
 		}
     } else {
     	$("#modal-newUI").modal('show');

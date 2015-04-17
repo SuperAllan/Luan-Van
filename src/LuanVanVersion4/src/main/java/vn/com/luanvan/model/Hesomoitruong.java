@@ -27,7 +27,7 @@ public class Hesomoitruong implements java.io.Serializable {
 
 	private Integer hesomoitruongid;
 	private float trongso;
-	private String motahesomt;
+	private String motaheso;
 	private Set<Xephangmoitruong> xephangnhoms = new HashSet<Xephangmoitruong>(0);
 
 	public Hesomoitruong() {
@@ -37,9 +37,9 @@ public class Hesomoitruong implements java.io.Serializable {
 		this.trongso = trongso;
 	}
 
-	public Hesomoitruong(int trongso, String motahesomt, Set<Xephangmoitruong> xephangnhoms) {
+	public Hesomoitruong(int trongso, String motaheso, Set<Xephangmoitruong> xephangnhoms) {
 		this.trongso = trongso;
-		this.motahesomt = motahesomt;
+		this.motaheso = motaheso;
 		this.xephangnhoms = xephangnhoms;
 	}
 
@@ -63,13 +63,13 @@ public class Hesomoitruong implements java.io.Serializable {
 		this.trongso = trongso;
 	}
 
-	@Column(name = "MOTAHESOMT")
-	public String getMotahesomt() {
-		return this.motahesomt;
+	@Column(name = "MOTAHESO")
+	public String getMotaheso() {
+		return this.motaheso;
 	}
 
-	public void setMotahesomt(String motahesomt) {
-		this.motahesomt = motahesomt;
+	public void setMotaheso(String motaheso) {
+		this.motaheso = motaheso;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hesomoitruong")

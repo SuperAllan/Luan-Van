@@ -37,9 +37,9 @@ import vn.com.luanvan.model.Usecase;
 import vn.com.luanvan.model.Xephangkythuat;
 import vn.com.luanvan.model.Xephangmoitruong;
 
+@SuppressWarnings("deprecation")
 public class ExcelBuilder extends AbstractExcelView{
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void buildExcelDocument(Map<String, Object> model,
 			HSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response)
@@ -63,7 +63,7 @@ public class ExcelBuilder extends AbstractExcelView{
         	createPhuLucVIII(lists.get(8), workbook);
 	}
 	
-	@SuppressWarnings({ "static-access", "deprecation", "unchecked"})
+	@SuppressWarnings({ "static-access", "unchecked"})
 	void createPhuLucI(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle styleBold = workbook.createCellStyle();
         Font fontBold = workbook.createFont();
@@ -152,7 +152,7 @@ public class ExcelBuilder extends AbstractExcelView{
     	
 	}
 	
-	@SuppressWarnings({ "static-access", "deprecation", "unchecked" })
+	@SuppressWarnings({ "static-access", "unchecked" })
 	void createPhuLucII(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle styleBold = workbook.createCellStyle();
         Font fontBold = workbook.createFont();
@@ -273,7 +273,7 @@ public class ExcelBuilder extends AbstractExcelView{
     	sheet.setColumnWidth(6, 3200);
 	}
 	
-	@SuppressWarnings({ "static-access", "deprecation", "unchecked" })
+	@SuppressWarnings({ "static-access", "unchecked" })
 	void createPhuLucIII(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle styleBold = workbook.createCellStyle();
         Font fontBold = workbook.createFont();
@@ -370,7 +370,7 @@ public class ExcelBuilder extends AbstractExcelView{
     	hssfSheet.setColumnWidth(5, 7300);
 	}
 	
-	@SuppressWarnings({ "static-access", "deprecation", "unchecked" })
+	@SuppressWarnings({ "static-access", "unchecked" })
 	void createPhuLucIV(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle styleBold = workbook.createCellStyle();
         Font fontBold = workbook.createFont();
@@ -504,7 +504,7 @@ public class ExcelBuilder extends AbstractExcelView{
     	hssfSheet.setColumnWidth(5, 5800);
 	}
 	
-	@SuppressWarnings({ "static-access", "deprecation", "unchecked" })
+	@SuppressWarnings({ "static-access", "unchecked" })
 	void createPhuLucV(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle styleBold = workbook.createCellStyle();
         Font fontBold = workbook.createFont();
@@ -600,7 +600,7 @@ public class ExcelBuilder extends AbstractExcelView{
     		hssfSheet.setColumnWidth(3, 3900);
 	}
 	
-	@SuppressWarnings({ "unchecked", "static-access", "deprecation" })
+	@SuppressWarnings({ "unchecked", "static-access"})
 	void createPhuLucVI(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle styleBold = workbook.createCellStyle();
         Font fontBold = workbook.createFont();
@@ -674,7 +674,7 @@ public class ExcelBuilder extends AbstractExcelView{
     		HSSFRow sheetRow = hssfSheet.createRow(countRow);
     		sheetRow.createCell(0).setCellValue(listMoiTruong.get(i).getHesomoitruongid());
     		sheetRow.getCell(0).setCellStyle(textCenter);
-    		sheetRow.createCell(1).setCellValue(listMoiTruong.get(i).getMotahesomt());
+    		sheetRow.createCell(1).setCellValue(listMoiTruong.get(i).getMotaheso());
     		if(listXepHangMT.size() != 0){
     		sheetRow.createCell(2).setCellValue(listXepHangMT.get(i).getGiatrixephang());
     		}else{
@@ -714,7 +714,7 @@ public class ExcelBuilder extends AbstractExcelView{
     		hssfSheet.setColumnWidth(5, 5600);
 	}
 	
-	@SuppressWarnings({ "unchecked", "static-access", "deprecation" })
+	@SuppressWarnings({ "unchecked", "static-access" })
 	void createPhuLucBangLuong(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle formatSeparator = workbook.createCellStyle();
 		formatSeparator.setDataFormat(HSSFDataFormat.getBuiltinFormat("#,##0"));
@@ -888,7 +888,7 @@ public class ExcelBuilder extends AbstractExcelView{
     		hssfSheet.setColumnWidth(12, 3500);
 	}
 	
-	@SuppressWarnings({ "static-access", "deprecation", "unchecked" })
+	@SuppressWarnings({ "static-access", "unchecked" })
 	void createPhuLucVII(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle formatSeparator = workbook.createCellStyle();
 		formatSeparator.setDataFormat(HSSFDataFormat.getBuiltinFormat("#,##0"));
@@ -1037,7 +1037,7 @@ public class ExcelBuilder extends AbstractExcelView{
 		hssfSheet.setColumnWidth(3, 11300);
 	}
 	
-	@SuppressWarnings({ "static-access", "deprecation", "unchecked" })
+	@SuppressWarnings({ "static-access", "unchecked" })
 	void createPhuLucVIII(DocumentExcel documentExcel, HSSFWorkbook workbook){
 		CellStyle formatSeparator = workbook.createCellStyle();
 		formatSeparator.setDataFormat(HSSFDataFormat.getBuiltinFormat("#,##0"));

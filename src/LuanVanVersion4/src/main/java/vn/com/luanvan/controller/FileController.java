@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.Date;
 import java.util.Iterator;

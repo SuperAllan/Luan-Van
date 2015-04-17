@@ -45,8 +45,8 @@
 		              			data-bv-notempty-message="Tài khoản phải khác rỗng"
 						  		data-bv-stringlength="true"
 		              			data-bv-stringlength-min="6"
-		              			data-bv-stringlength-max="20"
-		              			data-bv-stringlength-message="Tài khoản phải ít nhất là 6 ký tự và nhiều nhất là 20 ký tự">
+		              			data-bv-stringlength-max="30"
+		              			data-bv-stringlength-message="Tài khoản phải ít nhất là 6 ký tự và nhiều nhất là 30 ký tự">
 						</div>
 						<div style="color: #a94442;font-size: 85%;padding-top: 5px;">
 						<c:if test="${not empty strUser}">

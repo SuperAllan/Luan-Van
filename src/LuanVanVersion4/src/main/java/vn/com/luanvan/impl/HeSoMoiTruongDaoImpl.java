@@ -15,6 +15,7 @@ public class HeSoMoiTruongDaoImpl implements HeSoMoiTruongDao{
 	@Autowired
 	private SessionFactory sessionFactory;
 	
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Hesomoitruong> getListHeSoMoiTruong() {
 		String hql = "FROM Hesomoitruong";

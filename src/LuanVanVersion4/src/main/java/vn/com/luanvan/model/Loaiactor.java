@@ -28,7 +28,6 @@ public class Loaiactor implements java.io.Serializable {
 	private Integer loaiactorid;
 	private String loai;
 	private Integer trongso;
-	private String ghichu;
 	private String motaloaiactor;
 	private Set<Actor> actors = new HashSet<Actor>(0);
 
@@ -39,11 +38,10 @@ public class Loaiactor implements java.io.Serializable {
 		this.loai = loai;
 	}
 
-	public Loaiactor(String loai, Integer trongso, String ghichu,
+	public Loaiactor(String loai, Integer trongso,
 			String motaloaiactoer, Set<Actor> actors) {
 		this.loai = loai;
 		this.trongso = trongso;
-		this.ghichu = ghichu;
 		this.motaloaiactor = motaloaiactoer;
 		this.actors = actors;
 	}
@@ -75,15 +73,6 @@ public class Loaiactor implements java.io.Serializable {
 
 	public void setTrongso(Integer trongso) {
 		this.trongso = trongso;
-	}
-
-	@Column(name = "GHICHU")
-	public String getGhichu() {
-		return this.ghichu;
-	}
-
-	public void setGhichu(String ghichu) {
-		this.ghichu = ghichu;
 	}
 
 	@Column(name = "MOTALOAIACTOR")

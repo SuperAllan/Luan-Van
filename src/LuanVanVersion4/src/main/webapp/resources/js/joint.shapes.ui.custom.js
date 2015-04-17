@@ -789,3 +789,87 @@ joint.shapes.ui.SelectBoxView = joint.dia.ElementView.extend({
        this.$box.remove();
    }
 });
+
+
+joint.shapes.ui.Table = joint.shapes.basic.Generic.extend({
+	markup: [
+        '<g class="scalable">',
+            '<rect/>',
+            '<line class="line1"/>',
+            '<line class="line2"/>',
+            '<line class="line3"/>',
+            '<line class="line4"/>',
+            '<line class="line5"/>',
+            '<text class="text1">A</text>',
+            '<text class="text2">B</text>',
+            '<text class="text3">C</text>',
+            '<text class="text4">D</text>',
+        '</g>'
+    ].join(''),
+
+	defaults: joint.util.deepSupplement({ 
+        type: 'ui.Table',
+        size: {
+        	width: 240, height: 120	
+        },
+        attrs: {
+            rect: { width: 240, height: 120, rx: 0, ry: 0, 'stroke-width': 2, stroke: 'black', fill: 'transparent' },
+            ".line1": { x1: 60, y1: 0, x2: 60, y2: 120, 'stroke-width': 2, stroke: 'black' },
+            ".line2": { x1: 120, y1: 0, x2: 120, y2: 120, 'stroke-width': 2, stroke: 'black' },
+            ".line3": { x1: 180, y1: 0, x2: 180, y2: 120, 'stroke-width': 2, stroke: 'black' },
+            ".line4": { x1: 0, y1: 40, x2: 240, y2: 40, 'stroke-width': 2, stroke: 'black' },
+            ".line5": { x1: 0, y1: 80, x2: 240, y2: 80, 'stroke-width': 2, stroke: 'black' },
+            ".text1": { x: 25, y: 25, fill: 'black', 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 },
+            ".text2": { x: 85, y: 25, fill: 'black', 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 },
+            ".text3": { x: 145, y: 25, fill: 'black', 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 },
+            ".text4": { x: 205, y: 25, fill: 'black', 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 },
+        }
+    }, joint.shapes.basic.Generic.prototype.defaults)
+});
+
+joint.shapes.ui.TableView = joint.dia.ElementView.extend({
+
+    template : [
+        '<div class="ui-table">',
+            '<button class="delete">x</button>',
+            '<div class="resize"><i class="glyphicon glyphicon-fullscreen"></i></div>',
+            '<button class="copy">+</button>',
+        '</div>'
+    ].join(''),
+
+    initialize: function() {
+        _.bindAll(this, 'updateTableView');
+        joint.dia.ElementView.prototype.initialize.apply(this, arguments);
+
+        this.$box = $(_.template(this.template)());
+        this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
+        
+        // Update the box position whenever the underlying model changes.
+        this.model.on('change', this.updateTableView, this);
+        // Remove the box when the model gets removed from the graph.
+        this.model.on('remove', this.removeTableView, this);
+
+        this.updateTableView();
+    },
+    render: function() {
+        joint.dia.ElementView.prototype.render.apply(this, arguments);
+        this.paper.$el.prepend(this.$box);
+        this.updateTableView();
+        return this;
+    },
+    updateTableView: function() {
+        // Set the position and dimension of the box so that it covers the JointJS element.
+        var bbox = this.model.getBBox();
+        // Example of updating the HTML with a data stored in the cell model.
+        this.$box.css({
+            width: bbox.width,
+            height: bbox.height,
+            left: bbox.x,
+            top: bbox.y,
+            transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
+        });
+    },
+    removeTableView: function() {
+        this.$box.remove();
+    }
+});

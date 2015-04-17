@@ -31,6 +31,7 @@ public class NhomChucNangDaoImpl implements NhomChucNangDao{
 		sessionFactory.getCurrentSession().save(nhom);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Nhomchucnang> getListNhomChucNang() {
 		String hql = "FROM Nhomchucnang";
@@ -43,12 +44,23 @@ public class NhomChucNangDaoImpl implements NhomChucNangDao{
 		sessionFactory.getCurrentSession().delete(nhom);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Nhomchucnang> getListNhomChucNang(Project project) {
 		String hql = "FROM Nhomchucnang as a where a.project.projectid = :projectid";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("projectid", project.getProjectid());
 		return query.list();
+	}
+
+	@Transactional
+	public Nhomchucnang findNhomChucNangByID(int id) {
+		return (Nhomchucnang) sessionFactory.getCurrentSession().get(Nhomchucnang.class, id);
+	}
+
+	@Transactional
+	public void update(Nhomchucnang nhom) {
+		sessionFactory.getCurrentSession().update(nhom);
 	}
 	
 }

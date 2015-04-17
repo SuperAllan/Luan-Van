@@ -60,7 +60,7 @@
 						 		<textarea class="form-control" rows="1" name="listMoTaUC">${listData2.motauc}</textarea>
 						 	</td>
 						 	<td class="text-center">
-						 		<select class="form-control" name="listTinhTien">
+						 		<select class="form-control text-center" name="listTinhTien" style="text-align: center;">
 							 		<c:choose>
 							 			<c:when test="${listData2.tinhtien == true}">
 							 				<option value="true" selected>Có</option>
@@ -74,7 +74,7 @@
 						 		</select>
 						 	</td>
 						 	<td>
-						 		<select class="form-control" name="listBMT">
+						 		<select class="form-control text-center" name="listBMT" style="text-align: center;">
 									<c:forEach var="list" items="${bmts}">
 										<c:choose>
 									      <c:when test="${listData2.bmt.bmtid == list.bmtid}">

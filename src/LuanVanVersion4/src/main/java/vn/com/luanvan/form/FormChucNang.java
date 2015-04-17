@@ -2,8 +2,8 @@ package vn.com.luanvan.form;
 
 public class FormChucNang{
 	String[] listChucNang;
-	String[] listPhanLoai;
-	String[] listMucDo;
+	Integer[] listPhanLoai;
+	Integer[] listMucDo;
 	String[] listGhiChu;
 	
 	public String[] getListChucNang() {
@@ -12,16 +12,16 @@ public class FormChucNang{
 	public void setListChucNang(String[] listChucNang) {
 		this.listChucNang = listChucNang;
 	}
-	public String[] getListPhanLoai() {
+	public Integer[] getListPhanLoai() {
 		return listPhanLoai;
 	}
-	public void setListPhanLoai(String[] listPhanLoai) {
+	public void setListPhanLoai(Integer[] listPhanLoai) {
 		this.listPhanLoai = listPhanLoai;
 	}
-	public String[] getListMucDo() {
+	public Integer[] getListMucDo() {
 		return listMucDo;
 	}
-	public void setListMucDo(String[] listMucDo) {
+	public void setListMucDo(Integer[] listMucDo) {
 		this.listMucDo = listMucDo;
 	}
 	public String[] getListGhiChu() {

@@ -76,24 +76,29 @@ $("#a-new-diagram").on('click', function() {
 
 // Begin create new diagram
 $("#btn-new-diagram").on('click', function() {
-	$.ajax({
-		url: '/luanvan/diagram/creatediagram',
-		data: "nameProject=" + $("#nameProject").val() + "&nameDiagram=" + $("#input-new-diagram").val(),
-		success: function(result) {
-			if (result != "") {
-				$("#name-diagram-show").html($("#input-new-diagram").val());
-				$("#modal-new-diagram").modal('hide');
-				$("#a-rename-diagram").show('fade');
-				setIconSave("saved");
-				graph.clear();
-			} else {
-				alert("Tên nhóm đã tồn tại");
+	if ($("#input-new-diagram").val() != "") {
+		$.ajax({
+			url: '/luanvan/diagram/creatediagram',
+			data: "nameProject=" + $("#nameProject").val() + "&nameDiagram=" + $("#input-new-diagram").val(),
+			success: function(result) {
+				if (result != "") {
+					$("#name-diagram-show").html($("#input-new-diagram").val());
+					$("#modal-new-diagram").modal('hide');
+					$("#a-rename-diagram").show('fade');
+					setIconSave("saved");
+					graph.clear();
+				} else {
+					alert("Tên nhóm đã tồn tại");
+				}
+			},
+			error: function() {
+				alert("Đã xảy ra lỗi. Không thể tạo được sơ đồ mới. Liên hệ admin để giải quyết, cảm ơn!");
 			}
-		},
-		error: function() {
-			alert("Đã xảy ra lỗi. Không thể tạo được sơ đồ mới. Liên hệ admin để giải quyết, cảm ơn!");
-		}
-	});
+		});
+	} else {
+		alert("Không được bỏ trống");
+	}
+	
 });
 // End create new diagram
 

@@ -66,6 +66,7 @@ public class UIUsecaseDaoImpl implements UIUsecaseDao {
 		return false;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<UIUsecase> getUIUsecaseByUsecaseID(int usecaseid) {
 		String hql = "from UIUsecase as u where u.usecase.usecaseid = :usecaseid";

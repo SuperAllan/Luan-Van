@@ -16,6 +16,7 @@
 		<intercept-url pattern="/updateProject**" access="isAuthenticated()" />
 		<intercept-url pattern="/xoaDuAn**" access="isAuthenticated()" />
 		<intercept-url pattern="/updateFeatures**" access="isAuthenticated()" />
+		<intercept-url pattern="/updatePhiChucNang**" access="isAuthenticated()" />
 		<intercept-url pattern="/updateHeSoKyThuat**" access="isAuthenticated()" />
 		<intercept-url pattern="/updateHeSoMoiTruong**" access="isAuthenticated()" />
 		<intercept-url pattern="/updateBangLuong**" access="isAuthenticated()" />
@@ -33,7 +34,7 @@
 			username-parameter="username"
 			password-parameter="password"
 			always-use-default-target = "true"/>
-		<logout invalidate-session="true" delete-cookies="JSESSIONID" logout-success-url="/" />
+		<logout invalidate-session="true" delete-cookies="JSESSIONID" logout-success-url="/welcome" />
 		
 		<session-management invalid-session-url="/welcome" >
         	<concurrency-control max-sessions="5" expired-url="/welcome" />

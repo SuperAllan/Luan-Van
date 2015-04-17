@@ -29,18 +29,15 @@ public class Bmt implements java.io.Serializable {
 	private String ten;
 	private Integer trongso;
 	private float hesobmt;
-	private String motabmt;
 	private Set<Usecase> usecases = new HashSet<Usecase>(0);
 
 	public Bmt() {
 	}
 
-	public Bmt(String ten, Integer trongso, Integer hesobmt, String motabmt,
-			Set<Usecase> usecases) {
+	public Bmt(String ten, Integer trongso, Integer hesobmt, Set<Usecase> usecases) {
 		this.ten = ten;
 		this.trongso = trongso;
 		this.hesobmt = hesobmt;
-		this.motabmt = motabmt;
 		this.usecases = usecases;
 	}
 
@@ -80,15 +77,6 @@ public class Bmt implements java.io.Serializable {
 
 	public void setHesobmt(float hesobmt) {
 		this.hesobmt = hesobmt;
-	}
-
-	@Column(name = "MOTABMT")
-	public String getMotabmt() {
-		return this.motabmt;
-	}
-
-	public void setMotabmt(String motabmt) {
-		this.motabmt = motabmt;
 	}
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "bmt")

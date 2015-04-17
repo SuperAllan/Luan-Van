@@ -23,6 +23,7 @@ public class PhanLoaiChucNangDaoImpl implements PhanLoaiChucNangDao{
 		this.sessionFactory = sessionFactory;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Phanloaichucnang> getListTenLoai() {
 		String hql ="from Phanloaichucnang";

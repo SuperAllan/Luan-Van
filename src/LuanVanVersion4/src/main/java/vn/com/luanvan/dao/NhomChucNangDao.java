@@ -11,4 +11,8 @@ public interface NhomChucNangDao{
 	List<Nhomchucnang> getListNhomChucNang(Project project);
 	
 	void delete(Nhomchucnang nhom);
+	
+	void update(Nhomchucnang nhom);
+	
+	Nhomchucnang findNhomChucNangByID( int id);
 }

@@ -9,6 +9,15 @@ $(document).ready(function(){
 	$('textarea').keyup(function(){
 		textAreaAdjust(this);
 	});
+	
+	//$('#formLogIn').bootstrapValidator();
+	$('#formLogIn').bootstrapValidator({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        }
+    })
 });
 
 function formSubmitMenu() {

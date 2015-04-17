@@ -1,16 +1,16 @@
 package vn.com.luanvan.controller;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Locale;
 
 public class tesst {
 
-	public static void main(String[] args) {
-		DecimalFormat formatter = new DecimalFormat("#,###.#####");
-		int a = (int) (21769 * 1.4 * 160.34217 * 20);
+	public static void main(String[] args)  {
 		
-		System.out.println(formatter.format(a));
+		String str ="[";
+			for(int i = 0; i < 5; i++){
+				str+="{\"value\":"+i+"}";
+			}
+		str+="]";
+		System.out.print(str);
 	}
 
 }

@@ -30,7 +30,6 @@ public class Actor implements java.io.Serializable {
 
 	private Integer actorid;
 	private Loaiactor loaiactor;
-	private String ghichu;
 	private String motaactor;
 	private String nameofactor;
 	private Project project;
@@ -44,10 +43,9 @@ public class Actor implements java.io.Serializable {
 		this.nameofactor = nameofactor;
 	}
 
-	public Actor(Loaiactor loaiactor, String ghichu, String motamucdo,
+	public Actor(Loaiactor loaiactor, String motamucdo,
 			String nameofactor, Set<Phanloai> phanloais) {
 		this.loaiactor = loaiactor;
-		this.ghichu = ghichu;
 		this.motaactor = motamucdo;
 		this.nameofactor = nameofactor;
 		this.phanloais = phanloais;
@@ -72,15 +70,6 @@ public class Actor implements java.io.Serializable {
 
 	public void setLoaiactor(Loaiactor loaiactor) {
 		this.loaiactor = loaiactor;
-	}
-
-	@Column(name = "GHICHU")
-	public String getGhichu() {
-		return this.ghichu;
-	}
-
-	public void setGhichu(String ghichu) {
-		this.ghichu = ghichu;
 	}
 
 	@Column(name = "MOTAACTOR")

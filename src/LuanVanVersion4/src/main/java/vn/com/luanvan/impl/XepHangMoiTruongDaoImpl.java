@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import vn.com.luanvan.dao.XepHangMoiTruongDao;
-import vn.com.luanvan.model.Xephangkythuat;
 import vn.com.luanvan.model.Xephangmoitruong;
 
 @Repository
@@ -32,6 +31,7 @@ public class XepHangMoiTruongDaoImpl implements XepHangMoiTruongDao{
 		query.executeUpdate();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Xephangmoitruong> getListXepHangMoiTruong(Integer projectid) {
 		String hql = "FROM Xephangmoitruong as a where a.project.projectid = :projectid";

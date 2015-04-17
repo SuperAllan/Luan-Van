@@ -30,6 +30,7 @@ public class XepHangKyThuatDaoImpl implements XepHangKyThuatDao{
 		query.executeUpdate();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Xephangkythuat> getListXepHangKyThuat(Integer projectid) {
 		String hql = "FROM Xephangkythuat as a where a.project.projectid = :projectid";

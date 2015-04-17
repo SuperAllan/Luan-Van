@@ -6,15 +6,11 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.com.luanvan.dao.ProjectDao;
 import vn.com.luanvan.dao.UserDao;
 import vn.com.luanvan.dao.UserRoleDao;
+import vn.com.luanvan.form.Emailer;
 import vn.com.luanvan.model.Project;
 import vn.com.luanvan.model.User;
 import vn.com.luanvan.model.UserRole;
@@ -47,8 +44,6 @@ public class LogRegController {
 	private UserDao userDao;
 	@Autowired
 	private ProjectDao projectDao;
-	@Autowired
-    private JavaMailSender mailSender;
 	
 	/**
 	 * Trang chủ
@@ -148,22 +143,23 @@ public class LogRegController {
 		        		+"<a href=\"http://localhost:8080/luanvan/confirm/id="+user.getIdconfirm()+"\">Nhấn vào đây để kích hoạt</a>";
 				 
 				try {
-				MimeMessage message = mailSender.createMimeMessage(); 
-				message.setFrom(new InternetAddress("luanvan111327@gmail.com"));
-				message.setRecipient(Message.RecipientType.TO,new InternetAddress(user.getEmail())); 		
-				message.setSubject(subject, "UTF-8");
-				message.setContent(content, "text/html; charset=UTF-8"); 
+//				MimeMessage message = mailSender.createMimeMessage(); 
+//				message.setFrom(new InternetAddress("luanvan111327@gmail.com"));
+//				message.setRecipient(Message.RecipientType.TO,new InternetAddress(user.getEmail())); 		
+//				message.setSubject(subject, "UTF-8");
+//				message.setContent(content, "text/html; charset=UTF-8"); 
+//			    //sending message  
+//				mailSender.send(message);
+				Emailer sendMail = new Emailer();
+				sendMail.send(user.getEmail(), subject, content);
 				model.addAttribute("successRegister","Đăng ký thành công");
 				model.addAttribute("userInActive", user);
-			    //sending message  
-				mailSender.send(message);
 				} catch (Exception e) {
 					userroleDao.delete(userRole);
 					userDao.delete(user);
 					model.addAttribute("errorRegister","Hệ thông đang bận xin thử lại lần sau.");
 					e.printStackTrace();
 				} 
-				
 		        return "home";
 			}
 		}
@@ -260,7 +256,6 @@ public class LogRegController {
 		@RequestMapping(value="/sendMailAgain", method = RequestMethod.POST)
 		public String sendMailAgain(HttpServletRequest request, Model model){
 			String username = request.getParameter("userInActiveForSendMail");
-			System.out.print(username);
 			if(username != null || username != ""){
 				User user = userDao.findUserbyUserName(username);
 				if(user.isEnabled() == false){
@@ -268,13 +263,17 @@ public class LogRegController {
 					String content = "<h3>Xin chào, bạn đã đăng ký thành công tài khoản</h3> <br>"
 			        		+"<a href=\"http://localhost:8080/luanvan/confirm/id="+user.getIdconfirm()+"\">Nhấn vào đây để kích hoạt</a>";
 					try{
-					MimeMessage message = mailSender.createMimeMessage();  
-					message.setFrom(new InternetAddress("luanvan111327@gmail.com"));
-					message.setRecipient(Message.RecipientType.TO,new InternetAddress(user.getEmail())); 		
-					message.setSubject(subject, "UTF-8");
-					message.setContent(content, "text/html; charset=UTF-8"); 
+//					MimeMessage message = mailSender.createMimeMessage();  
+//					message.setFrom(new InternetAddress("luanvan111327@gmail.com"));
+//					message.setRecipient(Message.RecipientType.TO,new InternetAddress(user.getEmail())); 		
+//					message.setSubject(subject, "UTF-8");
+//					message.setContent(content, "text/html; charset=UTF-8"); 
 				    //sending message  
-					mailSender.send(message);
+					//mailSender.send(message);
+						Emailer sendMail = new Emailer();
+						sendMail.send(user.getEmail(), subject, content);
+						model.addAttribute("successRegister","Đăng ký thành công");
+						model.addAttribute("userInActive", user);
 					}catch(Exception e){
 						return "403";
 					}

@@ -17,6 +17,7 @@ public class TrongsonolucDaoImpl implements TrongsonolucDao{
 	@Autowired
 	SessionFactory sessionFactory;
 	
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Trongsonoluc> getAll() {
 		String hql = "FROM Trongsonoluc";

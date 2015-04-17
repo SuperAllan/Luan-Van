@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -43,6 +44,7 @@ public class UsecaseDaoImpl implements UsecaseDao {
 		query.executeUpdate();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Integer> countBMT(Integer projectid) {
 		List<Integer> count = new ArrayList<Integer>();

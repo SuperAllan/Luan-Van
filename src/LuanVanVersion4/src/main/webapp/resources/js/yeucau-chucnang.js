@@ -6,150 +6,241 @@ var number = 0;
 var count = 0;
 
 $(document).ready(function() {
-	
-    $('.countNhomChucNangFromData').each(function(){
-    	count++;
-    	$(this).attr("id","soLuongNhom"+count+"");
-    	var bien = 0;
-    	$(this).parent().parent().parent().attr("id","Nhom"+count+"");
-    	$("#Nhom"+count+" tr").each(function(){
-    		bien++;
-    	});
-    	$('#soLuongNhom'+count).attr("value", bien-1);
-    });
-    
-	$('.loadFromData').on('click', function(){
-    	themChucNang($(this).parent().parent().parent().attr("id"));
-    });
-
-	$('.removeFunctionFromData').on('click', function(){
-		$("#soLuong"+$(this).parent().parent().parent().attr("id")).val(parseInt($("#soLuong"+$(this).parent().parent().parent().attr("id")).val())-1);
-		$(this).parent().parent().remove();
-		countSTT();
-	});
-    
-	$('.xoaNhomFromData').on('click',function(){
-    	xoaNhom($(this).parent().parent().parent().attr("id"));
-    	countSTT();
-    });
-    
 	countSTT();
-//    $('.listGhiChu').each(function(){
-//    	if($(this).val() == null || $(this).val() == "" || $(this).length < 1){
-//    		$(this).val("Ghi chú");
-//    	}
-//   	});
 });  
 
-function checkNameNhomChucNang(bienThis){
+function ajaxNhomChucNang(bienThis){
 	var dem = 0;
+	var check = true;
 	var value = $(bienThis).val();
-	 $('.nhomChucNang').each(function(){
-		 if(value != "" && value == $(this).val()){
-			 dem++;
-			 if(dem > 1){
-				alert('Tên nhóm chức năng đã tồn tại.');
-    			$(bienThis).focus();
+	var parentID = null;
+	if( $(bienThis).parent().parent().attr('id') != null ){
+		parentID = $(bienThis).parent().parent().attr('id');
+		parentID = parentID.replace('Nhom','');
+	}
+	if(value == "" || value == " " || value == null || value == 'null'){
+		alert("Tên nhóm chức năng phải khác rỗng.");
+		check = false;
+		$(bienThis).focus();
+	}else{
+		$('.nhomChucNang').each(function(){
+			 if(value == $(this).val()){
+				 dem++;
+				 if(dem > 1){
+					alert('Tên nhóm chức năng đã tồn tại.');
+					check = false;
+	    			$(bienThis).focus();
+				 }
 			 }
-		 }
-	 });
+		 });
+	}
+	if(check == true){
+		onloadChucNang(parentID, value);
+	}
+	
+}
+function onloadChucNang(parentID, nhom){
+	$('#listChucNang').html("<h3>Đang tải...</h3>");
+	$.ajax({
+		type: 'get',
+		url: 'themNhomChucNang',
+		data: {
+			parentID: parentID,
+			nhomChucNang: nhom,
+			tenProject: $('#tenProjectForChucNang').val()
+		},
+		success: function(data) {
+			$('#listChucNang').html(data);
+			countSTT();
+		},
+		error: function() {
+			alert("Lỗi xảy ra do mất kết nối với cơ sở dữ liệu! Vui lòng nhấn F5 để thử lại!");
+		}
+	});
 }
 
-function checkNameChucNang(bienThis){
+function ajaxChucNang(bienThis, nhomID){
 	var dem = 0;
+	var check = true;
+	var parentID = null;
 	var value = $(bienThis).val();
-	 $('.chucNang').each(function(){
-		 if(value != "" && value == $(this).val()){
-			 dem++;
-			 if(dem > 1){
-				alert('Tên chức năng đã tồn tại.');
-    			$(bienThis).focus();
+	if($(bienThis).parent().parent().attr('id') != null){
+		parentID = $(bienThis).parent().parent().attr('id');
+		parentID = parentID.replace('Chuc','');
+	}
+	if(value == "" || value == " " || value == null){
+		alert("Tên chức năng phải khác rỗng.");
+		check = false;
+		$(bienThis).focus();
+	}else{
+		$('.chucNang').each(function(){
+			 if(value == $(this).val()){
+				 dem++;
+				 if(dem > 1){
+					alert('Tên chức năng đã tồn tại.');
+					check = false;
+	    			$(bienThis).focus();
+				 }
 			 }
-		 }
-	 });
+		 });
+	}
+	if(check == true){
+		$('#listChucNang').html("<h3>Đang tải...</h3>");
+		$.ajax({
+			type: 'get',
+			url: 'themChucNang',
+			data: {
+				parentID: parentID,
+				chucNang: value,
+				nhomChucNangID: nhomID,
+				tenProject: $('#tenProjectForChucNang').val()
+			},
+			success: function(data) {
+				$('#listChucNang').html(data);
+				countSTT();
+			},
+			error: function() {
+				alert("Lỗi xảy ra do mất kết nối với cơ sở dữ liệu! Vui lòng nhấn F5 để thử lại!");
+			}
+		});
+		
+	}
+	
 }
 
+function updatePhanLoai(value, chucNangID){
+	$.ajax({
+		type: 'get',
+		url: 'updatePhanLoai',
+		data: {
+			phanLoai: value,
+			chucNangID: chucNangID
+		},
+		success: function(data) {
+			countSTT();
+		},
+		error: function() {
+			alert("Lỗi xảy ra do mất kết nối với cơ sở dữ liệu! Vui lòng nhấn F5 để thử lại!");
+		}
+	});
+}
 
+function updateMucDo(value, chucNangID){
+	$.ajax({
+		type: 'get',
+		url: 'updateMucDo',
+		data: {
+			mucDo: value,
+			chucNangID: chucNangID
+		},
+		success: function(data) {
+		},
+		error: function() {
+			alert("Lỗi xảy ra do mất kết nối với cơ sở dữ liệu! Vui lòng nhấn F5 để thử lại!");
+		}
+	});
+}
+
+function updateGhiChu(value, chucNangID){
+	$.ajax({
+		type: 'get',
+		url: 'updateGhiChu',
+		data: {
+			ghiChu: value,
+			chucNangID: chucNangID
+		},
+		success: function(data) {
+		},
+		error: function() {
+			alert("Lỗi xảy ra do mất kết nối với cơ sở dữ liệu! Vui lòng nhấn F5 để thử lại!");
+		}
+	});
+}
+ 
 function themNhom(){
 	var listChucNang = $('#listChucNang');
-	if(count > number){
-		number = count + 1;
-	}
-	var nhom = "<tbody id='Nhom"+number+"'><tr>" +
-			"<td colspan='5'><input name='nhomChucNang' type='text' style='width: 710px;' class='form-control-bs nhomChucNang' onblur='checkNameNhomChucNang(this)' required='required' placeholder='Nhập tên nhóm'>"+
-			"<input type='hidden' name='soLuongChucNang'  id='soLuongNhom"+number+"'></td>" +
+	var nhom = "<tr>" +
+			"<td colspan='5'><input name='nhomChucNang' id='newNhom' type='text' class='form-control-bs nhomChucNang' onblur='ajaxNhomChucNang(this)' required='required' placeholder='Nhập tên nhóm'></td>" +
 			"<td>" +
-				"<a class='btn btn-link btn-block text-success' onclick='themChucNang(\"Nhom"+number+"\")' title='Thêm chức năng' style='display: inline; padding-right: 5px;'><small><i class='glyphicon glyphicon-plus'></i> Thêm chức năng</small></a>" +
-				"<a class='btn btn-link btn-block text-danger' onclick='xoaNhom(\"Nhom"+number+"\")' title='Xóa nhóm' style='display: inline; padding-left: 0px;'><small ><i class='glyphicon glyphicon-remove'></i> Xóa nhóm</small></a>" +
-			"</td></tr></tbody>";
-	
+				"<a class='text-success' title='Thêm chức năng' style='padding-right: 5px; pointer-events: none;'><small><i class='glyphicon glyphicon-plus'></i> Thêm chức năng</small></a>" +
+				"<a class='text-danger' title='Xóa nhóm' style='padding-left: 0px; pointer-events: none;'><small ><i class='glyphicon glyphicon-remove'></i> Xóa nhóm</small></a>" +
+			"</td>" +
+			"</tr>";
 	listChucNang.prepend(nhom);
-	$("#soLuongNhom"+number).val(0);
-	number++;
 	countSTT();
+	focusID('newNhom');
+}
+
+
+/* Xu ly them chuc nang */
+function themChucNang(id) {
+	var tr = "<tr>"+
+			"<td class='text-center countSTT'></td>"+
+			"<td><textarea name='listChucNang' id='newChuc' rows='1'  class='form-control chucNang' onkeyup='textAreaAdjust(this)'  onblur='ajaxChucNang(this,"+id+")' required='required' placeholder='Mô tả chức năng' data-bv-notempty='true' data-bv-notempty-message='Mô tả khác rỗng'></textarea></td>"+
+			"<td>"+
+				"<select class='form-control' name='listPhanLoai' disabled='disabled'></select>"+
+			"</td>"+
+			"<td>"+
+				"<select class='form-control' name='listMucDo' disabled='disabled'></select>"+
+			"</td>"+
+			"<td>"+
+				"<textarea class='form-control listGhiChu' rows='1' name='listGhiChu' placeholder='Ghi chú' disabled='disabled'></textarea>"+
+			"</td>"+
+			"<td><a class='text-danger' title='Xóa chức năng' style='pointer-events: none;'><small><i class='glyphicon glyphicon-remove'></i> Xóa chức năng</small></a></td>"+
+		"</tr>";
+	$('#Nhom'+id).after(tr);
+	countSTT();
+	focusID('newChuc');
 }
 
 function xoaNhom(id){
 	var isConfirm = confirm("Bạn có chắc muốn xóa nhóm này không? Các chức năng trong nhóm sẽ mất hết!");
 	if(isConfirm == true){
 		$("#"+id).remove();
+		$.ajax({
+			type: 'get',
+			url: 'xoaNhomChucNang',
+			data: {
+				nhomChucNangID: id
+			},
+			success: function(data) {
+				var object = $.parseJSON(data);
+				for (var i = 0; i < object.chucnangs.length; i++) {
+					$("#Chuc"+ object.chucnangs[i].value).remove();
+				}
+				$("#Nhom"+id).remove();
+				countSTT();
+			},
+			error: function() {
+				alert("Lỗi xảy ra do mất kết nối với cơ sở dữ liệu! Vui lòng nhấn F5 để thử lại!");
+			}
+		});
 	}
+}
+
+
+function xoaChucNang(id){
+	
+	//$('#listChucNang').html("<h3>Đang tải...</h3>");
+	$.ajax({
+		type: 'get',
+		url: 'xoaChucNang',
+		data: {
+			chucNangID: id
+		},
+		success: function(data) {
+			if(data == "OKOKOK"){
+				$("#Chuc"+id).remove();
+				countSTT();
+			}
+		},
+		error: function() {
+			alert("Lỗi xảy ra do mất kết nối với cơ sở dữ liệu! Vui lòng nhấn F5 để thử lại!");
+		}
+	});
 	countSTT();
 }
 
-/* Xu ly them phong */
-function themChucNang(id) {
-	var tr = "<tr>"+
-			"<td class='countSTT'></td>"+
-			"<td><textarea name='listChucNang' rows='1'  class='form-control chucNang' onkeyup='textAreaAdjust(this)'  onblur='checkNameChucNang(this)' required='required' placeholder='Mô tả chức năng' data-bv-notempty='true' data-bv-notempty-message='Mô tả khác rỗng'></textarea></td>"+
-			"<td>"+
-				"<select class='form-control' name='listPhanLoai'>";
-				$("#selectPhanLoai > option").each(function() {
-				tr += "<option value="+this.value+">"+this.text+"</option>";
-				});
-			tr+="</select>"+
-			"</td>"+
-			"<td>"+
-				"<select class='form-control' name='listMucDo'>";
-				$("#selectMucDo > option").each(function() {
-				tr += "<option value="+this.value+">"+this.text+"</option>";
-				});
-			tr+="</select>"+
-			"</td>"+
-			"<td>"+
-				"<textarea class='form-control listGhiChu' rows='1' name='listGhiChu' placeholder='Ghi chú'></textarea>"+
-			"</td>"+
-			"<td><a class='btn btn-link btn-block removeFunction text-danger' onclick='xoaChucNang(\""+id+"\",this)' title='Xóa chức năng'><small><i class='glyphicon glyphicon-remove'></i> Xóa chức năng</small></a></td>"+
-		"</tr>";
-	//$("#"+id).after(tr);
-	if($("#"+id).children('tr').length > 1){
-		$("#"+id+" tr:first").after(tr);
-	}else{
-		$("#"+id).append(tr);
-	}
-	$("#soLuong"+id).val(parseInt($("#soLuong"+id).val())+1);
-	countSTT();
-}
-
-function xoaChucNang(id, bienThis){
-	$("#soLuong"+id).val(parseInt($("#soLuong"+id).val())-1);
-	$(bienThis).parent().parent().remove();
-	countSTT();
-}
-
-function checkData(){
- 	temp = 0;
-    $('.nhomChucNang').each(function(){
-    	temp++;
-    });
-    if(temp < 1){
-    	$('#buttonChucNang').prop("disabled", true);
-    	return false;
-    }else{
-    	$('#buttonChucNang').prop("disabled", false);
-    	return true;
-    }
-}
 
 function countSTT(){
 	var countSTT = 0;
@@ -157,4 +248,7 @@ function countSTT(){
 		countSTT++;
 		$(this).text(countSTT);
 	});
+}
+function focusID(id){
+	$('#'+id).focus();
 }

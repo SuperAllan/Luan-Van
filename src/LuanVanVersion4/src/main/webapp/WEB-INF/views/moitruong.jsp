@@ -37,11 +37,11 @@
 					${list.hesomoitruongid}
 					<input type="hidden" name="IDMoiTruong" value="${list.hesomoitruongid}">
 				</td>
-				<td class="text-left" style="border: none;">${list.motahesomt}</td>
+				<td class="text-left" style="border: none;">${list.motaheso}</td>
 				<td style="border: none;">${list.trongso}</td>
 				<td style="border: none;"><input type="number" class="form-control" name="giaTriXepHangMT" value="${listXepHangMoiTruong[status.index].giatrixephang}" min="0" max="5" style="width: 50px; text-align: center;" required="required"></td>
 				<td class="ketQuaFromMoiTruong" style="border: none;">${ketQuaFromMoiTruong[status.index]}</td>
-				<td style="border: none;"><input type="number" class="form-control giaTriOnDinh" name="giaTriOnDinh" value="${listXepHangMoiTruong[status.index].ondinh}" min="0" step="0.1" style="width: 70px; text-align: center;" required="required"></td>
+				<td style="border: none;">${listXepHangMoiTruong[status.index].ondinh}</td>
 			</tr>
 		</c:forEach>
 			<tr>

@@ -8,8 +8,11 @@ import vn.com.luanvan.model.Project;
 public interface ChucNangDao{
 	void save(Chucnang chucnang);
 	
-	void deleteData (Integer projectid);
+	void delete(Chucnang chucnang);
 	
 	List<Chucnang> getChucNangFromData(Project project);
 	
+	Chucnang findChucNangByID( int id);
+	
+	void update(Chucnang chucnang);
 }

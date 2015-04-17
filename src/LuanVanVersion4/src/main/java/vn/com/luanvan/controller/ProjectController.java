@@ -1,6 +1,5 @@
 package vn.com.luanvan.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -30,6 +29,7 @@ import vn.com.luanvan.dao.MucLuongNhaNuocDao;
 import vn.com.luanvan.dao.NhomChucNangDao;
 import vn.com.luanvan.dao.NhomucDao;
 import vn.com.luanvan.dao.PhanLoaiChucNangDao;
+import vn.com.luanvan.dao.PhichucnangDao;
 import vn.com.luanvan.dao.ProjectDao;
 import vn.com.luanvan.dao.TrongsonolucDao;
 import vn.com.luanvan.dao.UIDao;
@@ -40,12 +40,9 @@ import vn.com.luanvan.dao.XepHangKyThuatDao;
 import vn.com.luanvan.dao.XepHangMoiTruongDao;
 import vn.com.luanvan.model.Giatriluong;
 import vn.com.luanvan.model.Luong;
-import vn.com.luanvan.model.Nhomchucnang;
-import vn.com.luanvan.model.Phanloaichucnang;
 import vn.com.luanvan.model.Project;
 import vn.com.luanvan.model.Trongsonoluc;
 import vn.com.luanvan.model.User;
-import vn.com.luanvan.model.Mucdo;
 
 
 @Controller
@@ -96,6 +93,8 @@ public class ProjectController {
 	private DiagramDao diagramDao;
 	@Autowired
 	private UIDao uiDao;
+	@Autowired
+	private PhichucnangDao phichucnangDao;
 	
 	/**
 	 * 
@@ -151,18 +150,13 @@ public class ProjectController {
 		User user = userDao.findUserbyUserName(username);
 		//Biến cho trang thiết kế giao diện
 		model.addAttribute("uis", uiDao.getUIByProject(projectid));
-		model.addAttribute("diagrams", diagramDao.getDiagramByProject(project.getProjectid()));
+		model.addAttribute("diagrams", diagramDao.getDiagramByProject(projectid));
 		
-		//Biến cho trang yêu cầu chức năng
-		List<Phanloaichucnang> listPhanLoai = phanLoaiChucNangDao.getListTenLoai();
-		List<Mucdo> listMucDo = mucDoDao.getListMucDo();
-		List<Nhomchucnang> listNhomChucNangFromData = nhomChucNangDao.getListNhomChucNang(project);
-		if(listNhomChucNangFromData != null){
-			model.addAttribute("listNhomChucNangFromData", listNhomChucNangFromData);
-		}
+		
 		model.addAttribute("listTrongSoNoLuc", trongsonolucDao.getAll());
-		model.addAttribute("listPhanLoai", listPhanLoai);
-		model.addAttribute("listMucDo", listMucDo);
+		
+		//Biến cho trang yêu cầu phi chức năng
+		model.addAttribute("listPhiChucNang", phichucnangDao.getListPhiChucNangByProjectID(projectid));
 		
 		//Biến cho trang chuyển đổi use case
 		model.addAttribute("listNhomUC", nhomucDao.getNhomucByProject(projectid));
