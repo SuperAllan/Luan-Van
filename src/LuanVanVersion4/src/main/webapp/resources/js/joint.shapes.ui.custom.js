@@ -1,5 +1,72 @@
 joint.shapes.ui = {}
 
+joint.shapes.ui.Form = joint.shapes.basic.Generic.extend({
+	markup: [
+        '<g class="scalable">',
+            '<rect/>',
+        '</g>'
+    ].join(''),
+
+	defaults: joint.util.deepSupplement({ 
+        type: 'ui.Form',
+        nameClass: "",
+        parent: "",
+        size: {
+        	width: 200, height: 200	
+        },
+        attrs: {
+            rect: { width: 200, height: 200, rx: 0, ry: 0, 'stroke-width': 2, stroke: '#000000', fill: '#ffffff'}
+        }
+    }, joint.shapes.basic.Generic.prototype.defaults)
+});
+
+joint.shapes.ui.FormView = joint.dia.ElementView.extend({
+
+    template : [
+        '<div class="ui-form">',
+            '<button class="delete">x</button>',
+            '<div class="resize"><i class="glyphicon glyphicon-fullscreen"></i></div>',
+            '<button class="copy">+</button>',
+        '</div>'
+    ].join(''),
+
+    initialize: function() {
+        _.bindAll(this, 'updateFormView');
+        joint.dia.ElementView.prototype.initialize.apply(this, arguments);
+
+        this.$box = $(_.template(this.template)());
+        this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
+        
+        // Update the box position whenever the underlying model changes.
+        this.model.on('change', this.updateFormView, this);
+        // Remove the box when the model gets removed from the graph.
+        this.model.on('remove', this.removeFormView, this);
+
+        this.updateFormView();
+    },
+    render: function() {
+        joint.dia.ElementView.prototype.render.apply(this, arguments);
+        this.paper.$el.prepend(this.$box);
+        this.updateFormView();
+        return this;
+    },
+    updateFormView: function() {
+        // Set the position and dimension of the box so that it covers the JointJS element.
+        var bbox = this.model.getBBox();
+        // Example of updating the HTML with a data stored in the cell model.
+        this.$box.css({
+            width: bbox.width,
+            height: bbox.height,
+            left: bbox.x,
+            top: bbox.y,
+            transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
+        });
+    },
+    removeFormView: function() {
+        this.$box.remove();
+    }
+});
+
 joint.shapes.ui.Button = joint.shapes.basic.Generic.extend({
 	 markup: [
         '<g class="scalable">',
@@ -10,11 +77,13 @@ joint.shapes.ui.Button = joint.shapes.basic.Generic.extend({
 
     defaults: joint.util.deepSupplement({
         type: 'ui.Button',
+        nameClass: "btn btn-default ",
         size: { width: 100, height: 30 },
         name: 'Button',
+        parent: "",
         attrs: {
-            rect: { width: 100, height: 30, fill: "#eeeeee", stroke: "black", 'stroke-dasharray': "none", 'stroke-width': 2 },
-            text: { x: 50, y: 20, fill: 'black', 'text-anchor': 'middle', 'font-family': 'Arial', 'font-size': 16 }
+            rect: { width: 100, height: 30, fill: "#eeeeee", stroke: "#000000", 'stroke-dasharray': "none", 'stroke-width': 2 },
+            text: { x: 50, y: 20, fill: '#000000', 'text-anchor': 'middle', 'font-family': 'Arial', 'font-size': 16 }
         },
         connect: []
     }, joint.shapes.basic.Generic.prototype.defaults)
@@ -90,11 +159,13 @@ joint.shapes.ui.Div = joint.shapes.basic.Generic.extend({
 
 	defaults: joint.util.deepSupplement({ 
         type: 'ui.Div',
+        nameClass: "",
+        parent: "",
         size: {
         	width: 200, height: 200	
         },
         attrs: {
-            rect: { width: 200, height: 200, rx: 0, ry: 0, 'stroke-width': 2, stroke: 'black', fill: 'transparent' }
+            rect: { width: 200, height: 200, rx: 0, ry: 0, 'stroke-width': 2, stroke: '#000000', fill: '#ffffff'}
         }
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
@@ -156,11 +227,13 @@ joint.shapes.ui.TextBox = joint.shapes.basic.Generic.extend({
 
     defaults: joint.util.deepSupplement({
         type: 'ui.TextBox',
+        nameClass: 'form-control ',
         size: { width: 150, height: 30 },
         name: 'TextBox',
+        parent: "",
         attrs: {
-            rect: { width: 150, height: 30, rx: 0, ry: 0, fill: "#ffffff", stroke: "black", 'stroke-dasharray': "none", 'stroke-width': 2 },
-            text: { fill: 'black', y: 20, 'text-anchor': 'left', x: 4, 'font-family': 'Arial', 'font-size': 16 }
+            rect: { width: 150, height: 30, rx: 0, ry: 0, fill: "#ffffff", stroke: "#000000", 'stroke-dasharray': "none", 'stroke-width': 2 },
+            text: { fill: '#000000', y: 20, 'text-anchor': 'left', x: 4, 'font-family': 'Arial', 'font-size': 16 }
         }
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
@@ -238,11 +311,13 @@ joint.shapes.ui.TextArea = joint.shapes.basic.Generic.extend({
 
     defaults: joint.util.deepSupplement({
         type: 'ui.TextArea',
+        nameClass: 'form-control',
         size: { width: 150, height: 60 },
         name: 'TextArea',
+        parent: "",
         attrs: {
-            rect: { width: 150, height: 60, rx: 0, ry: 0, fill: "#ffffff", stroke: "black", 'stroke-dasharray': "none", 'stroke-width': 2 },
-            text: { fill: 'black', 'text-anchor': 'left', y: 20, x: 4, 'font-family': 'Arial', 'font-size': 16 }
+            rect: { width: 150, height: 60, rx: 0, ry: 0, fill: "#ffffff", stroke: "#000000", 'stroke-dasharray': "none", 'stroke-width': 2 },
+            text: { fill: '#000000', 'text-anchor': 'left', y: 20, x: 4, 'font-family': 'Arial', 'font-size': 16 }
         }
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
@@ -321,8 +396,10 @@ joint.shapes.ui.Label = joint.shapes.basic.Generic.extend({
         type: 'ui.Label',
         size: { width: 100, height: 30 },
         name: 'Label',
+        nameClass: "",
+        parent: "",
         attrs: {
-            text: { fill: 'black', y: 20, 'text-anchor': 'middle', x: 50, 'font-family': 'Arial', 'font-size': 16 }
+            text: { fill: '#000000', y: 20, 'text-anchor': 'middle', x: 50, 'font-family': 'Arial', 'font-size': 16 }
         }
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
@@ -400,10 +477,11 @@ joint.shapes.ui.RadioChecked = joint.shapes.basic.Generic.extend({
         type: 'ui.RadioChecked',
         size: { width: 20, height: 20 },
         name: 'Radio Checked',
+        parent: "",
         attrs: {
             '.parent': { cy: 10, cx: 10, r: 10, fill: "#ffffff", stroke: "black", 'stroke-dasharray': "none", 'stroke-width': 2 },
             '.children': { cy: 10, cx: 10, r: 5, fill: "black", stroke: "none", 'stroke-dasharray': "none" },
-            text: { fill: 'black', y: 20, x: 24, 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 }
+            text: { fill: '#000000', y: 20, x: 24, 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 }
         }
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
@@ -480,9 +558,10 @@ joint.shapes.ui.Radio = joint.shapes.basic.Generic.extend({
         type: 'ui.Radio',
         size: { width: 20, height: 20 },
         name: 'Radio',
+        parent: "",
         attrs: {
             circle: { cy: 10, cx: 10, r: 10, fill: "#ffffff", stroke: "black", 'stroke-dasharray': "none", 'stroke-width': 2 },
-            text: { fill: 'black', y: 20, x: 24, 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 }
+            text: { fill: '#000000', y: 20, x: 24, 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 }
         }
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
@@ -560,10 +639,11 @@ joint.shapes.ui.CheckboxChecked = joint.shapes.basic.Generic.extend({
         type: 'ui.CheckboxChecked',
         size: { width: 20, height: 20 },
         name: 'Checkbox Checked',
+        parent: "",
         attrs: {
             rect: { width: 20, height: 20, fill: "#ffffff", stroke: "black", 'stroke-dasharray': "none", 'stroke-width': 2 },
-            '.name': { fill: 'black', y: 20, 'text-anchor': 'left', x: 24, 'font-family': 'Arial', 'font-size': 16 },
-            '.checked': { x: 4, y: 16, 'font-family': 'Arial', 'font-size': 18, 'fill': 'black', 'font-weight': 'bold' }
+            '.name': { fill: '#000000', y: 20, 'text-anchor': 'left', x: 24, 'font-family': 'Arial', 'font-size': 16 },
+            '.checked': { x: 4, y: 16, 'font-family': 'Arial', 'font-size': 18, 'fill': '#000000', 'font-weight': 'bold' }
         }
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
@@ -641,9 +721,10 @@ joint.shapes.ui.Checkbox = joint.shapes.basic.Generic.extend({
         type: 'ui.Checkbox',
         size: { width: 20, height: 20 },
         name: 'Checkbox',
+        parent: "",
         attrs: {
             rect: { width: 20, height: 20, fill: "#ffffff", stroke: "black", 'stroke-dasharray': "none", 'stroke-width': 2 },
-            text: { fill: 'black', y: 20, 'text-anchor': 'left', x: 24, 'font-family': 'Arial', 'font-size': 16 }
+            text: { fill: '#000000', y: 20, 'text-anchor': 'left', x: 24, 'font-family': 'Arial', 'font-size': 16 }
         }
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
@@ -721,9 +802,11 @@ joint.shapes.ui.SelectBox = joint.shapes.basic.Generic.extend({
        type: 'ui.SelectBox',
        size: { width: 150, height: 30 },
        name: 'Select Box',
+       nameClass: "form-control",
+       parent: "",
        attrs: {
            rect: { width: 150, height: 30, fill: "#eeeeee", stroke: "black", 'stroke-dasharray': "none", 'stroke-width': 2 },
-           text: { x: 10, y: 20, fill: 'black', 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 },
+           text: { x: 10, y: 20, fill: '#000000', 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 },
            path: { d: "M 130 10 L 140 10 L 135 20 L 130 10", stroke: "black", 'stroke-width': "1", fill: "black" }
        },
        connect: []
@@ -794,82 +877,118 @@ joint.shapes.ui.SelectBoxView = joint.dia.ElementView.extend({
 joint.shapes.ui.Table = joint.shapes.basic.Generic.extend({
 	markup: [
         '<g class="scalable">',
-            '<rect/>',
-            '<line class="line1"/>',
-            '<line class="line2"/>',
-            '<line class="line3"/>',
-            '<line class="line4"/>',
-            '<line class="line5"/>',
-            '<text class="text1">A</text>',
-            '<text class="text2">B</text>',
-            '<text class="text3">C</text>',
-            '<text class="text4">D</text>',
-        '</g>'
+            '<rect />',
+            '<line />',
+        '</g>',
+        '<text />',
     ].join(''),
 
 	defaults: joint.util.deepSupplement({ 
         type: 'ui.Table',
+        row: 0,
+        col: 0,
+        nameClass: "table ",
+        parent: "",
         size: {
-        	width: 240, height: 120	
+        	width: 350, height: 100	
         },
         attrs: {
-            rect: { width: 240, height: 120, rx: 0, ry: 0, 'stroke-width': 2, stroke: 'black', fill: 'transparent' },
-            ".line1": { x1: 60, y1: 0, x2: 60, y2: 120, 'stroke-width': 2, stroke: 'black' },
-            ".line2": { x1: 120, y1: 0, x2: 120, y2: 120, 'stroke-width': 2, stroke: 'black' },
-            ".line3": { x1: 180, y1: 0, x2: 180, y2: 120, 'stroke-width': 2, stroke: 'black' },
-            ".line4": { x1: 0, y1: 40, x2: 240, y2: 40, 'stroke-width': 2, stroke: 'black' },
-            ".line5": { x1: 0, y1: 80, x2: 240, y2: 80, 'stroke-width': 2, stroke: 'black' },
-            ".text1": { x: 25, y: 25, fill: 'black', 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 },
-            ".text2": { x: 85, y: 25, fill: 'black', 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 },
-            ".text3": { x: 145, y: 25, fill: 'black', 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 },
-            ".text4": { x: 205, y: 25, fill: 'black', 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 },
+            rect: { width: 350, height: 100, rx: 0, ry: 0, 'stroke-width': 2, stroke: '#000000' },
+            line: {'stroke-width': 1, stroke: '#000000' },
+            text: {fill: '#000000', 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16 },
         }
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
 
-joint.shapes.ui.TableView = joint.dia.ElementView.extend({
+function createTableDynamic(row, column, width, height, text, rect) {
+	if (text == "") {
+		text = {fill: '#000000', 'text-anchor': 'left', 'font-family': 'Arial', 'font-size': 16};
+	}
+	if (rect == "") {
+		rect = { width: width, height: height, rx: 0, ry: 0, 'stroke-width': 2, stroke: '#000000', fill: '#f2f2f2' };
+	}
+	var markupRow = markupColumn = markupText = templateInput = "";
+	for (var i = 0; i < column - 1; i++) {
+		markupColumn += '<line class="column' + i + '" x1="' + ((i + 1)/column) * width + '" y1="0" x2="' + ((i + 1)/column) * width + '" y2="' + height + '"/>';
+	}
+	for (var i = 0; i < row - 1; i++) {
+		markupRow += '<line class="row' + i + '" x1="0" y1="' + ((i + 1)/row) * height  + '" x2="' + width + '" y2="' + ((i + 1)/row) * height + '"/>';
+	}
+	var dem = 0;
+	for (var i = 0; i < row; i++) {
+		for (var j = 0; j < column; j++) {
+			markupText += '<text class="text' + dem + '" x="' + (((j/column) * width) + 5) + '" y="' + ((((i*2 + 1)/(row * 2)) * height) + 5) + '"> Data ' + dem + '</text>';
+			dem++;
+		}
+	}
+	joint.shapes.ui.Table = joint.shapes.basic.Generic.extend({
+		markup: [
+	        '<g class="scalable">',
+	            '<rect />',
+	            markupRow,
+	            markupColumn,
+	        '</g>',
+	        markupText,    
+	    ].join(''),
 
-    template : [
-        '<div class="ui-table">',
-            '<button class="delete">x</button>',
-            '<div class="resize"><i class="glyphicon glyphicon-fullscreen"></i></div>',
-            '<button class="copy">+</button>',
-        '</div>'
-    ].join(''),
+		defaults: joint.util.deepSupplement({ 
+	        type: 'ui.Table',
+	        row: row,
+			col: column,
+			nameClass: "table ",
+			parent: "",
+	        size: {
+	        	width: width, height: height	
+	        }
+	    }, joint.shapes.basic.Generic.prototype.defaults)
+	});
+	joint.shapes.ui.TableView = joint.dia.ElementView.extend({
 
-    initialize: function() {
-        _.bindAll(this, 'updateTableView');
-        joint.dia.ElementView.prototype.initialize.apply(this, arguments);
+	    template : [
+	        '<div class="ui-table">',
+	            '<button class="delete">x</button>',
+	            '<div class="resize"><i class="glyphicon glyphicon-fullscreen"></i></div>',
+	            '<button class="copy">+</button>',
+	        '</div>'
+	    ].join(''),
 
-        this.$box = $(_.template(this.template)());
-        this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
-        
-        // Update the box position whenever the underlying model changes.
-        this.model.on('change', this.updateTableView, this);
-        // Remove the box when the model gets removed from the graph.
-        this.model.on('remove', this.removeTableView, this);
+	    initialize: function() {
+	        _.bindAll(this, 'updateTableView');
+	        joint.dia.ElementView.prototype.initialize.apply(this, arguments);
+	        this.$box = $(_.template(this.template)());
+	        this.model.attr({
+	        	rect: { width: width, height: height, rx: rect["rx"], ry: rect["ry"], 'stroke-width': rect["stroke-width"], stroke: rect["stroke"], fill: rect["fill"] },
+	            line: {'stroke-width': 1, stroke: '#000000' },
+	            text: {fill: text["fill"], 'text-anchor': text["text-anchor"], 'font-family': text["font-family"], 'font-size': text["font-size"]}
+	        });
+	        this.$box.find('.delete').on('mousedown', _.bind(this.model.remove, this.model));
+	        // Update the box position whenever the underlying model changes.
+	        this.model.on('change', this.updateTableView, this);
+	        // Remove the box when the model gets removed from the graph.
+	        this.model.on('remove', this.removeTableView, this);
 
-        this.updateTableView();
-    },
-    render: function() {
-        joint.dia.ElementView.prototype.render.apply(this, arguments);
-        this.paper.$el.prepend(this.$box);
-        this.updateTableView();
-        return this;
-    },
-    updateTableView: function() {
-        // Set the position and dimension of the box so that it covers the JointJS element.
-        var bbox = this.model.getBBox();
-        // Example of updating the HTML with a data stored in the cell model.
-        this.$box.css({
-            width: bbox.width,
-            height: bbox.height,
-            left: bbox.x,
-            top: bbox.y,
-            transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
-        });
-    },
-    removeTableView: function() {
-        this.$box.remove();
-    }
-});
+	        this.updateTableView();
+	    },
+	    render: function() {
+	        joint.dia.ElementView.prototype.render.apply(this, arguments);
+	        this.paper.$el.prepend(this.$box);
+	        this.updateTableView();
+	        return this;
+	    },
+	    updateTableView: function() {
+	        // Set the position and dimension of the box so that it covers the JointJS element.
+	        var bbox = this.model.getBBox();
+	        // Example of updating the HTML with a data stored in the cell model.
+	        this.$box.css({
+	            width: bbox.width,
+	            height: bbox.height,
+	            left: bbox.x,
+	            top: bbox.y,
+	            transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
+	        });
+	    },
+	    removeTableView: function() {
+	        this.$box.remove();
+	    }
+	});
+}

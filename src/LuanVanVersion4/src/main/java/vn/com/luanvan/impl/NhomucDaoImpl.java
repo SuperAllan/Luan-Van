@@ -65,7 +65,7 @@ public class NhomucDaoImpl implements NhomucDao {
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Nhomuc> getNhomucByProject(int projectId) {
-		String sql = "from Nhomuc as a where a.project.projectid = :projectId";
+		String sql = "from Nhomuc as a where a.project.projectid = :projectId order by tennhom";
 		Query query = sessionFactory.getCurrentSession().createQuery(sql);
 		query.setParameter("projectId", projectId);
 		return query.list();

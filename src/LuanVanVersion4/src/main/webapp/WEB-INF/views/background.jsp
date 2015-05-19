@@ -20,7 +20,7 @@
 			</div>
 			<div class="panel-body">
 				<div class="col-md-2 text-center">
-		     		<form method="POST" action="/luanvan/uploadImage" role="form"  id="formUploadFile">
+		     		<form method="POST" action="${contextPath}/uploadImage" role="form"  id="formUploadFile">
 		      			<div onclick="showDialog()" id="anhDaiDien">
 		      				<c:if test="${not empty user.image }">
 		      					<img src="<c:url value="${user.image}" />" style="height: 150px; width: 150px; cursor: pointer;">
@@ -36,7 +36,7 @@
 				      	 <input type="file"  style="display:none;" id="uploadImageId"/>
 		      		</form>
 			    
-			    <span style="font-size:20px; color:#666; cursor: default;">${user.username}</span>
+			    <span style="font-size:20px; color:#666; cursor: default;" class="username" title="${user.username}">${user.username}</span>
 			    <div class="tabs-left">
 					<ul class="nav nav-stacked tab-left">
 				        <li class="classLi text-left active" id="duAn"><a href="#tabDuAn" data-toggle="tab"><i class="glyphicon glyphicon-list-alt"></i> Các dự án</a></li>
@@ -50,7 +50,7 @@
 			        <div class="tab-pane fade in active" id="tabDuAn">
 			            <div class="panel panel-primary">
 						  <div class="panel-heading" >
-						 	 <a  style="color:white;" data-toggle="modal" data-target="#myModal">
+						 	 <a  style="color:white;" data-toggle="modal" data-target="#myModal" id="buttonCreateProject">
 						 	 	<i class="glyphicon glyphicon-plus-sign"></i> Tạo dự án</a>
 						  </div>
 						  <div class="panel-body">
@@ -63,7 +63,7 @@
 											<a href="${contextPath}/detailProject?name=${list.tenproject}" >
 												<span class="projectName" title="${list.tenproject}">${list.tenproject}</span>
 											</a>
-											<span class=" date-create pull-right"><fmt:formatDate value="${list.ngaytao}" pattern="dd-MM-yyyy" /></span>
+											<span class=" date-create pull-right" title="Ngày tạo dự án <fmt:formatDate value="${list.ngaytao}" pattern="dd-MM-yyyy" />"><fmt:formatDate value="${list.ngaytao}" pattern="dd-MM-yyyy" /></span>
 											<div class="description">${list.motaproject}</div>
 										</div>
 									</c:forEach>
@@ -80,7 +80,7 @@
 											<a href="${contextPath}/detailProject?name=${list.tenproject}" >
 												<span class="projectName" title="${list.tenproject}">${list.tenproject}</span>
 											</a>
-											<span class=" date-create pull-right"><fmt:formatDate value="${list.ngaytao}" pattern="dd-MM-yyyy" /></span>
+											<span class=" date-create pull-right" title="Ngày tạo dự án <fmt:formatDate value="${list.ngaytao}" pattern="dd-MM-yyyy" />"><fmt:formatDate value="${list.ngaytao}" pattern="dd-MM-yyyy" /></span>
 											<div class="description">${list.motaproject}</div>
 										</div>
 									</c:forEach>
@@ -97,7 +97,7 @@
 											<a href="${contextPath}/detailProject?name=${list.tenproject}" >
 												<span class="projectName" title="${list.tenproject}">${list.tenproject}</span>
 											</a>
-											<span class=" date-create pull-right"><fmt:formatDate value="${list.ngaytao}" pattern="dd-MM-yyyy" /></span>
+											<span class=" date-create pull-right" title="Ngày tạo dự án <fmt:formatDate value="${list.ngaytao}" pattern="dd-MM-yyyy" />"><fmt:formatDate value="${list.ngaytao}" pattern="dd-MM-yyyy" /></span>
 											<div class="description">${list.motaproject}</div>
 										</div>
 									</c:forEach>
@@ -121,25 +121,26 @@
 			            <div class="panel panel-primary">
 						  <div class="panel-heading" style="font-size: 18px">Thông tin cá nhân</div>
 						  <div class="panel-body">
-							  <form action="/luanvan/updateInformation" role="form" method="POST">
+							  <form action="${contextPath}/updateInformation" role="form" method="POST">
 							  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 								  	<div class="form-group">
 								  		<label>Họ và tên:</label>
-								  		<input type="text" name="name" class="form-control" value="${user.fullname}"  placeholder="Nhập họ và tên vào đây">
+								  		<input type="text" name="name" class="form-control" value="${user.fullname}" onchange="setSubmitThongTinCaNhan()" placeholder="Nhập họ và tên vào đây">
 								  	</div>
 								  	<div class="form-group">
 								  		<label>Email:</label>
-								  		<input type="email" name="updateEmail" class="form-control" value="${user.email}">
+								  		<input type="email" name="updateEmail" class="form-control" onchange="setSubmitThongTinCaNhan()" value="${user.email}">
 								  	</div>
 								  	<div class="form-group">
 								  		<label>Số điện thoại:</label>
-								  		<input type="text" name="phone" value="${user.phone}"  class="form-control" placeholder="Nhập số điện thoại vào đây" maxlength="11">
+								  		<input type="text" pattern="[0][0-9]{9,10}" name="phone" value="${user.phone}" onchange="setSubmitThongTinCaNhan()" class="form-control" placeholder="Nhập số điện thoại vào đây">
+								  		<small class="text-info">Ví dụ: 0123333444 hoặc 01233334445 (Tổng cổng 10 số hoặc 11 số)</small>
 								  	</div>
 								  	<div class="form-group">
 								  		<label>Địa chỉ:</label>
-								  		<textarea name="address"  class="form-control" rows="3">${user.address}</textarea>
+								  		<textarea name="address" onchange="setSubmitThongTinCaNhan()" class="form-control" rows="3">${user.address}</textarea>
 								  	</div>
-								  	<button type="submit" class="btn btn-default btn-primary">Cập nhật</button>
+								  	<button type="submit" class="btn btn-default btn-primary" id="submitThongTinCaNhan">Cập nhật</button>
 							  </form>
 						  </div>
 						</div><!-- End panel -->
@@ -154,7 +155,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-<form action="/luanvan/createProject" method="GET" role="form" id="form-tao-du-an">
+<form action="${contextPath}/createProject" method="GET" role="form" id="form-tao-du-an">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -164,27 +165,23 @@
       <div class="modal-body">
 			<div class="form-group">
 				<label class="index">Tên dự án:</label>
-				<input type="text" class="form-control input-lg" onkeyup="checkSpecialCharacter(this.value)" placeholder="Tên dự án" name="projectName"  maxlength="200" autofocus="autofocus" required="required"
+				<input type="text" class="form-control input-lg" id="projectName" onkeyup="checkSpecialCharacter(this.value)" placeholder="Tên dự án" name="projectName"  maxlength="200" autofocus="autofocus" required="required"
 					data-bv-notempty="true"
 		            data-bv-notempty-message="Tên dự án phải khác rỗng.">
-				<c:if test="${empty errorName}">
-					<span class="help-block text-info" style="color: #03a9f4 !important;">Hãy tạo tên dự án một cách ngắn gọn và dễ nhớ</span>
-				</c:if>
-				<small id="showCheckSpecialCharacter" style="color: #a94442;">${errorName}</small>
+				<small id="showCheckSpecialCharacter" style="color: #a94442;">${errorNameProject}</small>
 			</div>
 			<div class="form-group">
-				<label class="index">Mô tả dự án (Tùy chọn):</label>
+				<label class="index">Mô tả dự án (Có thể bỏ trống):</label>
 				<textarea class="form-control" placeholder="Mô tả dự án" name="description" rows="3"></textarea>
-				<span class="help-block text-info">Hãy giới thiệu hoặc mô tả ngắn gọn mục tiêu mà dự án bạn hướng tới. Bạn có thể để trống mục này.</span>
 			</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-        <button type="submit" id="submitCreateProject" class="btn btn-primary">Đồng ý</button>
+        <button type="submit" id="submitCreateProject" class="btn btn-primary">Tạo</button>
       </div>
     </div>
   </div>
-  </form>
+</form>
 </div>
 
 <!-- Insert footer.jsp -->

@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "uiusecase", catalog = "luanvan")
+@Table(name = "uiusecase")
 public class UIUsecase {
 	private UIUsecaseId id;
 	private UI ui;

@@ -21,7 +21,7 @@ import javax.persistence.Table;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "userrole", catalog = "luanvan")
+@Table(name = "userrole")
 public class UserRole implements java.io.Serializable {
 
 	private Integer userroleid;

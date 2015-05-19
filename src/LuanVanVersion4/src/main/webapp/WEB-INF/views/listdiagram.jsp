@@ -22,18 +22,23 @@
 	}
 $(document).ready(function(){
 	$('#scrollBarListDiagram').perfectScrollbar();
+	
+	$('.classLi').on('click',function(){
+		$('#searchDiagram').val('');
+		searchListDiagram('');
+	});
 });	
 </script>
 <!-- search -->
 <div class="panel-side-search">
 	<div>
-		<input style="border-radius: 4px; height: 34px;" type="search" id="input" class="form-control text-center"  title="Search" onkeyup="searchListDiagram(this.value)" placeholder="Nhập nội dung tìm kiếm">
+		<input style="border: solid 1px #e2e2e2; border-radius: 4px; height: 34px;" type="search" id="searchDiagram" class="form-control text-center"  title="Search" onkeyup="searchListDiagram(this.value)" placeholder="Nhập nội dung tìm kiếm">
 	</div> 
 </div>
 <!-- End search -->
 <div class="form-group" style="padding-top: 10px; font-weight: bold;">
 	<span>Tên sơ đồ</span>  
-	<a href="/luanvan/diagram/newdiagram?nameProject=${project.tenproject}" class="pull-right">
+	<a href="${contextPath}/diagram/newdiagram?nameProject=${project.tenproject}" class="pull-right">
 						<i class="glyphicon glyphicon-plus-sign"></i> Tạo mới
 	</a>
 </div>
@@ -43,7 +48,7 @@ $(document).ready(function(){
 			<c:forEach items="${diagrams}" var="diagram">
 				<tr>
 					<td><span class="forSearch">${diagram.namediagram}</span>
-						<a class="label label-primary pull-right" href="/luanvan/diagram/viewdiagram?nameProject=${project.tenproject}&nameDiagram=${diagram.namediagram}">
+						<a class="label label-primary pull-right" href="${contextPath}/diagram/viewdiagram?nameProject=${project.tenproject}&nameDiagram=${diagram.namediagram}">
 							<i class="glyphicon glyphicon-pencil"></i>
 						</a>
 					</td>

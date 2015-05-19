@@ -25,7 +25,7 @@ import javax.persistence.Table;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "actor", catalog = "luanvan")
+@Table(name = "actor")
 public class Actor implements java.io.Serializable {
 
 	private Integer actorid;

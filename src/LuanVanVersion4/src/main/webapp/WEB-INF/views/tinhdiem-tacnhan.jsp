@@ -1,6 +1,6 @@
 <%@ page language="java" pageEncoding="utf8" contentType="text/html;charset=UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<form method="get" action="/luanvan/updateTinhDiemActor" role="form">
+<form method="get" action="${contextPath}/updateTinhDiemActor" role="form">
 	<input type="hidden" name="projectNameForLuong" value="${project.tenproject}">
 	
 	<div class="text-center">

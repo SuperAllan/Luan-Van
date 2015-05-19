@@ -3,9 +3,11 @@ package vn.com.luanvan.controller;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,6 +40,18 @@ public class UsecaseController{
 	private UserDao userDao;
 	
 	
+	class CustomComparator implements Comparator<Usecase> {
+	    public int compare(Usecase p1, Usecase p2){
+	            return p1.getNameofuc().compareTo(p2.getNameofuc());
+	    }
+	}
+	/**
+	 * 
+	 * @param request	
+	 * @param principal	Sử dụng lấy username người dùng.
+	 * @param model		Lưu trữ đối tượng trả về trang view.
+	 * @return			Trả về trang detail-usecase.
+	 */
 	@RequestMapping(value="/detailUsecase", method = RequestMethod.GET)
 	public String detailUsecase(HttpServletRequest request, Principal principal, Model model){
 		String projectName = request.getParameter("name");
@@ -45,13 +59,21 @@ public class UsecaseController{
 		if (request.getParameter("usecaseid") != null) {
 			model.addAttribute("usecaseid", request.getParameter("usecaseid"));
 		}
+		if(request.getParameter("nameDiagram") != null){
+			model.addAttribute("nameDiagram", request.getParameter("nameDiagram"));
+		}
 		User user = userDao.findUserbyUserName(principal.getName());
 		model.addAttribute("project", project);
 		model.addAttribute("user", user);
-		model.addAttribute("nameDiagram", request.getParameter("nameDiagram"));
 		return "detail-usecase";
 	}
-	
+	/**
+	 * 
+	 * @param request
+	 * @param principal
+	 * @param model
+	 * @return			Trả về trang show-detail-usecase.
+	 */
 	@RequestMapping(value="/showDetailUsecase", method = RequestMethod.GET)
 	public String showDetailUsecase(HttpServletRequest request, Principal principal, Model model){
 		String usecaseID = request.getParameter("usecaseid");
@@ -59,7 +81,12 @@ public class UsecaseController{
 		model.addAttribute("usecase", usecase);
 		return "show-detail-usecase";
 	}
-	
+	/**
+	 * 
+	 * @param model
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value ="/searchUsecase", method = RequestMethod.GET)
 	public String searchYeuCau( Model model, HttpServletRequest request) {
 		try {
@@ -95,7 +122,9 @@ public class UsecaseController{
 						usecaseTemp.add(listUsecase.get(j));
 					}
 				}
-				listNhomUC.get(i).setUsecases(usecaseTemp);
+				TreeSet<Usecase> sortSet = new TreeSet<Usecase>(new CustomComparator());
+				sortSet.addAll(usecaseTemp);
+				listNhomUC.get(i).setUsecases(sortSet);
 			}
 			model.addAttribute("resultNhomUC", listNhomUC);
 		}else{
@@ -103,7 +132,11 @@ public class UsecaseController{
 		}
 		return "show-list-usecase";
 	}
-
+	/**
+	 * 
+	 * @param usecaseID
+	 * @param listCauHoi
+	 */
 	@RequestMapping(value ="/updateCauHoi", produces="text/plain; charset=utf-8")
 	public @ResponseBody void updateCauHoi(@RequestParam("usecaseID") String usecaseID, 
 			@RequestParam("listCauHoi") String listCauHoi){

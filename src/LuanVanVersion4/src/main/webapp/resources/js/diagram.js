@@ -24,7 +24,6 @@ $(document).ready(function(){
 		$(this).text(formatTitle);
 		}
 	});
-	// Begin loading diagram
 	if ($("#path").html() && $("#path").html() != "") {
 		graph.fromJSON(JSON.parse(decodeURIComponent(window.atob($("#path").html()))));
 	}
@@ -33,21 +32,40 @@ $(document).ready(function(){
 	} else {
 		$("#a-rename-diagram").hide("fade");
 	}
-	// End loading diagram
 });
 
-//var dmp = new diff_match_patch();
+graph.on('add', function(cell){
+	var attr = cell.attributes;
+	if (attr.type == 'uml.Actor' || attr.type == 'uml.Usecase') {
+		$("#history-diagram").append("<p> Thêm " + cell.attributes.name + "</p>");
+	}
+});
+
+$("#fullscreen-diagram").on('click', function() {
+	if ($(this).html() == '<i class="glyphicon glyphicon-fullscreen"></i>') {
+		$(this).html('<i class="glyphicon glyphicon-resize-small"></i>');
+		$("#header-diagram").hide();
+		$("#properties-diagram").hide();
+		$("#content-diagram").css("top", 0);
+	} else {
+		$(this).html('<i class="glyphicon glyphicon-fullscreen"></i>');
+		$("#header-diagram").show();
+		$("#properties-diagram").show();
+		$("#content-diagram").css("top", "100px");
+	}
+	
+})
+
 function searchUsecaseActor(value){
-	if(value == '' || value == ' ' || value == null){
-		$('.forSearch').each(function(){
+	if(value == '' || value == ' ' || value == null) {
+		$('.forSearch').each(function() {
 			$(this).css("display", "");
 		});
-	}else{
+	} else {
 		value = $.trim(value.toUpperCase());
 		
 		$('.forSearch').each(function(){
 			var temp = $.trim($(this).text().toUpperCase());
-			//var match = dmp.match_main(temp, value, 1);
 			if(temp.indexOf(value) > -1){
 				$(this).css("display", "");
 			}else{
@@ -70,15 +88,19 @@ function setIconSave(value) {
 // End set icon save
 
 $("#a-new-diagram").on('click', function() {
-	$("#input-new-diagram").val("");
 	$("#modal-new-diagram").modal('show');
 });
+
+$('#modal-new-diagram').on('shown.bs.modal', function () {
+	$("#input-new-diagram").val("");
+	$("#input-new-diagram").focus();
+})
 
 // Begin create new diagram
 $("#btn-new-diagram").on('click', function() {
 	if ($("#input-new-diagram").val() != "") {
 		$.ajax({
-			url: '/luanvan/diagram/creatediagram',
+			url: '../diagram/creatediagram',
 			data: "nameProject=" + $("#nameProject").val() + "&nameDiagram=" + $("#input-new-diagram").val(),
 			success: function(result) {
 				if (result != "") {
@@ -87,8 +109,9 @@ $("#btn-new-diagram").on('click', function() {
 					$("#a-rename-diagram").show('fade');
 					setIconSave("saved");
 					graph.clear();
+					setContentMessage("Sơ đồ được tạo mới");
 				} else {
-					alert("Tên nhóm đã tồn tại");
+					setContentMessage("Tên sơ đồ đã tồn tại");
 				}
 			},
 			error: function() {
@@ -96,17 +119,22 @@ $("#btn-new-diagram").on('click', function() {
 			}
 		});
 	} else {
-		alert("Không được bỏ trống");
+		setContentMessage("Tên sơ đồ không được bỏ trống");
 	}
 	
 });
 // End create new diagram
 
+$("#modal-rename-diagram").on('show.bs,modal', function() {
+	$("#input-rename-diagram").val("");
+	$("#input-rename-diagram").focus();
+})
+
 // Begin rename diagram
 $("#btn-rename-diagram").on('click', function() {
 	if ($("#input-rename-diagram").val() != "") {
 		$.ajax({
-			url: '/luanvan/diagram/renamediagram',
+			url: '../diagram/renamediagram',
 			data: "nameProject=" + $("#nameProject").val() + "&nameDiagramNew=" + $("#input-rename-diagram").val()
 			+ "&nameDiagramOld=" + $("#name-diagram-show").html(),
 			success: function(result) {
@@ -114,8 +142,9 @@ $("#btn-rename-diagram").on('click', function() {
 					$("#name-diagram-show").html($("#input-rename-diagram").val());
 					$("#modal-rename-diagram").modal('hide');
 					$("#a-rename-diagram").show('fade');
+					setContentMessage("Tên sơ đồ đã thay đổi");
 				} else {
-					alert("Tên nhóm đã tồn tại");
+					setContentMessage("Tên sơ đồ đã tồn tại");
 				}
 			},
 			error: function() {
@@ -123,7 +152,7 @@ $("#btn-rename-diagram").on('click', function() {
 			}
 		});
 	} else {
-		alert("Tên nhóm không được bỏ trống");
+		setContentMessage("Tên sơ đồ không được bỏ trống");
 	}
 });
 // End rename diagram
@@ -177,8 +206,9 @@ $("#saveDiagram").on('click', function() {
 			paper.setDimensions(w, h);
 			// Khong hien thi cac view khong can thiet khi xuat hinh
 		    toggleElementLinkView('block');
+		    deleteSelectView(graph);
 			$.ajax({
-				url : "/luanvan/diagram/savediagram",
+				url : "../diagram/savediagram",
 				type: "post",
 				data: "nameProject=" + $("#nameProject").val() + "&nameDiagram=" + $("#name-diagram-show").html()
 					+ "&actorArray=" + actors + "&ucArray=" + ucs + "&path=" + window.btoa(encodeURIComponent(JSON.stringify(graph)))
@@ -188,8 +218,9 @@ $("#saveDiagram").on('click', function() {
 						setIconSave("saved");
 						listActor();
 						listUsecase();
+						setContentMessage("Sơ đồ lưu thành công");
 					} else {
-						alert("Tên đối tượng đã tồn tại đã tồn tại trong dự án");
+						setContentMessage("Tên đối tượng đã tồn tại đã tồn tại trong dự án");
 					}
 				},
 				error: function() {
@@ -197,7 +228,7 @@ $("#saveDiagram").on('click', function() {
 				}
 			});
 		} else {
-			alert("Trùng tên không thể lưu");
+			setContentMessage("Trùng tên không thể lưu");
 		}
 	} else {
 		$("#modal-new-diagram").modal('show');
@@ -208,7 +239,7 @@ $("#saveDiagram").on('click', function() {
 // Begin list diagram
 $("#view-list-diagram").on("click", function() {
 	$.ajax({
-		url: "/luanvan/diagram/viewlistdiagram",
+		url: "../diagram/viewlistdiagram",
 		data: "nameProject=" + $("#nameProject").val(),
 		success: function(result) {
 			var object = $.parseJSON(result);
@@ -232,7 +263,7 @@ $("#view-list-diagram").on("click", function() {
 					$(this).parent().parent().parent().parent().hide("fade");
 					var nameDiagram = $(this).attr("id");
 					$.ajax({
-						url: "/luanvan/diagram/deletediagram",
+						url: "../diagram/deletediagram",
 						data: "nameProject=" + $("#nameProject").val() + "&nameDiagram=" + nameDiagram,
 						success: function(result) {
 							if ($("#name-diagram-show").html() == nameDiagram || $("#body-list-diagram").html() == "") {
@@ -241,6 +272,7 @@ $("#view-list-diagram").on("click", function() {
 								setIconSave("saved");
 								graph.clear();
 							}
+							setContentMessage("Xóa sơ đồ thành công");
 						},
 						error: function() {
 							alert("error");
@@ -253,7 +285,7 @@ $("#view-list-diagram").on("click", function() {
 			$(".edit-details-diagram").on('click', function() {
 				var nameDiagram = $(this).attr("id");
 				$.ajax({
-					url: "/luanvan/diagram/editdiagram",
+					url: "../diagram/editdiagram",
 					data: "nameProject=" + $("#nameProject").val() + "&nameDiagram=" + nameDiagram,
 					success: function(result) {
 						graph.clear();
@@ -371,7 +403,7 @@ $(".toggle-element-view").on('click', function() {
 function removeRoleActorNew(idActor, idUsecase) {
 	$.ajax({
 		type: "post",
-		url: "/luanvan/diagram/removeroleactor",
+		url: "../diagram/removeroleactor",
 		data: "idActor=" + idActor + "&idUsecase=" + idUsecase,
 		success: function() {
 		},
@@ -433,10 +465,10 @@ function testRoleActor(roles, nameTest) {
 paper.on('cell:pointerdblclick ', function(cellView, evt, x, y) {
 	if (cellView.model.attributes.type == "uml.Actor") {
 		$.ajax({
-			url: "/luanvan/diagram/getinfoactor",
+			url: "../diagram/getinfoactor",
 			data: "nameProject=" + $("#nameProject").val() + "&id=" + cellView.model.attributes.created,
 			success: function(result) {
-				var object = $.parseJSON(result);
+				var object = $.parseJSON(processNewline(result));
 				$("#name-modal-actor").html(cellView.model.attributes.name);
 				$("#id-modal-actor").val(cellView.model.attributes.created);
 				if (object.actor.mota != "null") {
@@ -468,10 +500,10 @@ paper.on('cell:pointerdblclick ', function(cellView, evt, x, y) {
 	}
 	if (cellView.model.attributes.type == "uml.Usecase") {
 		$.ajax({
-			url: "/luanvan/diagram/getinfousecase",
+			url: "../diagram/getinfousecase",
 			data: "nameProject=" + $("#nameProject").val() + "&id=" + cellView.model.attributes.created,
 			success: function(result) {
-				var object = $.parseJSON(result);
+				var object = $.parseJSON(processNewline(result));
 				$("#name-modal-usecase").html(cellView.model.attributes.name);
 				$("#id-modal-usecase").val(cellView.model.attributes.created);
 				if (object.usecase.mota != "null") {
@@ -480,7 +512,7 @@ paper.on('cell:pointerdblclick ', function(cellView, evt, x, y) {
 					$("#description-modal-usecase").val("");
 				}
 				$("#level-modal-usecase").val(object.usecase.mucdo);
-				$("#a-question-upload-file").attr("href", "/luanvan/detailUsecase?name=" + $("#nameProject").val() + "&usecaseid=" + cellView.model.attributes.created +"&nameDiagram="+ $("#name-diagram-show").html());
+				$("#a-question-upload-file").attr("href", "../detailUsecase?name=" + $("#nameProject").val() + "&usecaseid=" + cellView.model.attributes.created +"&nameDiagram="+ $("#name-diagram-show").html());
 				if (object.usecase.tinhtien == "0") {
 					$("#pay-money-modal-usecase").prop("checked", false);
 				} else {
@@ -499,7 +531,7 @@ paper.on('cell:pointerdblclick ', function(cellView, evt, x, y) {
 				getRelationshipUsecase(cellView.model);
 				var dsui = "";
 				for (var i = 0; i < object.usecase.dsui.length; i++) {
-					dsui += '<a target="_blank" href="/luanvan/diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + object.usecase.dsui[i].name + '">' + object.usecase.dsui[i].name + '</a><br>';
+					dsui += '<a target="_blank" href="../diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + object.usecase.dsui[i].name + '">' + object.usecase.dsui[i].name + '</a><br>';
 				}
 				$("#listUIOfUC").html(dsui);
 				$("#modal-usecase").modal('show');
@@ -630,7 +662,7 @@ $("#saveInfoUC").on('click', function(){
 		group = $("#input-group-modal-usecase").val();
 	}
 	$.ajax({
-		url: "/luanvan/diagram/saveinfousecase",
+		url: "../diagram/saveinfousecase",
 		type: "post",
 		data: "nameProject=" + $("#nameProject").val() + "&id=" + $("#id-modal-usecase").val()
 			+ "&description=" + $("#description-modal-usecase").val() + "&level=" + $("#level-modal-usecase").val()
@@ -638,6 +670,7 @@ $("#saveInfoUC").on('click', function(){
 			+ "&group=" + $("#input-group-modal-usecase").val(),
 		success: function(result) {
 			$("#modal-usecase").modal('hide');
+			setContentMessage("Thông tin usecase đã lưu");
 		},
 		error: function() {
 			alert("Lỗi, không thể lưu thông tin use case, liên hệ admin để giải quyết, cảm ơn.");
@@ -653,13 +686,14 @@ $("#saveInfoActor").on('click', function(){
 		role += $(this).val() + "_" + this.id + "/";
 	});
 	$.ajax({
-		url: "/luanvan/diagram/saveinfoactor",
+		url: "../diagram/saveinfoactor",
 		type: "post",
 		data: "nameProject=" + $("#nameProject").val() + "&id=" + $("#id-modal-actor").val() + "&role=" + role
 			+ "&description=" + $("#description-modal-actor").val() + "&level=" + $("#level-modal-actor").val()
 			+ "&name=" + $("#name-modal-actor").html(),
 		success: function(result) {
 			$("#modal-actor").modal('hide');
+			setContentMessage("Thông tin actor đã lưu");
 		},
 		error: function() {
 			alert("Lỗi, không thể lưu thông tin tác nhân, liên hệ admin để giải quyết, cảm ơn.");
@@ -669,7 +703,7 @@ $("#saveInfoActor").on('click', function(){
 
 function listActor() {
 	$.ajax({
-		url: "/luanvan/diagram/listactor",
+		url: "../diagram/listactor",
 		data: "nameProject=" + $("#nameProject").val(),
 		success: function(result) {
 			var obj = $.parseJSON(result);
@@ -699,7 +733,7 @@ $("#children-usecase-view div").on('mousedown', function() {
 
 function listUsecase() {
 	$.ajax({
-		url: "/luanvan/diagram/listusecase",
+		url: "../diagram/listusecase",
 		data: "nameProject=" + $("#nameProject").val(),
 		success: function(result) {
 			var obj = $.parseJSON(result);
@@ -735,7 +769,7 @@ paper.on('blank:pointerdown', function(cellView, x, y) {
 			position: { x: x, y: y },
 			size: { width: 1, height: 1 },
 			attrs:{
-				rect: { 'stroke' : '#333333', 'stroke-width': 1, 'stroke-dasharray': 5, fill: 'none'}
+				rect: { 'stroke' : '#333333', 'stroke-width': 1, 'stroke-dasharray': 3, fill: '#337ab7', 'fill-opacity': 0.5}
 			}
 		});
 		graph.addCell(selectViewDiagram);
@@ -760,6 +794,7 @@ paper.on('cell:pointerdown', function(cellView, evt, px, py) {
 				target: { id: cellView.model.id }
 			});
 			graph.addCell(link);
+			setContentMessage("Sơ đồ đã thay đổi");
 		});
 		cellView.$box.find('.extend').on('mousedown', function() {
 			hasDrawing = true;
@@ -775,6 +810,7 @@ paper.on('cell:pointerdown', function(cellView, evt, px, py) {
 			    }
 			});
 			graph.addCell(link);
+			setContentMessage("Sơ đồ đã thay đổi");
 		});
 		cellView.$box.find('.include').on('mousedown', function() {
 			hasDrawing = true;
@@ -790,6 +826,7 @@ paper.on('cell:pointerdown', function(cellView, evt, px, py) {
 			    }
 			});
 			graph.addCell(link);
+			setContentMessage("Sơ đồ đã thay đổi");
 		});
 		cellView.$box.find('.generalization').on('mousedown', function() {
 			hasDrawing = true;
@@ -798,13 +835,16 @@ paper.on('cell:pointerdown', function(cellView, evt, px, py) {
 				target: { id: cellView.model.id }
 			});
 			graph.addCell(link);
+			setContentMessage("Sơ đồ đã thay đổi");
 		});
 	}
 
 });
 
 graph.on('change:position', function(cell) {
-	setIconSave('notsaved');
+	if (cell.attributes.type != "selectViewDiagram") {
+		setIconSave('notsaved');
+	}
 	var paperW = paper.options.width;
     var paperH = paper.options.height;
     var cellBbox = cell.getBBox();
@@ -864,92 +904,91 @@ $("#paper").on('mouseup', function(e) {
 		});
 		for (var i = 0; i < listElements.length; i++) {
 			if (listElements[i].model.attributes.type != 'selectViewDiagram') {
-				listElements[i].$box.find('.delete').show();
-				listElements[i].$box.find('.relationship').show();
 				listElements[i].$box.find('.delete').parent().css('border', '1px dashed #d9534f');
 				listSelectViewDiagram.push(listElements[i]);
+				setContentMessage("Nhấn phím 'Delete' để xóa");
 			}
 		}
 		selectViewDiagram.remove();
-	}
-	
-	var posMouse = getClickPosition(e);
-	
-	removeLinkSameSourceTarget();
-    
-	hasDrawing = false;
-	var canDrawingTarget = false;
-    var viewTarget = paper.findViewsFromPoint(getClickPosition(e));
-    if (viewTarget.length) {
-    	if (link) {
-    		var target = graph.getCell(link.attributes.source.id);
-			if (link.attributes.type == "uml.Association") {
-				if ((viewTarget[0].model.attributes.type == "uml.Actor" && target.attributes.type == "uml.Actor")
-					|| (viewTarget[0].model.attributes.type == "uml.Usecase" && target.attributes.type == "uml.Usecase")) {
-					canDrawingTarget = false;
-				} else {
-					canDrawingTarget = true;
-				}
-    			
-    		}
-    		if (link.attributes.type == "uml.Extend" || link.attributes.type == "uml.Include") {
-    			if (viewTarget[0].model.attributes.type != "uml.Actor") {
-    				canDrawingTarget = true;
-    			} else {
-    				canDrawingTarget = false;
-    			}
-    		}
-    		if (link.attributes.type == "uml.Generalization") {
-    			if (viewTarget[0].model.attributes.type == target.attributes.type) {
-    				canDrawingTarget = true;
-    			} else {
-    				canDrawingTarget = false;
-    			}
-    		}
-    	}
-    }
-
-    if (canDrawingTarget) {
-	    if (link.attributes.source.id != viewTarget[0].model.id) {
-			link.set('target', { id: viewTarget[0].model.id });
-			if (!hasLinkST(link)) {
-				graph.addCell(link.clone());
-			}
-		}
-	}
-
-	if (link) {
-		link.remove();
-		if (link.attributes.type == "uml.Association") {
-			var object = graph.getCell(link.attributes.source.id);
-			if (viewTarget[0].model.attributes.type == "uml.Actor" && object.attributes.type == "uml.Usecase") {
-				$.ajax({
-					type: "post",
-					url: '/luanvan/diagram/setroleactor',
-					data: "idActor=" + viewTarget[0].model.attributes.created + "&idUsecase=" + object.attributes.created,
-					success: function(result) {
-						setPathDiagram();
-					},
-					error: function() {
-						alert("Không thể cập nhật thông tin quyền của tác nhân");
-					}
-				});
-			} else if (viewTarget[0].model.attributes.type == "uml.Usecase" && object.attributes.type == "uml.Actor") {
-				$.ajax({
-					type: "post",
-					url: '/luanvan/diagram/setroleactor',
-					data: "idUsecase=" + viewTarget[0].model.attributes.created + "&idActor=" + object.attributes.created,
-					success: function(result) {
-						setPathDiagram();
-					},
-					error: function() {
-						alert("Không thể cập nhật thông tin quyền của tác nhân");
-					}
-				});
-			}
-		}
+	} else {
+		var posMouse = getClickPosition(e);
 		
-		link = null;
+		removeLinkSameSourceTarget();
+	    
+		hasDrawing = false;
+		var canDrawingTarget = false;
+	    var viewTarget = paper.findViewsFromPoint(getClickPosition(e));
+	    if (viewTarget.length) {
+	    	if (link) {
+	    		var target = graph.getCell(link.attributes.source.id);
+				if (link.attributes.type == "uml.Association") {
+					if ((viewTarget[0].model.attributes.type == "uml.Actor" && target.attributes.type == "uml.Actor")
+						|| (viewTarget[0].model.attributes.type == "uml.Usecase" && target.attributes.type == "uml.Usecase")) {
+						canDrawingTarget = false;
+					} else {
+						canDrawingTarget = true;
+					}
+	    			
+	    		}
+	    		if (link.attributes.type == "uml.Extend" || link.attributes.type == "uml.Include") {
+	    			if (viewTarget[0].model.attributes.type != "uml.Actor") {
+	    				canDrawingTarget = true;
+	    			} else {
+	    				canDrawingTarget = false;
+	    			}
+	    		}
+	    		if (link.attributes.type == "uml.Generalization") {
+	    			if (viewTarget[0].model.attributes.type == target.attributes.type) {
+	    				canDrawingTarget = true;
+	    			} else {
+	    				canDrawingTarget = false;
+	    			}
+	    		}
+	    	}
+	    }
+
+	    if (canDrawingTarget) {
+		    if (link.attributes.source.id != viewTarget[0].model.id) {
+				link.set('target', { id: viewTarget[0].model.id });
+				if (!hasLinkST(link)) {
+					graph.addCell(link.clone());
+				}
+			}
+		}
+
+		if (link) {
+			link.remove();
+			if (link.attributes.type == "uml.Association" && viewTarget.length) {
+				var object = graph.getCell(link.attributes.source.id);
+				if (viewTarget[0].model.attributes.type == "uml.Actor" && object.attributes.type == "uml.Usecase") {
+					$.ajax({
+						type: "post",
+						url: '../diagram/setroleactor',
+						data: "idActor=" + viewTarget[0].model.attributes.created + "&idUsecase=" + object.attributes.created,
+						success: function(result) {
+							setPathDiagram();
+						},
+						error: function() {
+							alert("Không thể cập nhật thông tin quyền của tác nhân");
+						}
+					});
+				} else if (viewTarget[0].model.attributes.type == "uml.Usecase" && object.attributes.type == "uml.Actor") {
+					$.ajax({
+						type: "post",
+						url: '../diagram/setroleactor',
+						data: "idUsecase=" + viewTarget[0].model.attributes.created + "&idActor=" + object.attributes.created,
+						success: function(result) {
+							setPathDiagram();
+						},
+						error: function() {
+							alert("Không thể cập nhật thông tin quyền của tác nhân");
+						}
+					});
+				}
+			}
+			
+			link = null;
+		}
 	}
 });
 
@@ -979,9 +1018,12 @@ function hideAllTool() {
 	// Lay tat ca cac doi tuong
 	var allElement = graph.getElements();
 	for (var i = 0; i < allElement.length; i++) {
-		allElement[i].findView(paper).$box.find('.delete').hide();
-		allElement[i].findView(paper).$box.find('.relationship').hide();
-		allElement[i].findView(paper).$box.find('.delete').parent().css('border', 'none');
+		var element = allElement[i].findView(paper);
+		if (element.model.attributes.type != "selectViewDiagram") {
+			element.$box.find('.delete').hide();
+			element.$box.find('.relationship').hide();
+			element.$box.find('.delete').parent().css('border', 'none');
+		}
 	}	
 }
 
@@ -992,14 +1034,17 @@ function displayTool(cellView) {
 	var allElement = graph.getElements();
 	
 	for (var i = 0; i < allElement.length; i++) {
-		if (cellView.model.id == allElement[i].id) {
-			allElement[i].findView(paper).$box.find('.delete').show();
-			allElement[i].findView(paper).$box.find('.relationship').show();
-			allElement[i].findView(paper).$box.find('.delete').parent().css('border', '1px dashed #d9534f');
-		} else {
-			allElement[i].findView(paper).$box.find('.delete').hide();
-			allElement[i].findView(paper).$box.find('.relationship').hide();
-			allElement[i].findView(paper).$box.find('.delete').parent().css('border', 'none');
+		var element = allElement[i].findView(paper);
+		if (element.model.attributes.type != "selectViewDiagram") {
+			if (cellView.model.id == allElement[i].id) {
+				element.$box.find('.delete').show();
+				element.$box.find('.relationship').show();
+				element.$box.find('.delete').parent().css('border', '1px dashed #d9534f');
+			} else {
+				element.$box.find('.delete').hide();
+				element.$box.find('.relationship').hide();
+				element.$box.find('.delete').parent().css('border', 'none');
+			}
 		}
 	}
 }
@@ -1036,7 +1081,6 @@ $("#exportXML").on('click', function() {
     	+ encodeURIComponent(xmlString));
     pom.setAttribute('download', $("#nameFileXML").val() + '.xml');
     pom.click();
-
 });
 
 $("#exportJSON").on('click', function() {
@@ -1058,51 +1102,47 @@ function toggleElementLinkView(value) {
 }
 
 $("#a-export-svg").on('click', function() {
-	$("#nameFileSVG").val("");
 	$("#modal-exportSVG").modal('show');
 });
+$('#modal-exportSVG').on('shown.bs.modal', function () {
+    $("#nameFileSVG").val("");
+    $('#nameFileSVG').focus();
+});
 $("#exportSVG").on('click', function() {
-
-	// Khong hien thi cac view khong can thiet khi xuat hinh
-	toggleElementLinkView('none');
-
-	$("#modal-exportSVG").modal('hide');
 	
-	var w = paper.options.width;
-	var h = paper.options.height;
-	paper.fitToContent({padding: 5});
+	if ($("#nameFileSVG").val() != "") {
+		
+		// Khong hien thi cac view khong can thiet khi xuat hinh
+		toggleElementLinkView('none');
 	
-	var svg = paper.svg;
-    var serializer = new XMLSerializer();
-    var svgXML = serializer.serializeToString(svg);
-	
-	var pom = document.createElement('a');
-    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' 
-    	+ encodeURIComponent(svgXML));
-    pom.setAttribute('download', $("#nameFileSVG").val() + '.svg');
-    pom.click();
-
-    // Khong hien thi cac view khong can thiet khi xuat hinh
-    toggleElementLinkView('block');
-    
-    paper.setDimensions(w, h);
-
-});
-
-$("#loadFile").click(function() {
-	$("#readFile").click();
-});
-
-$("#readFile").change(function(evt) {
-	var file = evt.target.files[0];
-	if (file) {
-		var reader = new FileReader();
-		reader.readAsText(file);
-		reader.onload = function(e) {
-			var content = e.target.result;
-			graph.clear();
-			graph.fromJSON(JSON.parse(content));
+		$("#modal-exportSVG").modal('hide');
+		
+		var w = paper.options.width;
+		var h = paper.options.height;
+		paper.fitToContent({padding: 5});
+		
+		var svg = paper.svg;
+		
+		if ($('input[name="radioChooseTypeExportImage"]:checked').val() == "svg") {
+			var serializer = new XMLSerializer();
+		    var svgXML = serializer.serializeToString(svg);
+			
+			var pom = document.createElement('a');
+		    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' 
+		    	+ encodeURIComponent(svgXML));
+		    pom.setAttribute('download', $("#nameFileSVG").val() + '.svg');
+		    pom.click();
+		} else {
+			saveSvgAsPng(svg, $("#nameFileSVG").val() + '.png');
 		}
+	
+	    // Khong hien thi cac view khong can thiet khi xuat hinh
+	    toggleElementLinkView('block');
+	    
+	    paper.setDimensions(w, h);
+	} else {
+		setContentMessage("Xin vui lòng nhập tên tập tin");
+		$("#nameFileSVG").focus();
 	}
 });
 
@@ -1112,10 +1152,23 @@ $(document).keydown(function(event) {
 		for (var i = 0; i < listSelectViewDiagram.length; i++) {
 			listSelectViewDiagram[i].model.remove();
 		}
+		setPathDiagram();
+		setContentMessage("Sơ đồ đã thay đổi");
 	}
 	if (elementDown) {
 		if (event.keyCode == 46) {
 			$("#modal-delete-actor-usecase").modal('show');
+		}
+	}
+	if (event.keyCode == 13) {
+		if ($("#modal-new-diagram").hasClass("in")) {
+			$("#btn-new-diagram").trigger('click');
+		}
+		if ($("#modal-rename-diagram").hasClass("in")) {
+			$("#btn-rename-diagram").trigger('click');
+		}
+		if ($('#modal-exportSVG').hasClass("in")) {
+			$("#exportSVG").trigger('click');
 		}
 	}
 });
@@ -1123,13 +1176,15 @@ $(document).keydown(function(event) {
 $("#btn-delete-actor-usecase").on('click', function() {
 	if ($('input[name="radio-delete-actor-usecase"]:checked').val() == "1") {
 		$.ajax({
-			url: "/luanvan/diagram/deleteobject",
+			url: "../diagram/deleteobject",
 			data: "type=" + elementDown.model.attributes.type + "&id=" + elementDown.model.attributes.created
 			+ "&nameProject=" + $("#nameProject").val(),
 			success: function(){
 				elementDown.model.remove();
 				listActor();
 				listUsecase();
+				setPathDiagram();
+				setContentMessage("Sơ đồ đã thay đổi");
 			},
 			error: function() {
 				alert("Không thể xóa đối tượng");
@@ -1137,6 +1192,7 @@ $("#btn-delete-actor-usecase").on('click', function() {
 		});
 	} else {
 		elementDown.model.remove();
+		setContentMessage("Sơ đồ đã thay đổi");
 	}
 	setPathDiagram();
 	$("#modal-delete-actor-usecase").modal('hide');
@@ -1169,9 +1225,10 @@ function drop(ev) {
 				graph.addCell(actor);
 				$.ajax({
 					type: "post",
-					url: "/luanvan/diagram/savediagramactor",
+					url: "../diagram/savediagramactor",
 					data: "nameDiagram=" + $("#name-diagram-show").html() + "&idActor=" + id + "&nameProject=" + $("#nameProject").val(),
 					success: function() {
+						setContentMessage("Sơ đồ đã thay đổi");
 					},
 					error: function() {
 						alert("Không thể lưu sơ đồ tác nhân.")
@@ -1179,7 +1236,7 @@ function drop(ev) {
 				});
 				setPathDiagram();
 			} else {
-				alert(name + " đã tồn tại");
+				setContentMessage(name + " đã tồn tại");
 			}
 			
 		}
@@ -1194,10 +1251,10 @@ function drop(ev) {
 				graph.addCell(usecase);
 				$.ajax({
 					type: "post",
-					url: "/luanvan/diagram/savediagramusecase",
+					url: "../diagram/savediagramusecase",
 					data: "nameDiagram=" + $("#name-diagram-show").html() + "&idUsecase=" + id + "&nameProject=" + $("#nameProject").val(),
 					success: function() {
-						
+						setContentMessage("Sơ đồ đã thay đổi");
 					},
 					error: function() {
 						alert("Không thể lưu sơ đồ usecase.")
@@ -1205,7 +1262,7 @@ function drop(ev) {
 				});
 				setPathDiagram();
 			} else {
-				alert(name + " đã tồn tại");
+				setContentMessage(name + " đã tồn tại");
 			}
 		}
 		chooseElement = "";
@@ -1214,8 +1271,7 @@ function drop(ev) {
 			var max = 0;
 			var hasDefaultActor = false;
 			$("#children-actor-view div").each(function() {
-				var str = $(this).html().split(":");
-				console.log(str[1]);
+				var str = $(this).html().split("_");
 				if (str[0] == "Actor") {
 					if (str[1] == "" || str[1] == null || str[1] == "undefined") {
 						hasDefaultActor = true;
@@ -1227,24 +1283,24 @@ function drop(ev) {
 			});
 			var nameActor = "Actor";
 			if (hasDefaultActor) {
-				nameActor += ":1";
+				nameActor += "_1";
 			} else if (max > 0) {
-				nameActor += ":" + (max + 1);
+				nameActor += "_" + (max + 1);
 			}
 			actor.attributes.name = nameActor;
 			actor.attr(".name/text", nameActor);
 			graph.addCell(actor);
 			$.ajax({
-			url: "/luanvan/diagram/createactor",
+			url: "../diagram/createactor",
 			type: "post",
 			data: "nameProject=" + $("#nameProject").val() + "&nameDiagram=" + $("#name-diagram-show").html()
 				+ "&nameActor=" + nameActor,
 			success: function(result) {
 				actor.attributes.created = result;
-				
 				setIconSave("saved");
 				listActor();
 				setPathDiagram();
+				setContentMessage("Sơ đồ đã thay đổi");
 			},
 			error: function() {
 				alert("Không thể tạo tác nhân. Xin vui lòng liên hệ ADMIN để giải quyết.");
@@ -1256,7 +1312,7 @@ function drop(ev) {
 			var max = 0;
 			var hasDefaultUsecase = false;
 			$("#children-usecase-view div").each(function() {
-				var str = $(this).html().split(":");
+				var str = $(this).html().split("_");
 				if (str[0] == "Usecase") {
 					if (str[1] == "" || str[1] == null || str[1] == "undefined") {
 						hasDefaultUsecase = true;
@@ -1269,36 +1325,88 @@ function drop(ev) {
 			});
 			var nameUsecase = "Usecase";
 			if (hasDefaultUsecase) {
-				nameUsecase += ":1";
+				nameUsecase += "_1";
 			} else if (max > 0) {
-				nameUsecase += ":" + (max + 1);
+				nameUsecase += "_" + (max + 1);
 			}
 			usecase.attributes.name = nameUsecase;
 			usecase.attr(".name/text", nameUsecase);
 			graph.addCell(usecase);
 			$.ajax({
-				url: "/luanvan/diagram/createusecase",
+				url: "../diagram/createusecase",
 				type: "post",
 				data: "nameProject=" + $("#nameProject").val() + "&nameDiagram=" + $("#name-diagram-show").html()
 					+ "&nameUsecase=" + nameUsecase,
 				success: function(result) {
 					var object = $.parseJSON(result);
 					usecase.attributes.created = result;
-					
 					setIconSave("saved");
 					listUsecase();
 					setPathDiagram();
+					setContentMessage("Sơ đồ đã thay đổi");
 				},
 				error: function() {
 					alert("Không thể tao use case. Xin vui lòng liên hệ ADMIN để giải quyết.");
 				}
 			});
 		}
+		if (id == "create-hint-usecase") {
+			if (!hasNameHintUsecaseOnGraph(name) && !hasNameHintUsecaseOnDivLeft(name)) {
+				var usecase = new joint.shapes.uml.Usecase({position: { x: posMouse.x, y: posMouse.y }});
+				usecase.attributes.name = name;
+				usecase.attr(".name/text", name);
+				graph.addCell(usecase);
+				$.ajax({
+					url: "../diagram/createusecase",
+					type: "post",
+					data: "nameProject=" + $("#nameProject").val() + "&nameDiagram=" + $("#name-diagram-show").html()
+						+ "&nameUsecase=" + name,
+					success: function(result) {
+						var object = $.parseJSON(result);
+						usecase.attributes.created = result;
+						setIconSave("saved");
+						setContentMessage("Sơ đồ đã thay đổi");
+						listUsecase();
+						setPathDiagram();
+					},
+					error: function() {
+						alert("Không thể tao use case. Xin vui lòng liên hệ ADMIN để giải quyết.");
+					}
+				});
+			} else {
+				setContentMessage(name + " đã tồn tại.");
+			}
+		}
 	} else {
 		$("#modal-new-diagram").modal('show');
 	}
 }
 // End drag drop element to paper
+
+// Begin test has name hint usecase on graph
+function hasNameHintUsecaseOnGraph(name) {
+	var allElement = graph.getElements();
+	for (var i = 0; i < allElement.length; i++) {
+		if (allElement[i].attributes.type == 'uml.Usecase') {
+			if (allElement[i].attributes.name == name)
+				return true;
+		}
+	}
+	return false;
+}
+// End test has name hint usecase on graph
+
+// Begin test has name hint usecase on div left
+function hasNameHintUsecaseOnDivLeft(name) {
+	var hasName = false;
+	$("#children-usecase-view div").each(function() {
+		if ($(this).html() == name) {
+			hasName = true;
+		}
+	});
+	return hasName;
+}
+// End test has name hint usecase on div left
 
 // Begin function set path diagram
 function setPathDiagram() {
@@ -1314,8 +1422,9 @@ function setPathDiagram() {
 	paper.setDimensions(w, h);
 	// Khong hien thi cac view khong can thiet khi xuat hinh
     toggleElementLinkView('block');
+    deleteSelectView(graph);
 	$.ajax({
-		url: '/luanvan/diagram/setpathdiagram',
+		url: '../diagram/setpathdiagram',
 		type: "post",
 		data: "nameProject=" + $("#nameProject").val() + "&nameDiagram=" + $("#name-diagram-show").html() + "&image=" + image
 			+ "&path=" + window.btoa(encodeURIComponent(JSON.stringify(graph))),
@@ -1328,3 +1437,29 @@ function setPathDiagram() {
 	});
 }
 // End function set path diagram
+
+function setContentMessage(content) {
+	$("#message-alert-for-user").html(content);
+	$("#message-alert-for-user").show();
+	$('#message-alert-for-user').delay(2000).fadeOut(0);
+}
+
+function deleteSelectView(graph) {
+	var allElement = graph.getElements();
+	for (var i = 0; i < allElement.length; i++) {
+		if (allElement[i].attributes.type == 'selectViewDiagram') {
+			allElement[i].remove();
+		}
+	}
+}
+
+function processNewline(str) {
+	  return str
+	    .replace(/[\\]/g, '\\\\')
+	    .replace(/[\/]/g, '\\/')
+	    .replace(/[\b]/g, '\\b')
+	    .replace(/[\f]/g, '\\f')
+	    .replace(/[\n]/g, '\\n')
+	    .replace(/[\r]/g, '\\r')
+	    .replace(/[\t]/g, '\\t');
+}

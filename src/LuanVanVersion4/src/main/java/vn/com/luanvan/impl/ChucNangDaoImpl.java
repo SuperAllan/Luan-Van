@@ -1,6 +1,5 @@
 package vn.com.luanvan.impl;
 
-import java.util.List;
 
 import org.hibernate.Query;
 
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import vn.com.luanvan.dao.ChucNangDao;
 import vn.com.luanvan.model.Chucnang;
-import vn.com.luanvan.model.Project;
 @Repository
 public class ChucNangDaoImpl implements ChucNangDao{
 	@Autowired
@@ -35,18 +33,18 @@ public class ChucNangDaoImpl implements ChucNangDao{
 		sessionFactory.getCurrentSession().delete(chucnang);
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Transactional
-	public List<Chucnang> getChucNangFromData(Project project) {
-		String hql = "from Chucnang as a where a.project.projectid = :projectid";
-		Query query = sessionFactory.getCurrentSession().createQuery(hql);
-		query.setParameter("projectid", project.getProjectid());
-		return query.list();
-	}
-
 	@Transactional
 	public Chucnang findChucNangByID(int id) {
 		return (Chucnang) sessionFactory.getCurrentSession().get(Chucnang.class, id);
+	}
+
+	@Transactional
+	public Chucnang findByNhomID(int nhomid, String mota) {
+		String hql = "FROM Chucnang as a where a.nhomchucnang.nhomid= :nhomid and a.motayeucau= :mota";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("nhomid", nhomid);
+		query.setParameter("mota", mota);
+		return (Chucnang) query.list().get(0);
 	}
 
 }

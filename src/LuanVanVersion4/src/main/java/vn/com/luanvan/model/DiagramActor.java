@@ -18,7 +18,7 @@ import javax.persistence.Table;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "diagramactor", catalog = "luanvan")
+@Table(name = "diagramactor")
 public class DiagramActor implements java.io.Serializable {
 
 	private DiagramActorId id;

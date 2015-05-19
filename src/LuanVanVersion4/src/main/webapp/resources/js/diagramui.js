@@ -8,20 +8,20 @@ var hasBlankPointerDown = null;
 var selectView = null;
 var dragDropElementUI = false;
 var choosedElement = false;
-// Khoi tao so do - 1 graph la 1 so do
 var graphUI = new joint.dia.Graph;
 
-// Noi de ve so do cua graph da khoi tao
+var backHistoryList = [];
+var fowardHistoryList = [];
+var widthPaperUI = $('#paperUI').css("width").split("px");
+
 var paperUI = new joint.dia.Paper({
     el: $('#paperUI'),
-    fill: 'white',
-    width: 1500,
+    fill: '#ffffff',
+    width: widthPaperUI[0],
     height: 1000,
     model: graphUI,
     gridSize: 1
 });
-
-
 
 var lineH1 = new joint.shapes.basic.Rect({
 	size: { width: 1500, height: 1},
@@ -47,20 +47,49 @@ $(document).ready(function() {
 	// Begin loading ui
 	if ($("#path").html() && $("#path").html() != "") {
 		graphUI.fromJSON(JSON.parse(decodeURIComponent(window.atob($("#path").html()))));
+		var elements = graphUI.getElements();
+		for (var i = 0; i < elements.length; i++) {
+			var attrs = elements[i].attributes;
+			if (attrs.type == "ui.Table") {
+				createTableDynamic(attrs.row, attrs.col, attrs.size.width, attrs.size.height, attrs.attrs.text, attrs.attrs.rect);
+				var table = new joint.shapes.ui.Table({
+					position: { x: attrs.position.x, y: attrs.position.y },
+				});
+				elements[i].remove();
+				graphUI.addCell(table);
+			}
+		}
 	}
 	if ($("#name-ui-show").html() != "") {
 		$("#a-rename-ui").show("fade");
 	} else {
 		$("#a-rename-ui").hide("fade");
 	}
+	setIconSaveUI('saved');
 	// End loading ui
 });
+
+$("#fullscreen-ui").on('click', function() {
+	if ($(this).html() == '<i class="glyphicon glyphicon-fullscreen"></i>') {
+		$(this).html('<i class="glyphicon glyphicon-resize-small"></i>');
+		$("#header-diagram").hide();
+		$("#properties-diagram").hide();
+		$("#content-diagram").css("top", 0);
+	} else {
+		$(this).html('<i class="glyphicon glyphicon-fullscreen"></i>');
+		$("#header-diagram").show();
+		$("#properties-diagram").show();
+		$("#content-diagram").css("top", "100px");
+	}
+	
+})
 
 paperUI.on('cell:pointerdblclick', function(cellView, x, y) {
 	enableInput(cellView);
 });
 
 paperUI.on('blank:pointerdown', function(cellView, x, y) {
+	$("#list-class-of-element").hide();
 	hideAllToolUI();
 	disableInput(cellView);
 	cellViewPointerDown = null;
@@ -72,7 +101,7 @@ paperUI.on('blank:pointerdown', function(cellView, x, y) {
 			position: { x: x, y: y },
 			size: { width: 1, height: 1 },
 			attrs:{
-				rect: { 'stroke' : '#333333', 'stroke-width': 1, 'stroke-dasharray': 5, fill: 'none'}
+				rect: { 'stroke' : '#333333', 'stroke-width': 1, 'stroke-dasharray': 3, fill: '#337ab7', 'fill-opacity': 0.5}
 			}
 		});
 		graphUI.addCell(selectView);
@@ -88,17 +117,63 @@ paperUI.on('cell:pointerup', function(cellView, evt, x, y) {
         var cellViewBelow = _.find(cellViewsBelow, function(c) { return c.model.id !== cell.id });
 
         // Prevent recursive embedding.
-        if (cellViewBelow && cellViewBelow.model.get('parent') !== cell.id && cellViewBelow.model.attributes.type == "ui.Div") {
-            cellViewBelow.model.embed(cell);
+        if (cellViewBelow && cellViewBelow.model.get('parent') !== cell.id && (cellViewBelow.model.attributes.type == "ui.Div" || cellViewBelow.model.attributes.type == "ui.Form")) {
+        	if (!cell.isEmbeddedIn(cellViewBelow) && !cell.get('parent')) {
+        		cellViewBelow.model.embed(cell);
+        	}
         }
     }
      if (hasViewChangeBorder) {
-		hasViewChangeBorder.model.attr('rect/stroke', 'black');
+		hasViewChangeBorder.model.attr('rect/stroke', '#000000');
 		hasViewChangeBorder = null;
 	}
 });
 
+function setContentListClass(cell) {
+	var strClass = "";
+	var classArr = cell.attributes.nameClass.split(" ");
+	var noBlank = true;
+	for (var i = 0; i < classArr.length; i++) {
+		if (classArr[i] != "") {
+			noBlank = false;
+			strClass +=  '<div>' + classArr[i] + '<button id="' + classArr[i] + '_' + cell.id 
+				+ '" class="removeClassElement pull-right"><i class="glyphicon glyphicon-trash"></i></button></div>';
+		}
+	}
+	$("#list-class-of-element").html(strClass);
+	
+	$(".removeClassElement").on('click', function() {
+		removeClassElement(this.id);
+	})
+	if (noBlank) {
+		$("#list-class-of-element").html('<div>Chưa gắn class</div>');
+	}
+}
+
+
+
+function removeClassElement(id) {
+	var idArray = id.split("_");
+	var name = idArray[0];
+	var cell = graphUI.getCell(idArray[1]);
+	var strClass = "";
+	var classArr = cell.attributes.nameClass.split(" ");
+	for (var i = 0; i < classArr.length; i++) {
+		if (classArr[i] != name) {
+			strClass += classArr[i] + " ";
+		}
+	}
+	cell.attributes.nameClass = strClass;
+	setContentListClass(cell);
+	setContentMessage("Thuộc tính đã thay đổi");
+}
+
 paperUI.on('cell:pointerdown', function(cellView, evt, px, py) {
+	
+	console.log(cellView.model.attributes);
+	
+	setContentListClass(cellView.model);
+	$("#list-class-of-element").show();
 	
 	listSelectView = [];
 	
@@ -107,7 +182,6 @@ paperUI.on('cell:pointerdown', function(cellView, evt, px, py) {
 	displayToolUI(cellView);
 
 	cellViewPointerDown = cellView;
-
 	$("#width-design-ui").val(cellViewPointerDown.model.attributes.size.width);
 	$("#height-design-ui").val(cellViewPointerDown.model.attributes.size.height);
 	$("#background-color-design-ui").val(cellViewPointerDown.model.attr('rect/fill'));
@@ -119,12 +193,16 @@ paperUI.on('cell:pointerdown', function(cellView, evt, px, py) {
 	$("#Y-design-ui").val(cellViewPointerDown.model.attributes.position.y);
 	$("#border-size-design-ui").val(cellViewPointerDown.model.attr('rect/stroke-width'));
 	$("#border-radius-design-ui").val(cellViewPointerDown.model.attr('rect/rx'));
-
+	
 	cellView.$box.find(".resize").on('mousedown', function() {
 		hasResizeUI = true;
 		cellViewResizeUI = cellView;
 	});
-
+	
+	cellView.$box.find(".delete").on('mousedown', function() {
+		backHistoryList.push(cellView.model);
+		backHistoryList.push("delete");
+	});
 	cellView.$box.find(".copy").on('mousedown', function() {
 		hasCopyUI = true;
 		cellViewCopyUI = cellView;
@@ -132,7 +210,7 @@ paperUI.on('cell:pointerdown', function(cellView, evt, px, py) {
 
 	cellView.$box.find(".link").on('mousedown', function() {
 		$.ajax({
-			url: "/luanvan/diagramui/viewlistui",
+			url: "../diagramui/viewlistui",
 			data: "nameProject=" + $("#nameProject").val(),
 			success: function(result) {
 				var object = $.parseJSON(result);
@@ -142,7 +220,7 @@ paperUI.on('cell:pointerdown', function(cellView, evt, px, py) {
 						str += '<div class="form-group">';
 						if (cellView.model.attributes.connect.indexOf(object.ui[i].name) != -1) {
 							str+= '<button class="btn btn-success" id="' + object.ui[i].name + '"><i class="glyphicon glyphicon-link"></i></button>';
-							str+= '<a href="/luanvan/diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + object.ui[i].name + '" target="_blank"> ' + object.ui[i].name + '</a>';
+							str+= '<a href="../diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + object.ui[i].name + '" target="_blank"> ' + object.ui[i].name + '</a>';
 						} else {
 							str+= '<button class="btn btn-danger" id="' + object.ui[i].name + '"><i class="glyphicon glyphicon-link"></i></button>';
 							str+= '<span> ' + object.ui[i].name + '</span>';
@@ -158,12 +236,14 @@ paperUI.on('cell:pointerdown', function(cellView, evt, px, py) {
 						$(this).addClass("btn-danger");
 						$(this).parent().children('a').remove();
 						$(this).parent().append('<span> ' + this.id + '</span>');
+						setContentMessage("Link đã gở bỏ khỏi giao diện");
 					} else {
 						cellView.model.attributes.connect.push(this.id);
 						$(this).parent().children('span').remove();
-						$(this).parent().append('<a href="/luanvan/diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + this.id + '" target="_blank"> ' + this.id + '</a>');
+						$(this).parent().append('<a href="../diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + this.id + '" target="_blank"> ' + this.id + '</a>');
 						$(this).removeClass("btn-danger");
 						$(this).addClass("btn-success");
+						setContentMessage("Link đã được gắn vào giao diện");
 					}
 					$("#saveDiagramUI").trigger('click');
 				});
@@ -181,19 +261,31 @@ paperUI.on('cell:pointerdown', function(cellView, evt, px, py) {
         cell.toFront();
     }
     
-    if (cell.get('parent')) {
-        graphUI.getCell(cell.get('parent')).unembed(cell);
+    if (cell.get('embeds') && cell.get('embeds').length > 0) {
+    	var embeds = cell.get('embeds');
+    	setContentMessage("Nhấn phím 'U' để UnGroup");
+    	$(document).keydown(function(event) {
+    		if (event.keyCode == 85) {
+        		for (var i = 0; i < embeds.length; i++) {
+        			cell.unembed(graphUI.getCell(embeds[i]));
+        		}
+        		setContentMessage("Đã UnGroup");
+        	}
+    	})
     }
+    
+//    if (cell.get('parent')) {
+//        graphUI.getCell(cell.get('parent')).unembed(cell);
+//    }
 });
 
 paperUI.on('cell:pointermove', function(cellView, evt, x, y) {
-
+	
 	var x = cellView.model.attributes.position.x;
 	var y = cellView.model.attributes.position.y;
 
 	$("#X-design-ui").val(x);
 	$("#Y-design-ui").val(y);
-	console.log(cellView.model.attributes.embeds);
 	if (cellView.model.attributes.embeds == undefined) {
 		alignBorderAuto(cellView);
 	}
@@ -205,13 +297,15 @@ paperUI.on('cell:pointermove', function(cellView, evt, x, y) {
         var cellViewBelow = _.find(cellViewsBelow, function(c) { return c.model.id !== cell.id });
 
         if (hasViewChangeBorder) {
-    		hasViewChangeBorder.model.attr('rect/stroke', 'black');
+    		hasViewChangeBorder.model.attr('rect/stroke', '#000000');
     	}
 
         // Prevent recursive embedding.
-        if (cellViewBelow && cellViewBelow.model.get('parent') !== cell.id && cellViewBelow.model.attributes.type == "ui.Div") {
-            cellViewBelow.model.attr('rect/stroke', 'blue');
-            hasViewChangeBorder = cellViewBelow;
+        if (cellViewBelow && cellViewBelow.model.get('parent') !== cell.id && (cellViewBelow.model.attributes.type == "ui.Div" || cellViewBelow.model.attributes.type == "ui.Form")) {
+        	if (!cell.isEmbeddedIn(cellViewBelow) && !cell.get('parent')) {
+        		cellViewBelow.model.attr('rect/stroke', 'blue');
+                hasViewChangeBorder = cellViewBelow;
+        	}
         }
     }
 });
@@ -249,11 +343,9 @@ $("#paperUI").on('mouseup', function(e) {
 		});
 		for (var i = 0; i < listElements.length; i++) {
 			if (listElements[i].model.attributes.type != 'selectView') {
-//				listElements[i].$box.find('.delete').show();
-//				listElements[i].$box.find('.copy').show();
-//				listElements[i].$box.find('.glyphicon-fullscreen').parent().show();
-				listElements[i].$box.find('.delete').parent().css('border', '3px dashed #0769AD');
+				listElements[i].$box.find('.delete').parent().css('outline', '#0769AD dashed 2px');
 				listSelectView.push(listElements[i]);
+				setContentMessage("Nhấn phím 'Delete' để xóa");
 			}
 		}
 		selectView.remove();
@@ -276,45 +368,103 @@ $("#paperUI").on('mouseup', function(e) {
 	}
 });
 
+$("#increase-layer-design-ui").on("click", function() {
+	cellViewPointerDown.model.toFront();
+})
+
+$("#decrease-layer-design-ui").on("click", function() {
+	cellViewPointerDown.model.toBack();
+})
+
 $("#element-design-ui button").on("mousedown", function(evt) {
 	dragDropElementUI = true;
 	choosedElement = this.id;
 });
 
+$("#div-bootstrap-design-ui").on('change', function() {
+	if (cellViewPointerDown) {
+		cellViewPointerDown.model.attributes.nameClass += " " + $(this).val();
+		setContentListClass(cellViewPointerDown.model);
+		setIconSaveUI('notsaved');
+		setContentMessage("Thuộc tính đã thay đổi");
+	}
+});
+
+$("#button-bootstrap-design-ui").on('change', function() {
+	if (cellViewPointerDown) {
+		cellViewPointerDown.model.attributes.nameClass += " " + $(this).val();
+		setContentListClass(cellViewPointerDown.model);
+		setIconSaveUI('notsaved');
+		setContentMessage("Thuộc tính đã thay đổi");
+	}
+});
+
+$("#form-bootstrap-design-ui").on('change', function() {
+	if (cellViewPointerDown) {
+		cellViewPointerDown.model.attributes.nameClass += " " + $(this).val();
+		setContentListClass(cellViewPointerDown.model);
+		setIconSaveUI('notsaved');
+		setContentMessage("Thuộc tính đã thay đổi");
+	}
+});
+
+$("#table-bootstrap-design-ui").on('change', function() {
+	if (cellViewPointerDown) {
+		cellViewPointerDown.model.attributes.nameClass += " " + $(this).val();
+		setContentListClass(cellViewPointerDown.model);
+		setIconSaveUI('notsaved');
+		setContentMessage("Thuộc tính đã thay đổi");
+	}
+});
+
+
 $("#width-design-ui").on('keyup change', function() {
-	if (cellViewPointerDown)
+	if (cellViewPointerDown) {
 		resizeWidthHeightCell(cellViewPointerDown, $(this).val(), $("#height-design-ui").val());
+		setContentMessage("Thuộc tính đã thay đổi");
+	}
 });
 
 $("#height-design-ui").on('keyup change', function() {
-	if (cellViewPointerDown)
+	if (cellViewPointerDown) {
 		resizeWidthHeightCell(cellViewPointerDown, $("#width-design-ui").val(), $(this).val());
+		setContentMessage("Thuộc tính đã thay đổi");
+	}
 });
 
 $("#font-color-design-ui").on('keyup change', function() {
-	if (cellViewPointerDown)
+	if (cellViewPointerDown) {
 		cellViewPointerDown.model.attr({text: {'fill': $(this).val()}});
+		setContentMessage("Thuộc tính đã thay đổi");
+	}
+		
 });
 
 $("#font-family-design-ui").on('keyup change', function() {
-	if (cellViewPointerDown)
+	if (cellViewPointerDown) {
 		cellViewPointerDown.model.attr({text: {'font-family': $(this).val()}});
+		setContentMessage("Thuộc tính đã thay đổi");
+	}
 });
 
 $("#font-size-design-ui").on('keyup change', function() {
-	if (cellViewPointerDown)
+	if (cellViewPointerDown) {
 		cellViewPointerDown.model.attr({text: {'font-size': $(this).val()}});
+		setContentMessage("Thuộc tính đã thay đổi");
+	}
 });
 
 $("#background-color-design-ui").on('input', function() {
 	if (cellViewPointerDown) {
 		cellViewPointerDown.model.attr({rect: {fill: $(this).val()}});
+		setContentMessage("Thuộc tính đã thay đổi");
 	}
 });
 
 $("#border-color-design-ui").on('input', function() {
 	if (cellViewPointerDown) {
 		cellViewPointerDown.model.attr({rect: {stroke: $(this).val()}});
+		setContentMessage("Thuộc tính đã thay đổi");
 	}
 });
 
@@ -323,6 +473,7 @@ $("#X-design-ui").on('keyup change', function() {
 		var x = cellViewPointerDown.model.attributes.position.x;
 		var y = cellViewPointerDown.model.attributes.position.y;
 		cellViewPointerDown.model.translate($(this).val() - x, $("#Y-design-ui").val() - y);
+		setContentMessage("Thuộc tính đã thay đổi");
 	}
 });
 
@@ -331,18 +482,21 @@ $("#Y-design-ui").on('keyup change', function() {
 		var x = cellViewPointerDown.model.attributes.position.x;
 		var y = cellViewPointerDown.model.attributes.position.y;
 		cellViewPointerDown.model.translate($("#X-design-ui").val() - x, $(this).val() - y);
+		setContentMessage("Thuộc tính đã thay đổi");
 	}
 });
 
 $("#border-size-design-ui").on('keyup change', function() {
 	if (cellViewPointerDown) {
 		cellViewPointerDown.model.attr({rect: {'stroke-width': $(this).val()}});
+		setContentMessage("Thuộc tính đã thay đổi");
 	}
 });
 
 $("#border-radius-design-ui").on('keyup change', function() {
 	if (cellViewPointerDown) {
 		cellViewPointerDown.model.attr({rect: {rx: $(this).val(), ry: $(this).val()}});
+		setContentMessage("Thuộc tính đã thay đổi");
 	}
 });
 
@@ -357,6 +511,7 @@ function alignBorderAuto(cellView) {
 	var cw = cellView.model.attributes.size.width;
 	var ch = cellView.model.attributes.size.height;
 	var allElements = graphUI.getElements();
+	console.log(allElements.length);
 	for (var i = 0; i < allElements.length; i++) {
 		if (allElements[i].id != cellView.model.id) {
 			var h = allElements[i].attributes.size.height;
@@ -422,15 +577,24 @@ function moveSelectBox(cellView, width, height) {
 
 // Di chuyen cac duong ke trong table
 function moveTable(cellView, width, height) {
-	cellView.model.attr({ ".line1": {x1: 0.25 * width, y1: 0, x2: 0.25 * width, y2: height}});
-	cellView.model.attr({ ".line2": {x1: 0.5 * width, y1: 0, x2: 0.5 * width, y2: height}});
-	cellView.model.attr({ ".line3": {x1: 0.75 * width, y1: 0, x2: 0.75 * width, y2: height}});
-	cellView.model.attr({ ".line4": {x1: 0, y1: (1/3)*height, x2: width, y2: (1/3)*height}});
-	cellView.model.attr({ ".line5": {x1: 0, y1: (2/3)*height, x2: width, y2: (2/3)*height}});
-	cellView.model.attr({ ".text1": {x: (1/8) * width - 5, y: (1/6) * height + 5}});
-	cellView.model.attr({ ".text2": {x: (3/8) * width - 5, y: (1/6) * height + 5}});
-	cellView.model.attr({ ".text3": {x: (5/8) * width - 5, y: (1/6) * height + 5}});
-	cellView.model.attr({ ".text4": {x: (7/8) * width - 5, y: (1/6) * height + 5}});
+	var column = cellView.model.attributes.col;
+	var row = cellView.model.attributes.row;
+	for (var i = 0; i < column - 1; i++) {
+		var x = ((i + 1)/column) * width;
+		cellView.model.attr(".column" + i, {x1: x, y1: 0, x2: x, y2: height});
+	}
+	for (var i = 0; i < row - 1; i++) {
+		var y = ((i + 1)/row) * height;
+		cellView.model.attr(".row" + i, {x1: 0, y1: y, x2: width, y2: y});
+	}
+	var dem = 0;
+	for (var i = 0; i < row; i++) {
+		for (var j = 0; j < column; j++) {
+			cellView.$box.find(".inputCell" + dem).attr('style', 'width:' + width/column + 'px !important; height:' + height/row +'px !important;');
+			cellView.model.attr(".text" + dem, {x: (((j/column) * width) + 5), y: ((((i*2 + 1)/(row * 2)) * height) + 5)});
+			dem++;
+		}
+	}
 }
 
 // Tao mot button
@@ -438,8 +602,9 @@ function createButton(positionX, positionY) {
 	var button = new joint.shapes.ui.Button({
 		position: { x: positionX, y: positionY }
 	});
-	
 	graphUI.addCell(button);
+	backHistoryList.push(button);
+	backHistoryList.push("add");
 }
 
 // Tao mot div
@@ -448,6 +613,18 @@ function createDiv(positionX, positionY) {
 		position: { x: positionX, y: positionY }
 	});
 	graphUI.addCell(div);
+	backHistoryList.push(div);
+	backHistoryList.push("add");
+}
+
+//Tao mot form
+function createForm(positionX, positionY) {
+	var form = new joint.shapes.ui.Form({
+		position: { x: positionX, y: positionY }
+	});
+	graphUI.addCell(form);
+	backHistoryList.push(form);
+	backHistoryList.push("add");
 }
 
 // Tao mot textbox
@@ -456,6 +633,8 @@ function createTextBox(positionX, positionY) {
 		position: { x: positionX, y: positionY }
 	});
 	graphUI.addCell(textBox);
+	backHistoryList.push(textBox);
+	backHistoryList.push("add");
 }
 
 // Tao mot textbox
@@ -464,6 +643,8 @@ function createTextArea(positionX, positionY) {
 		position: { x: positionX, y: positionY }
 	});
 	graphUI.addCell(textArea);
+	backHistoryList.push(textArea);
+	backHistoryList.push("add");
 }
 
 // Tao mot label
@@ -472,6 +653,8 @@ function createLabel(positionX, positionY) {
 		position: { x: positionX, y: positionY }
 	});
 	graphUI.addCell(label);
+	backHistoryList.push(label);
+	backHistoryList.push("add");
 }
 
 // Tao mot radio checked
@@ -480,6 +663,8 @@ function createRadioChecked(positionX, positionY) {
 		position: { x: positionX, y: positionY }
 	});
 	graphUI.addCell(radioChecked);
+	backHistoryList.push(radioChecked);
+	backHistoryList.push("add");
 }
 
 // Tao mot radio
@@ -488,6 +673,8 @@ function createRadio(positionX, positionY) {
 		position: { x: positionX, y: positionY }
 	});
 	graphUI.addCell(radio);
+	backHistoryList.push(radio);
+	backHistoryList.push("add");
 }
 
 // Tao mot checkbox checked
@@ -496,14 +683,18 @@ function createCheckboxChecked(positionX, positionY) {
 		position: { x: positionX, y: positionY }
 	});
 	graphUI.addCell(checkboxChecked);
+	backHistoryList.push(checkboxChecked);
+	backHistoryList.push("add");
 }
-
+	
 // Tao mot checkbox
 function createCheckbox(positionX, positionY) {
 	var checkbox = new joint.shapes.ui.Checkbox({
 		position: { x: positionX, y: positionY }
 	});
 	graphUI.addCell(checkbox);
+	backHistoryList.push(checkbox);
+	backHistoryList.push("add");
 }
 
 //Tao mot selectbox
@@ -512,15 +703,41 @@ function createSelectbox(positionX, positionY) {
 		position: { x: positionX, y: positionY }
 	});
 	graphUI.addCell(selectbox);
+	backHistoryList.push(selectbox);
+	backHistoryList.push("add");
 }
+
+$("#modal-table-size-ui").on('shown.bs.modal', function() {
+	$("#input-col-ui").focus();
+})
 
 //Tao mot table
 function createTable(positionX, positionY) {
-	var table = new joint.shapes.ui.Table({
-		position: { x: positionX, y: positionY }
-	});
-	graphUI.addCell(table);
+//	$("#modal-table-size-ui").modal('show');
+	var col = $("#input-col-ui").val();
+	var row = $("#input-row-ui").val();
+	if (col == "" || row == "") {
+		setContentMessage("Không được bỏ trống");
+	} else if (col < 0 || row < 0) {
+		setContentMessage("Phải lớn hơn 0");
+	} if (col > 10 || row > 10) { 
+		setContentMessage("Phải nhỏ hơn 10");
+	}	
+	else {
+		createTableDynamic(row, col, 350, 100, "", "");
+		var table = new joint.shapes.ui.Table({
+			position: { x: positionX, y: positionY },
+		});
+		graphUI.addCell(table);
+		backHistoryList.push(table);
+		backHistoryList.push("add");
+		$("#modal-table-size-ui").modal('hide');
+		setContentMessage("Table đã được tạo");
+	}
 }
+$("#btn-table-size-ui").on('click', function(){
+	createTable(parseInt($("#input-hidden-x-position").val()), parseInt($("#input-hidden-y-position").val()));
+});
 
 // Su dung hien thi cac button xung quanh doi tuong dang chon
 function displayToolUI(cellView) {
@@ -529,18 +746,21 @@ function displayToolUI(cellView) {
 	var allCells = graphUI.getElements();
 	
 	for (var i = 0; i < allCells.length; i++) {
-		if (cellView.model.id == allCells[i].id) {
-			allCells[i].findView(paperUI).$box.find('.delete').show();
-			allCells[i].findView(paperUI).$box.find('.copy').show();
-			allCells[i].findView(paperUI).$box.find('.link').show();
-			allCells[i].findView(paperUI).$box.find('.glyphicon-fullscreen').parent().show();
-			allCells[i].findView(paperUI).$box.find('.delete').parent().css('border', '3px dashed #0769AD');
-		} else {
-			allCells[i].findView(paperUI).$box.find('.delete').hide();
-			allCells[i].findView(paperUI).$box.find('.copy').hide();
-			allCells[i].findView(paperUI).$box.find('.link').hide();
-			allCells[i].findView(paperUI).$box.find('.glyphicon-fullscreen').parent().hide();
-			allCells[i].findView(paperUI).$box.find('.delete').parent().css('border', 'none');
+		var element = allCells[i].findView(paperUI);
+		if (element.model.attributes.type != "selectView") {
+			if (cellView.model.id == allCells[i].id) {
+				element.$box.find('.delete').show();
+				element.$box.find('.copy').show();
+				element.$box.find('.link').show();
+				element.$box.find('.glyphicon-fullscreen').parent().show();
+				element.$box.find('.delete').parent().css('outline', '#0769AD dashed 2px');
+			} else {
+				element.$box.find('.delete').hide();
+				element.$box.find('.copy').hide();
+				element.$box.find('.link').hide();
+				element.$box.find('.glyphicon-fullscreen').parent().hide();
+				element.$box.find('.delete').parent().css('outline', 'none');
+			}
 		}
 	}
 }
@@ -550,29 +770,35 @@ function hideAllToolUI() {
 	// Lay tat ca cac doi tuong
 	var allCells = graphUI.getElements();
 	for (var i = 0; i < allCells.length; i++) {
-		allCells[i].findView(paperUI).$box.find('.delete').hide();
-		allCells[i].findView(paperUI).$box.find('.copy').hide();
-		allCells[i].findView(paperUI).$box.find('.link').hide();
-		allCells[i].findView(paperUI).$box.find('.glyphicon-fullscreen').parent().hide();
-		allCells[i].findView(paperUI).$box.find('.delete').parent().css('border', 'none');
+		var element = allCells[i].findView(paperUI);
+		if (element.model.attributes.type != "selectView") {
+			element.$box.find('.delete').hide();
+			element.$box.find('.copy').hide();
+			element.$box.find('.link').hide();
+			element.$box.find('.glyphicon-fullscreen').parent().hide();
+			element.$box.find('.delete').parent().css('outline', 'none');
+		}
 	}
 }
 
 function enableInput(cellView) {
 	cellView.$box.find("input").css('pointer-events', 'auto');
-	cellView.$box.find("input").focus();
+	cellView.$box.find("input:first").focus();
 	cellView.$box.find("textarea").css('pointer-events', 'auto');
-	cellView.$box.find("textarea").focus();
-	cellView.$box.find('.delete').parent().css('border', 'none');
+	cellView.$box.find("textarea:first").focus();
+	cellView.$box.find('.delete').parent().css('outline', 'none');
 }
 
 function disableInput() {
 	// Lay tat ca cac doi tuong
 	var allCells = graphUI.getElements();
 	for (var i = 0; i < allCells.length; i++) {
-		allCells[i].findView(paperUI).$box.find("input").css('pointer-events', 'none');
-		allCells[i].findView(paperUI).$box.find("textarea").css('pointer-events', 'none');
-		allCells[i].findView(paperUI).$box.find('.delete').parent().css('border', 'none');
+		var element = allCells[i].findView(paperUI);
+		if (element.model.attributes.type != "selectView") {
+			element.$box.find("input").css('pointer-events', 'none');
+			element.$box.find("textarea").css('pointer-events', 'none');
+			element.$box.find('.delete').parent().css('outline', 'none');
+		}
 	}
 }
 
@@ -581,10 +807,10 @@ graphUI.on('change:position', function(cell) {
     var paperW = paperUI.options.width;
     var paperH = paperUI.options.height;
     var cellBbox = cell.getBBox();
-	if (cellBbox.origin().x <= 0 || cellBbox.origin().y <= 0
+	if (cellBbox.origin().x <= 0 || cellBbox.origin().y <= 0 || cellBbox.topRight().x >= paperW
     	|| cellBbox.origin().x >= paperW - cell.attributes.size.width 
     	|| cellBbox.origin().y >= paperW - cell.attributes.size.height) {
-    		cell.set('position', cell.previous('position'));
+//			cell.set('position', cell.previous('position'));
     }
 });
 
@@ -602,30 +828,70 @@ $("#exportXMLUI").on('click', function() {
 
 $("#exportSVGUI").on('click', function() {
 
-	// Khong hien thi cac view khong can thiet khi xuat hinh
-//	toogleElementLinkView('none');
-
-	$("#modal-exportSVGUI").modal('hide');
-	
-	var w = paperUI.options.width;
-	var h = paperUI.options.height;
-	paperUI.fitToContent({padding: 5});
-	
-	var svg = paperUI.svg;
-    var serializer = new XMLSerializer();
-    var svgXML = serializer.serializeToString(svg);
-	
-	var pom = document.createElement('a');
-    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' 
-    	+ encodeURIComponent(svgXML));
-    pom.setAttribute('download', $("#nameFileSVGUI").val() + '.svg');
-    pom.click();
-    
-    paperUI.setDimensions(w, h);
+	if ($("#nameFileSVGUI").val() != "") {
+		$("#modal-exportSVGUI").modal('hide');
+		
+		var w = paperUI.options.width;
+		var h = paperUI.options.height;
+		paperUI.fitToContent({padding: 5});
+		
+		var svg = paperUI.svg;
+		if ($('input[name="radioChooseTypeExportImage"]:checked').val() == "svg") {
+			var serializer = new XMLSerializer();
+		    var svgXML = serializer.serializeToString(svg);
+			var pom = document.createElement('a');
+		    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' 
+		    	+ encodeURIComponent(svgXML));
+		    pom.setAttribute('download', $("#nameFileSVGUI").val() + '.svg');
+		    pom.click();
+		} else {
+			saveSvgAsPng(svg, $("#nameFileSVG").val() + '.png');
+		}
+	    
+	    paperUI.setDimensions(w, h);
+	    setContentMessage("Xuất ảnh thành công");
+	} else {
+		setContentMessage("Xin vui lòng nhập tên tập tin");
+		$("#nameFileSVGUI").focus();
+	}
 });
+
 graphUI.on('change:position change:attrs change:size change:embeds change:parent', function(cellView) {
 	if (cellView.attributes.type != "selectView") {
 		setIconSaveUI('notsaved');
+		setContentMessage("Giao diện đã thay đổi");
+	}
+});
+
+$("#back-history-ui").on('click', function() {
+	if (backHistoryList.length) {
+		var action = backHistoryList.pop();
+		var cellView = backHistoryList.pop();
+		if (action == "add") {
+			fowardHistoryList.push(cellView);
+			fowardHistoryList.push('delete');
+			cellView.remove();
+		} else if (action == "delete") {
+			fowardHistoryList.push(cellView);
+			fowardHistoryList.push('add');
+			graphUI.addCell(cellView);
+		}
+	}
+});
+
+$("#foward-history-ui").on('click', function() {
+	if (fowardHistoryList.length) {
+		var action = fowardHistoryList.pop();
+		var cellView = fowardHistoryList.pop();
+		if (action == "add") {
+			backHistoryList.push(cellView);
+			backHistoryList.push('delete');
+			cellView.remove();
+		} else if (action == "delete") {
+			backHistoryList.push(cellView);
+			backHistoryList.push('add');
+			graphUI.addCell(cellView);
+		}
 	}
 });
 
@@ -653,12 +919,13 @@ $("#saveDiagramUI").on('click', function() {
 		paperUI.setDimensions(w, h);
 		$("#saveDiagramUI").prop("disabled", true);
 		$.ajax({
-			url : "/luanvan/diagramui/savediagramui",
+			url : "../diagramui/savediagramui",
 			method: "post",
 			data: "nameProject=" + $("#nameProject").val() + "&path=" + window.btoa(encodeURIComponent(JSON.stringify(graphUI)))
 				+ "&nameui=" + $("#name-ui-show").html() + "&image=" + image,
 			success: function() {
 				setIconSaveUI('saved');
+				setContentMessage("Giao diện đã lưu thành công");
 			},
 			error: function() {
 				alert("error");
@@ -669,36 +936,52 @@ $("#saveDiagramUI").on('click', function() {
 	}
 });
 
+function setContentMessage(content) {
+	$("#message-alert-for-user").html(content);
+	$("#message-alert-for-user").show();
+	$('#message-alert-for-user').delay(2000).fadeOut(0);
+}
+
 $("#new-design-ui").on('click', function() {
-	$("#input-nameUI").val("");
 	$("#modal-newUI").modal('show');
+	$('#modal-newUI').on('shown.bs.modal', function () {
+		$("#input-nameUI").val("");
+		$("#input-nameUI").focus();
+	})
 });
 
 $("#create-name-UI").on('click', function() {
-	$.ajax({
-		url: "/luanvan/diagramui/checknameui",
-		data: "nameProject=" + $("#nameProject").val() + "&nameui=" + $("#input-nameUI").val(),
-		success: function(result) {
-			if (result == "true") {
-				alert("Tên đã có");
-			} else {
-				$("#name-ui-show").html($("#input-nameUI").val());
-				$("#name-ui-show").show('fade');
-				$("#modal-newUI").modal('hide');
-				$("#a-rename-ui").show('fade');
-				graphUI.clear();
-				$("#saveDiagramUI").trigger('click');
+	if ($("#input-nameUI").val() != "") {
+		$.ajax({
+			url: "../diagramui/checknameui",
+			data: "nameProject=" + $("#nameProject").val() + "&nameui=" + $("#input-nameUI").val(),
+			success: function(result) {
+				if (result == "true") {
+					setContentMessage("Tên đã có");
+				} else {
+					setContentMessage("Đã tạo giao diện mới");
+					$("#name-ui-show").html($("#input-nameUI").val());
+					$("#name-ui-show").show('fade');
+					$("#modal-newUI").modal('hide');
+					$("#a-rename-ui").show('fade');
+					graphUI.clear();
+					$("#saveDiagramUI").trigger('click');
+				}
+			},
+			error: function() {
+				alert("Error");
 			}
-		},
-		error: function() {
-			alert("Error");
-		}
-	});
+		});
+	} else {
+		setContentMessage("Tên không được bỏ trống");
+		$("#input-nameUI").focus();
+	}
+	
 });
 
 $("#viewListUI").on("click", function() {
 	$.ajax({
-		url: "/luanvan/diagramui/viewlistui",
+		url: "../diagramui/viewlistui",
 		data: "nameProject=" + $("#nameProject").val(),
 		success: function(result) {
 			var object = $.parseJSON(result);
@@ -719,7 +1002,7 @@ $("#viewListUI").on("click", function() {
 				$(this).parent().parent().parent().hide("fade");
 				var nameui = $(this).attr("id");
 				$.ajax({
-					url: "/luanvan/diagramui/deleteui",
+					url: "../diagramui/deleteui",
 					data: "&nameProject=" + $("#nameProject").val() + "&nameui=" + nameui,
 					success: function(result) {
 						if ($("#name-ui-show").html() == nameui || $("#body-list-ui").html() == "") {
@@ -728,6 +1011,7 @@ $("#viewListUI").on("click", function() {
 							graphUI.clear();
 						}
 						setIconSave("saved");
+						setContentMessage("Đã xóa giao diện");
 					},
 					error: function() {
 						alert("error");
@@ -744,15 +1028,28 @@ $("#viewListUI").on("click", function() {
 				$("#a-rename-ui").show('fade');
 				var nameui = $(this).attr("id");
 				$.ajax({
-					url: "/luanvan/diagramui/loadui",
+					url: "../diagramui/loadui",
 					data: "&nameProject=" + $("#nameProject").val() + "&nameui=" + nameui,
 					success: function(result) {
 						graphUI.clear();
 						graphUI.fromJSON(JSON.parse(decodeURIComponent(window.atob(result))));
+						var elements = graphUI.getElements();
+						for (var i = 0; i < elements.length; i++) {
+							var attrs = elements[i].attributes;
+							if (attrs.type == "ui.Table") {
+								createTableDynamic(attrs.row, attrs.col, attrs.size.width, attrs.size.height, attrs.attrs.text, attrs.attrs.rect);
+								var table = new joint.shapes.ui.Table({
+									position: { x: attrs.position.x, y: attrs.position.y },
+								});
+								elements[i].remove();
+								graphUI.addCell(table);
+							}
+						}
 						$("#modal-listUI").modal('hide');
 						$("#name-ui-show").html(nameui);
 						$("#saveDiagramUI").prop("disabled", true);
 						$("#properties-design-ui").hide("fade");
+						setIconSaveUI("saved");
 					},
 					error: function() {
 						alert("error");
@@ -769,52 +1066,73 @@ $("#viewListUI").on("click", function() {
 });
 
 $("#btn-svgUI").on('click', function() {
-	$("#nameFileSVGUI").val("");
 	$("#modal-exportSVGUI").modal('show');
+	$('#modal-exportSVGUI').on('shown.bs.modal', function () {
+		$("#nameFileSVGUI").val("");
+		$("#nameFileSVGUI").focus();
+	})
 });
 
+$("#a-rename-ui").on('click', function() {
+	$("#input-rename-ui").focus();
+});
 $("#btn-rename-ui").on('click', function() {
 	var nameuiOld = $("#name-ui-show").html();
 	var nameuiNew = $("#input-rename-ui").val();
-	$.ajax({
-		url: "/luanvan/diagramui/checknameui",
-		data: "nameProject=" + $("#nameProject").val() + "&nameui=" + nameuiNew,
-		success: function(result) {
-			if (result == "true") {
-				alert("Tên đã có");
-			} else {
-				$.ajax({
-					url: "/luanvan/diagramui/renameui",
-					data: "&nameProject=" + $("#nameProject").val() + "&nameuiOld=" + nameuiOld + "&nameuiNew=" + nameuiNew,
-					success: function(result) {
-						$("#name-ui-show").html(nameuiNew);
-						$("#saveDiagramUI").trigger('click');
-						$("#modal-rename-ui").modal('hide');
-					},
-					error: function() {
-						alert("error");
-					}
-				});
+	if (nameuiNew != "") {
+		$.ajax({
+			url: "../diagramui/checknameui",
+			data: "nameProject=" + $("#nameProject").val() + "&nameui=" + nameuiNew,
+			success: function(result) {
+				if (result == "true") {
+					setContentMessage("Tên đã có");
+				} else {
+					$.ajax({
+						url: "../diagramui/renameui",
+						data: "&nameProject=" + $("#nameProject").val() + "&nameuiOld=" + nameuiOld + "&nameuiNew=" + nameuiNew,
+						success: function(result) {
+							$("#name-ui-show").html(nameuiNew);
+							$("#saveDiagramUI").trigger('click');
+							$("#modal-rename-ui").modal('hide');
+							setContentMessage("Tên giao diện đã thay đổi");
+						},
+						error: function() {
+							alert("error");
+						}
+					});
+				}
+			},
+			error: function() {
+				alert("Error");
 			}
-		},
-		error: function() {
-			alert("Error");
-		}
-	});
+		});
+	} else {
+		setContentMessage("Tên thay đổi không được bỏ trống");
+	}
 });
 
 $(document).keydown(function(event) {
 	if (event.keyCode == 46) {
 		for (var i = 0; i < listSelectView.length; i++) {
 			listSelectView[i].model.remove();
+			backHistoryList.push(listSelectView[i].model);
+			backHistoryList.push("delete");
 		}
+		$("#list-class-of-element").hide();
+		setContentMessage("Xóa thành công");
 	}
 	if (cellViewPointerDown) {
 		if (event.keyCode == 46) {
 			for (var i = 0; i < listSelectView.length; i++) {
 				listSelectView[i].model.remove();
+				backHistoryList.push(listSelectView[i].model);
+				backHistoryList.push("delete");
 			}
 			cellViewPointerDown.model.remove();
+			backHistoryList.push(cellViewPointerDown.model);
+			backHistoryList.push("delete");
+			$("#list-class-of-element").hide();
+			setContentMessage("Xóa thành công");
 		}
 		if (event.keyCode == 37) {
 			event.preventDefault();
@@ -836,6 +1154,23 @@ $(document).keydown(function(event) {
 			hasCtrlKey = true;
 		}
 	}
+	if (event.keyCode == 13) {
+		if ($("#modal-newUI").hasClass("in")) {
+			$("#create-name-UI").trigger('click');
+		}
+		if ($("#modal-table-size-ui").hasClass("in")) {
+			$("#btn-table-size-ui").trigger('click');
+		}
+		if ($("#modal-rename-ui").hasClass("in")) {
+			$("#btn-rename-ui").trigger('click');
+		}
+		if ($("#modal-assignUI").hasClass("in")) {
+			$("#btn-assignUI").trigger('click');
+		}
+		if ($("#modal-exportSVGUI").hasClass("in")) {
+			$("#exportSVGUI").trigger('click');
+		}
+	}
 });
 
 $("#assign-usecase-design-ui").on('click', function() {
@@ -843,7 +1178,7 @@ $("#assign-usecase-design-ui").on('click', function() {
 		$("#body-assignUI").html("Đang tải danh sách use-cases ...");
 		$("#modal-assignUI").modal("show");
 		$.ajax({
-			url: "/luanvan/diagramui/loaduiusecase",
+			url: "../diagramui/loaduiusecase",
 			data: {
 				nameProject : $("#nameProject").val(), nameui : $("#name-ui-show").html()
 			},
@@ -893,19 +1228,24 @@ $("#btn-assignUI").on('click', function() {
 			idArray += $(this).val() + "_";
 		}
 	});
-	$.ajax({
-		url: "/luanvan/diagramui/assignuiusecase",
-		type: "post",
-		data: {
-			usecaseIDs : idArray, nameProject : $("#nameProject").val(), nameui : $("#name-ui-show").html()
-		},
-		success: function(){
-			$("#modal-assignUI").modal("hide");
-		},
-		error: function() {
-			alert("Không thể gán usecase cho giao diện");
-		}
-	});
+	if (idArray != "") {
+		$.ajax({
+			url: "../diagramui/assignuiusecase",
+			type: "post",
+			data: {
+				usecaseIDs : idArray, nameProject : $("#nameProject").val(), nameui : $("#name-ui-show").html()
+			},
+			success: function(){
+				$("#modal-assignUI").modal("hide");
+				setContentMessage("Giao diện đã gán usecase");
+			},
+			error: function() {
+				alert("Không thể gán usecase cho giao diện");
+			}
+		});
+	} else {
+		$("#modal-assignUI").modal("hide");
+	}
 });
 
 //Begin drag drop element to paper
@@ -922,6 +1262,9 @@ function drop(ev) {
     if ($("#name-ui-show").html() != "") {
 	    var pos = getClickPosition(ev);
 	    var id = ev.dataTransfer.getData("id");
+	    if (id == "form-design-ui") {
+			createForm(pos.x, pos.y);
+		}
 	    if (id == "div-design-ui") {
 			createDiv(pos.x, pos.y);
 		}
@@ -953,7 +1296,9 @@ function drop(ev) {
 			createSelectbox(pos.x, pos.y);
 		}
 		if (id == "table-design-ui") {
-			createTable(pos.x, pos.y);
+			$("#input-hidden-x-position").val(pos.x);
+			$("#input-hidden-y-position").val(pos.y);
+			$("#modal-table-size-ui").modal('show');
 		}
     } else {
     	$("#modal-newUI").modal('show');
@@ -966,7 +1311,7 @@ $("#screenflow-ui").on('click', function() {
 	$("#screenflow-in-ui").html("");
 	$("#screenflow-out-ui").html("");
 	$.ajax({
-		url: "/luanvan/diagramui/viewlistui",
+		url: "../diagramui/viewlistui",
 		data: "nameProject=" + $("#nameProject").val(),
 		success: function(result) {
 			var object = $.parseJSON(result);
@@ -977,13 +1322,13 @@ $("#screenflow-ui").on('click', function() {
 					if (path.cells[j].type == "ui.Button") {
 						if (object.ui[i].name != $("#name-ui-show").html()) {
 							if (path.cells[j].connect.indexOf($("#name-ui-show").html()) != -1) {
-								var aTag = '<div class="form-group text-primary"><a href="/luanvan/diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + object.ui[i].name + '" target="_blank"> ' + object.ui[i].name + '</a></div>';
+								var aTag = '<div class="form-group text-primary"><a href="../diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + object.ui[i].name + '" target="_blank"> ' + object.ui[i].name + '</a></div>';
 								$("#screenflow-in-ui").append(aTag);
 							}
 						} else {
 							if (path.cells[j].connect.indexOf($("#name-ui-show").html()) == -1) {
 								for (var h = 0; h < path.cells[j].connect.length; h++) {
-									var aTag = '<div class="form-group text-success"><a href="/luanvan/diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + path.cells[j].connect[h] + '" target="_blank"> ' + path.cells[j].connect[h] + '</a></div>';
+									var aTag = '<div class="form-group text-success"><a href="../diagramui/viewdiagramui?nameProject=' + $("#nameProject").val() + '&nameUI=' + path.cells[j].connect[h] + '" target="_blank"> ' + path.cells[j].connect[h] + '</a></div>';
 									$("#screenflow-out-ui").append(aTag);
 								}
 							}
@@ -1008,3 +1353,55 @@ function setIconSaveUI(value) {
 		$("#saveDiagramUI").html("<i class='glyphicon glyphicon-floppy-remove'></i> Lưu");
 	}
 }
+
+function createDivContainer(x, y) {
+	var divContainer = new joint.shapes.ui.DivContainer({
+		position: {x : x, y : y}
+	});
+	graphUI.addCell(divContainer);
+}
+
+$("#exportXML").on('click', function() {
+	var x2js = new X2JS();
+	var xmlString = '<?xml version="1.0" encoding="UTF-8"?>';
+	xmlString += '<content>' + x2js.json2xml_str($.parseJSON(JSON.stringify(graphUI))) + '</content>';
+	var pom = document.createElement('a');
+    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' 
+    	+ encodeURIComponent(xmlString));
+    pom.setAttribute('download', 'ex.xml');
+    pom.click();
+});
+
+$("#exportHTML").on('click', function() {
+	var x2js = new X2JS();
+	var xmlString = '<?xml version="1.0" encoding="UTF-8"?>';
+	xmlString += '<content>' + x2js.json2xml_str($.parseJSON(JSON.stringify(graphUI))) + '</content>';
+	$.ajax({
+		url: "../ui/exportHTML",
+		data: {xml: xmlString},
+		success: function(result) {
+			var pom = document.createElement('a');
+		    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' 
+		    	+ encodeURIComponent(result));
+		    pom.setAttribute('download', 'ex.html');
+		    pom.click();
+		},
+		error: function() {
+			alert("Không thể sinh mã HTML");
+		}
+	})
+})
+
+/*
+ * Toggle element left side bar
+ */
+$(".toggle-element-view").on('click', function() {
+	$(this).parent().find('div.children-element-view').toggle('fade');
+	if ($(this).find('i').hasClass("glyphicon-chevron-up")) {
+		$(this).find('i').removeClass("glyphicon-chevron-up");
+		$(this).find('i').addClass("glyphicon-chevron-down");
+	} else {
+		$(this).find('i').removeClass("glyphicon-chevron-down");
+		$(this).find('i').addClass("glyphicon-chevron-up");
+	}
+});

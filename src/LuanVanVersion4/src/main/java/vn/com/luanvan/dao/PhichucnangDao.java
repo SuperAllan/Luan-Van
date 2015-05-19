@@ -9,7 +9,13 @@ public interface PhichucnangDao {
 	
 	void save(Phichucnang phichucnang);
 	
+	void update(Phichucnang phichucnang);
+	
 	List<Phichucnang> getListPhiChucNangByProjectID(int projectID);
 	
 	void deleteAll(int projectID);
+	
+	Phichucnang findByID(int id);
+	
+	Phichucnang fintByProjectID (int projectID, String motayeucau);
 }

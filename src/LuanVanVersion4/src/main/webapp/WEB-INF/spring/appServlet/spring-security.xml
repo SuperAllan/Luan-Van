@@ -26,6 +26,26 @@
 		<intercept-url pattern="/detailUsecase**" access="isAuthenticated()" />
 		<intercept-url pattern="/downloadDoc**" access="isAuthenticated()" />
 		<intercept-url pattern="/downloadExcel**" access="isAuthenticated()" />
+		<intercept-url pattern="/uploadImage**" access="isAuthenticated()" />
+		<intercept-url pattern="/uploadFile**" access="isAuthenticated()" />
+		<intercept-url pattern="/downloadFile**" access="isAuthenticated()" />
+		<intercept-url pattern="/deleteFile**" access="isAuthenticated()" />
+		<intercept-url pattern="/themNhomChucNang**" access="isAuthenticated()" />
+		<intercept-url pattern="/xoaNhomChucNang**" access="isAuthenticated()" />
+		<intercept-url pattern="/themChucNang**" access="isAuthenticated()" />
+		<intercept-url pattern="/xoaChucNang**" access="isAuthenticated()" />
+		<intercept-url pattern="/updatePhanLoai**" access="isAuthenticated()" />  
+		<intercept-url pattern="/updateMucDo**" access="isAuthenticated()" />
+		<intercept-url pattern="/updateGhiChu**" access="isAuthenticated()" />
+		<intercept-url pattern="/updatePhiChucNang**" access="isAuthenticated()" />
+		<intercept-url pattern="/updateChuyenDoiUsecase**" access="isAuthenticated()" />
+		<intercept-url pattern="/showDetailUsecase**" access="isAuthenticated()" />
+		<intercept-url pattern="/searchUsecase**" access="isAuthenticated()" />
+		<intercept-url pattern="/updateCauHoi**" access="isAuthenticated()" />
+		<intercept-url pattern="/showAllChucNang**" access="isAuthenticated()" />
+		<intercept-url pattern="/showPhiChucNang**" access="isAuthenticated()" />
+		<intercept-url pattern="/themPhiChucNang**" access="isAuthenticated()" />
+		<intercept-url pattern="/xoaPhiChucNang**" access="isAuthenticated()" />
 		<access-denied-handler error-page="/403" />
 		<form-login 
 		    login-page="/login" 
@@ -37,11 +57,11 @@
 		<logout invalidate-session="true" delete-cookies="JSESSIONID" logout-success-url="/welcome" />
 		
 		<session-management invalid-session-url="/welcome" >
-        	<concurrency-control max-sessions="5" expired-url="/welcome" />
+        	<concurrency-control max-sessions="100" expired-url="/welcome" />
     	</session-management>
     	
 	</http>
-
+	
 	<authentication-manager>
 		<authentication-provider user-service-ref="myUserDetailsService" >
 			<password-encoder hash="bcrypt" />

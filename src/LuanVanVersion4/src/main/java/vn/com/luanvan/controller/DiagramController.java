@@ -21,6 +21,7 @@ import vn.com.luanvan.dao.DiagramDao;
 import vn.com.luanvan.dao.DiagramUsecaseDao;
 import vn.com.luanvan.dao.FileUCDao;
 import vn.com.luanvan.dao.LoaiactorDao;
+import vn.com.luanvan.dao.NhomChucNangDao;
 import vn.com.luanvan.dao.NhomucDao;
 import vn.com.luanvan.dao.PhanloaiDao;
 import vn.com.luanvan.dao.ProjectDao;
@@ -90,6 +91,8 @@ public class DiagramController {
 	@Autowired
 	private FileUCDao fileUCDao;
 	
+	@Autowired
+	private NhomChucNangDao nhomChucNangDao;
 	
 	@RequestMapping(value = "/diagram/newdiagram")
 	public String newDiagram(Principal principal, Model model) {
@@ -105,6 +108,7 @@ public class DiagramController {
 		model.addAttribute("usecases", usecases);
 		model.addAttribute("bmts", bmtDao.getAll());
 		model.addAttribute("loaiactors", loaiactorDao.getAll());
+		model.addAttribute("nhomChucNang", nhomChucNangDao.getListNhomChucNang(project));
 		return "newdiagram";
 	}
 	
@@ -139,6 +143,7 @@ public class DiagramController {
 		model.addAttribute("usecases", usecases);
 		model.addAttribute("bmts", bmtDao.getAll());
 		model.addAttribute("loaiactors", loaiactorDao.getAll());
+		model.addAttribute("nhomChucNangs", nhomChucNangDao.getListNhomChucNang(project));
 		return "newdiagram";
 	}
 	
@@ -403,7 +408,6 @@ public class DiagramController {
 		usecase.setBmt(bmtDao.getBmtById(1));
 		usecase.setTinhtien(true);
 		usecase.setNameofuc(nameUsecase);
-		usecase.setProject(project);
 		if (!nhomucDao.hasNhomuc(nameDiagram, project.getProjectid())) {
 			Nhomuc nhomuc = new Nhomuc();
 			nhomuc.setProject(project);
@@ -555,7 +559,7 @@ public class DiagramController {
 		Actor actor = actorDao.getActorByID(Integer.parseInt(idActor));
 		Usecase uc = usecaseDao.getUsecaseByID(Integer.parseInt(idUsecase));
 		
-		if (phanLoaiDao.getPhanLoaibyUsecaseActor(uc.getUsecaseid(), actor.getActorid()) == null) {
+		if (null == phanLoaiDao.getPhanLoaibyUsecaseActor(uc.getUsecaseid(), actor.getActorid())) {
 			PhanloaiId plid = new PhanloaiId();
 			plid.setActorid(actor.getActorid());
 			plid.setUsecaseid(uc.getUsecaseid());

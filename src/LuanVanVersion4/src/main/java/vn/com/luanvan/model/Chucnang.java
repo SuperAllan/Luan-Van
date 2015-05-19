@@ -20,14 +20,14 @@ import javax.persistence.Table;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "chucnang", catalog = "luanvan")
+@Table(name = "chucnang")
 public class Chucnang implements java.io.Serializable {
 
 	private Integer mayeucau;
 	private Mucdo mucdo;
 	private Nhomchucnang nhomchucnang;
 	private Phanloaichucnang phanloaichucnang;
-	private Usecase usecase;
+	//private Usecase usecase;
 	private String motayeucau;
 	private String ghichu;
 
@@ -35,20 +35,20 @@ public class Chucnang implements java.io.Serializable {
 	}
 
 	public Chucnang(Mucdo mucdo, Nhomchucnang nhomchucnang,
-			Phanloaichucnang phanloaichucnang, Usecase usecase) {
+			Phanloaichucnang phanloaichucnang) {
 		this.mucdo = mucdo;
 		this.nhomchucnang = nhomchucnang;
 		this.phanloaichucnang = phanloaichucnang;
-		this.usecase = usecase;
+//		this.usecase = usecase;
 	}
 
 	public Chucnang(Mucdo mucdo, Nhomchucnang nhomchucnang,
 			Phanloaichucnang phanloaichucnang, 
-			Usecase usecase, String motayeucau, String ghichu) {
+			String motayeucau, String ghichu) {
 		this.mucdo = mucdo;
 		this.nhomchucnang = nhomchucnang;
 		this.phanloaichucnang = phanloaichucnang;
-		this.usecase = usecase;
+//		this.usecase = usecase;
 		this.motayeucau = motayeucau;
 		this.ghichu = ghichu;
 	}
@@ -94,15 +94,15 @@ public class Chucnang implements java.io.Serializable {
 		this.phanloaichucnang = phanloaichucnang;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "USECASEID")
-	public Usecase getUsecase() {
-		return this.usecase;
-	}
-
-	public void setUsecase(Usecase usecase) {
-		this.usecase = usecase;
-	}
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "USECASEID")
+//	public Usecase getUsecase() {
+//		return this.usecase;
+//	}
+//
+//	public void setUsecase(Usecase usecase) {
+//		this.usecase = usecase;
+//	}
 
 	@Column(name = "MOTAYEUCAU", length = 65535)
 	public String getMotayeucau() {

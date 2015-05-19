@@ -63,11 +63,11 @@
 <body onload='document.loginForm.username.focus();' style="background: #357ebd;">
 
 	<div id="title-login-again" class="col-md-12 text-center">
-		<span>Tài khoản hoặc mật khẩu của bạn không đúng, xin vui lòng đăng nhập lại phía dưới.</span>
+		<span>Xin đăng nhập vào hệ thống.</span>
 	</div>
 	<div id="form-login-again" class="col-md-4 col-md-offset-4">
 		<form name='loginForm' action="<c:url value='/j_spring_security_check' />" method='POST' id="formLogInAgain">
-			<legend>Đăng nhập</legend>
+			<h2 class="text-center">Đăng nhập</h2>
 			<div class="form-group">
 				<c:if test="${not empty error}">
 					<div class="error">${error}</div>

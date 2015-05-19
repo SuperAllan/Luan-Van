@@ -2,8 +2,10 @@ package vn.com.luanvan.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.Principal;
 import java.util.Date;
@@ -20,6 +22,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+
+
+
+
 
 
 
@@ -58,7 +65,7 @@ public class FileController{
 	private FileUCDao fileUCDao;
 	
 	/**
-	 * Hàm lưu trữ image vào database
+	 * Hàm lưu trữ image vào database.
 	 * @param request		Dùng để lấy biến truyền vào từ trang view
 	 * @param principal		Dùng để lấy tên username của người dùng
 	 * @return				redirect tới trang background 
@@ -72,7 +79,14 @@ public class FileController{
 		userDao.save(user);
 		return "redirect:/background";	
 	}
-	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param usecaseID	ID của usecase lấy từ trang view.
+	 * @param model		Dùng để lưu trữ biến trả về cho trang view.
+	 * @return			Trả về trang show-list-view.
+	 */
 	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public String uploadFile( MultipartHttpServletRequest request, HttpServletResponse response,
     		@RequestParam("usecaseID")String usecaseID, Model model){
@@ -119,7 +133,11 @@ public class FileController{
 		return "show-list-file";
     }
 	
-	
+	/**
+	 * Hàm kiểm tra Unicode
+	 * @param s		Dữ liệu vào kiều String.
+	 * @return		Trả về kiểu boolean (Chuỗi có chứa unicode trả về true và ngược lại).
+	 */
 	public static boolean isUnicode(String s) {
 		int length = s.length();
 		for (int i = 0; i < length; i++) {
@@ -130,40 +148,57 @@ public class FileController{
 		}
 		return false;
 	}
-	
+	/**
+	 * 
+	 * @param response
+	 * @param request
+	 * @throws UnsupportedEncodingException 
+	 */
 	@RequestMapping(value="/downloadFile", method = RequestMethod.GET)
-	public void downloadFile(HttpServletResponse response, HttpServletRequest request) throws IOException{
+	public String downloadFile(HttpServletResponse response, HttpServletRequest request) throws UnsupportedEncodingException{
 		//String locationSave = request.getSession().getServletContext().getRealPath("/") +File.separator+"resources"+File.separator+"files"+File.separator;
 		String rootPath = System.getProperty("catalina.home");
 		String locationSave = rootPath + File.separator + "fileUpload" + File.separator;
 		String fileid = request.getParameter("fileid");
 		FileUC fileUC = fileUCDao.findFileByID(Integer.parseInt(fileid));
 		File fileDownload = new File(locationSave+fileUC.getLink());
-		FileInputStream inputStream = new FileInputStream(fileDownload);
+		FileInputStream inputStream;
+		try {
+			inputStream = new FileInputStream(fileDownload);
+		} catch (FileNotFoundException e) {
+			return "404";
+		}
 		response.setCharacterEncoding("UTF-8");
-		response.setContentType(fileUC.getType());
+		//response.setContentType(fileUC.getType());
 	    response.setContentLength((int) fileDownload.length());
 	    if(isUnicode(fileUC.getName()) == true){
 	    	response.setHeader("Content-Disposition", "attachment; filename="+URLEncoder.encode(fileUC.getName(), "UTF-8"));
 	    }else{
 	    	response.setHeader("Content-Disposition", "attachment; filename="+fileUC.getName());
 	    }
-        
-        OutputStream outStream = response.getOutputStream();
-        
-        byte[] buffer = new byte[4096];
+	    
+	    byte[] buffer = new byte[4096];
         int bytesRead = -1;
- 
-        // write bytes read from the input stream into the output stream
-        while ((bytesRead = inputStream.read(buffer)) != -1) {
-            outStream.write(buffer, 0, bytesRead);
-        }
-        inputStream.close();
-        outStream.close();
+        
+        OutputStream outStream;
+		try {
+			outStream = response.getOutputStream();
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+			    outStream.write(buffer, 0, bytesRead);
+			}
+			inputStream.close();
+		    outStream.close();
+		} catch (IOException e) {
+			return "404";
+		}
+		return null;
 	}
-	
+	/**
+	 * @param response
+	 * @param request
+	 */
 	@RequestMapping(value="/deleteFile", method = RequestMethod.GET)
-	public void deleteFile(HttpServletResponse response, HttpServletRequest request) throws IOException{
+	public void deleteFile(HttpServletResponse response, HttpServletRequest request){
 		//String locationSave = request.getSession().getServletContext().getRealPath("/") +File.separator+"resources"+File.separator+"files"+File.separator;
 		String rootPath = System.getProperty("catalina.home");
 		String locationSave = rootPath + File.separator + "fileUpload" + File.separator;
@@ -173,8 +208,6 @@ public class FileController{
 		if(fileDelete.exists()){
 			fileDelete.delete();
 			fileUCDao.delete(fileUC);
-			System.out.print("delete ok");
 		}
-		
 	}
 }

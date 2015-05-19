@@ -17,6 +17,7 @@
 <link href="<c:url value="/resources/css/jointshapesumlcustom.css" />" rel="stylesheet">
 </head>
 <body>
+<div id="message-alert-for-user"></div>
 <input type="hidden" id="nameProject" value="${project.tenproject}" />
 <div id="path" style="display:none;">${path}</div>
 <div id="wrapper-diagram">
@@ -50,7 +51,7 @@
 						    <span class="caret"></span>
 						  </a>
 						  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-						    <li role="presentation"><a role="menuitem" tabindex="-1" href="/luanvan/background" style="color: #333 !important;" ><i class="mdi-action-assignment-ind"></i> Thông tin chung</a></li>
+						    <li role="presentation"><a role="menuitem" tabindex="-1" href="../background" style="color: #333 !important;" ><i class="mdi-action-assignment-ind"></i> Thông tin chung</a></li>
 						    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:formSubmit()" style="color: #333 !important;"><i class="mdi-action-settings-power"></i> Đăng xuất</a></li>
 						  </ul>
 						</div>
@@ -97,18 +98,31 @@
 					<a href="#modal-rename-diagram" data-toggle="modal" id="a-rename-diagram" style="display: none;">
 						<i class="glyphicon glyphicon-pencil"></i> Đổi tên
 					</a>
+					<a class="pull-right" id="fullscreen-diagram"><i class="glyphicon glyphicon-fullscreen"></i></a>
 				</div>
 				<div id="paper" ondrop="drop(event);" ondragover="allowDrop(event)"></div>
 			</div>
 			<div id="tool-diagram">
-				<div style="background: url('/luanvan/resources/img/gauze.png'); padding: 0 20px 0 20px; margin-bottom: 10px;"><strong>Tạo mới đối tượng</strong></div>
-				<div class="text-center">
-					<img id="create-new-actor" draggable="true" ondragstart="drag(event)" width="40" height="40"
-						src="<c:url value="/resources/img/actor.svg" />" alt="actor"/>
+				<div id="tool-element-diagram">
+					<div style="background: url('../resources/img/gauze.png'); padding: 0 20px 0 20px; margin-bottom: 10px;"><strong>Tạo mới đối tượng</strong></div>
+					<div class="text-center">
+						<img id="create-new-actor" draggable="true" ondragstart="drag(event)" width="40" height="40"
+							src="<c:url value="/resources/img/actor.svg" />" alt="actor"/>
+					</div>
+					<div class="text-center">
+						<img id="create-new-usecase" draggable="true" ondragstart="drag(event)" width="40" height="40"
+							src="<c:url value="/resources/img/usecase.svg" />" alt="usecase"/>
+					</div>
 				</div>
-				<div class="text-center">
-					<img id="create-new-usecase" draggable="true" ondragstart="drag(event)" width="40" height="40"
-						src="<c:url value="/resources/img/usecase.svg" />" alt="usecase"/>
+				<div id="hint-usecase-diagram">
+					<div style="background: url('../resources/img/gauze.png'); padding: 0 20px 0 20px; margin-bottom: 10px;">
+						<strong>Gợi ý chức năng</strong>
+					</div>
+					<c:forEach items="${nhomChucNangs}" var="nhomChucNang">
+						<c:forEach items="${nhomChucNang.chucnangs}" var="chucnang">
+							<div style="word-break: break-word;" draggable="true" ondragstart="drag(event)" id="create-hint-usecase">${chucnang.motayeucau}</div>
+						</c:forEach>
+					</c:forEach>
 				</div>
 			</div>
 		</div>
@@ -243,7 +257,7 @@
 				<h4 class="modal-title"><i class="glyphicon glyphicon-pencil"></i> Đổi tên sơ đồ</h4>
 			</div>
 			<div class="modal-body">
-				<input type="text" id="input-rename-diagram" placeholder="Nhập tên nhóm" class="form-control" autofocus/>
+				<input type="text" id="input-rename-diagram" placeholder="Nhập tên sơ đồ" class="form-control" autofocus/>
 			</div>
 			<div class="modal-footer">
 				<button type="submit" class="btn btn-block btn-info" id="btn-rename-diagram">Đổi tên</button>
@@ -271,25 +285,33 @@
 <!-- End modal list diagram -->
 
 <!-- Begin modal export image -->
-<form>
-	<div class="modal fade" id="modal-exportSVG">
-		<div class="modal-dialog modal-sm">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title"><i class="glyphicon glyphicon-picture"></i> Xuất ảnh định dạng SVG</h4>
+<div class="modal fade" id="modal-exportSVG">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title"><i class="glyphicon glyphicon-picture"></i> Xuất ảnh</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label class="checkbox-inline">
+						<input type="radio" name="radioChooseTypeExportImage" value="svg" checked> SVG
+					</label>
+					<label class="checkbox-inline">
+						<input type="radio" name="radioChooseTypeExportImage" value="png"> PNG
+					</label>
 				</div>
-				<div class="modal-body">
-					<input type="text" id="nameFileSVG" placeholder="Nhập tên file cần lưu" class="form-control" autofocus/>
+				<div class="form-group">
+					<input type="text" id="nameFileSVG" placeholder="Nhập tên tập tin" class="form-control" autofocus/>
 				</div>
-				<div class="modal-footer">
-					<!-- <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button> -->
-					<button type="button" class="btn btn-block btn-info" id="exportSVG">Xuất ảnh</button>
-				</div>
+			</div>
+			<div class="modal-footer">
+				<!-- <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button> -->
+				<button type="button" class="btn btn-block btn-info" id="exportSVG">Xuất ảnh</button>
 			</div>
 		</div>
 	</div>
-</form>
+</div>
 <!-- End modal export image -->
 
 <!-- Begin modal delete actor and usecase -->
@@ -320,6 +342,7 @@
 <script src="<c:url value="/resources/js/joint.nojquery.min.js" />" ></script>
 <script src="<c:url value="/resources/js/jointshapesumlcustom.js"/>"></script>
 <script src="<c:url value="/resources/js/xml2json.js" />" ></script>
+<script src="<c:url value="/resources/js/saveSvgAsPng.js" />" ></script>
 <script src="<c:url value="/resources/js/global.js" />" ></script>
 <script src="<c:url value="/resources/js/diagram.js" />" ></script>
 

@@ -5,6 +5,7 @@
 
 <html>
 <head>
+
 <style>
 	.list-group .list-group-item:after {
   display: table;
@@ -60,5 +61,4 @@
 <%@ include file="/WEB-INF/views/footer.jsp" %>
 <script src="<c:url value="/resources/js/detail-usecase.js" />"></script>
 </body>
-
 </html>

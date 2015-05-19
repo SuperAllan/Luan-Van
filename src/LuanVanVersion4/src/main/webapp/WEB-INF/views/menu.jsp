@@ -28,7 +28,7 @@
             $.material.init();
         });
     </script> 
-<nav class="navbar navbar-default navbar-fixed-top" style="margin-bottom: 0px; background: url('/luanvan/resources/img/bg-footer.jpg');">
+<nav class="navbar navbar-default navbar-fixed-top" style="margin-bottom: 0px; background: url('resources/img/bg-footer.jpg');">
   <div class="container">
     <div class="navbar-header">
 	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -37,7 +37,7 @@
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span>
 	      </button>
-	      <a class="navbar-brand icon-menu" href="/luanvan/"><i class="glyphicon glyphicon-home glyphicon-lg"></i></a>
+	      <a class="navbar-brand icon-menu" href="${contextPath}/"><i class="glyphicon glyphicon-home glyphicon-lg"></i></a>
     </div>
 	
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -53,133 +53,137 @@
 		
     <!-- alert dang ky thanh cong-->
     <c:if test="${not empty successRegister}">
-	  	<div class="alert alert-success text-center alert-menu message-custom" >
-			<button type="button" class="close pull-right" data-dismiss="alert" aria-hidden="true">&times;</button>
+	  	<div class="alert alert-success text-center message-custom" >
 			${successRegister}
 		</div>
 	 </c:if>
 	 
 	 <!-- alert dang ky bi loi-->
     <c:if test="${not empty errorRegister}">
-	  	<div class="alert alert-danger text-center alert-menu message-custom" >
-			<button type="button" class="close pull-right" data-dismiss="alert" aria-hidden="true">&times;</button>
+	  	<div class="alert alert-danger text-center message-custom" >
 			${errorRegister}
+		</div>
+	 </c:if>
+	 
+	  <!-- alert dang ky email khong ton tai-->
+    <c:if test="${not empty existEmail}">
+	  	<div class="alert alert-danger text-center message-custom" >
+			${existEmail}
+		</div>
+	 </c:if>
+	 
+	  <!-- alert dang ky tai khoan trung-->
+    <c:if test="${not empty strUser}">
+	  	<div class="alert alert-danger text-center message-custom" >
+			${strUser}
+		</div>
+	 </c:if>
+	 
+	  <!-- alert dang ky email da duoc su dung-->
+    <c:if test="${not empty strEmail}">
+	  	<div class="alert alert-danger text-center message-custom" >
+			${strEmail}
 		</div>
 	 </c:if>
 	 
 	  <!-- alert gui email thanh cong-->
     <c:if test="${not empty successSendMail}">
-	  	<div class="alert alert-success text-center alert-menu message-custom" >
-			<button type="button" class="close pull-right" data-dismiss="alert" aria-hidden="true">&times;</button>
+	  	<div class="alert alert-success text-center message-custom" >
 			${successSendMail}
 		</div>
 	 </c:if>
 	 
     <!-- alert tao du an -->
-    <c:if test="${not empty success}">
-	  	<div class="alert alert-success text-center alert-menu message-custom" >
-			<button type="button" class="close pull-right" data-dismiss="alert" aria-hidden="true">&times;</button>
-			${success}
+    <c:if test="${not empty successCreateProject}">
+	  	<div class="alert alert-success text-center message-custom" >
+			${successCreateProject}
 		</div>
 	 </c:if>
 	 
-	 <c:if test="${not empty errorName}">
-	  	<div class="alert alert-danger text-center alert-menu message-custom">
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-			${errorName}
+	 <c:if test="${not empty errorNameProject}">
+	  	<div id="errorNameProject" class="alert alert-danger text-center message-custom">
+			${errorNameProject}
 		</div>
 	 </c:if>
 	 
    	<!-- alert change password -->
 	  <c:if test="${not empty successChangePassword}">	
-		<div id="successChangePassword" class="alert alert-success text-center alert-menu message-custom">
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<div id="successChangePassword" class="alert alert-success text-center message-custom">
 			${successChangePassword}
 		</div>
 	  </c:if>
 	  <!-- alert update information -->
 	  <c:if test="${not empty updateInforSuccess}">
-		  	<div id="updateInforSuccess" class="alert alert-success text-center alert-menu message-custom">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  	<div id="updateInforSuccess" class="alert alert-success text-center message-custom">
 				${updateInforSuccess}
 			</div>
 	  	</c:if>
 	  	
 	  	<!-- alert thanh cong thiet lap du an -->
 	  	<c:if test="${not empty updateTrangThaiSuccess}">
-		  	<div id="updateTrangThaiSuccess" class="alert alert-success text-center alert-menu message-custom">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  	<div id="updateTrangThaiSuccess" class="alert alert-success text-center message-custom">
 				${updateTrangThaiSuccess}
 			</div>
 	  	</c:if>
 	  	
 	  	<!-- alert error thiet lap du an -->
 	  	<c:if test="${not empty errorNameThietLap}">
-		  	<div id="errorNameThietLap" class="alert alert-danger text-center alert-menu message-custom-error">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  	<div id="errorNameThietLap" class="alert alert-danger text-center message-custom-error">
 				${errorNameThietLap}
 			</div>
 	  	</c:if>
 	  	
-	  	<!-- alert yeu cau chuc nang -->
-	  	<c:if test="${not empty UpdateChucNangSuccess}">
-		  	<div id="UpdateChucNangSuccess" class="alert alert-success alert-menu message-custom">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-				${UpdateChucNangSuccess}
+	  	<!-- alert error doi mat khau -->
+	  	<c:if test="${not empty errorOldPass}">
+		  	<div id="errorOldPass" class="alert alert-danger text-center message-custom-error">
+				${errorOldPass}
 			</div>
 	  	</c:if>
 	  	
 	  	<!-- alert yeu cau phi chuc nang -->
 	  	<c:if test="${not empty UpdatePhiChucNangSuccess}">
-		  	<div id="UpdatePhiChucNangSuccess" class="alert alert-success alert-menu message-custom">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  	<div id="UpdatePhiChucNangSuccess" class="alert alert-success message-custom">
 				${UpdatePhiChucNangSuccess}
 			</div>
 	  	</c:if>
 	  	
 	  	<!-- alert chuyen doi usecase-->
 	    <c:if test="${not empty UpdateChuyenDoiSuccess}">
-		  	<div id="UpdateChuyenDoiSuccess" class="alert alert-success text-center alert-menu message-custom" >
-				<button type="button" class="close pull-right" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  	<div id="UpdateChuyenDoiSuccess" class="alert alert-success text-center message-custom" >
 				${UpdateChuyenDoiSuccess}
 			</div>
 		 </c:if>
 	 
 	  	<!-- alert ky thuat cong nghe -->
 	  	<c:if test="${not empty updateKyThuatSuccess}">
-		  	<div id="updateKyThuatSuccess" class="alert alert-success alert-menu message-custom">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  	<div id="updateKyThuatSuccess" class="alert alert-success message-custom">
 				${updateKyThuatSuccess}
 			</div>
 	  	</c:if>
   		<!-- alert moi truong -->
 	  	<c:if test="${not empty updateMoiTruongSuccess}">
-		  	<div id="updateMoiTruongSuccess" class="alert alert-success alert-menu message-custom">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  	<div id="updateMoiTruongSuccess" class="alert alert-success message-custom">
 				${updateMoiTruongSuccess}
 			</div>
 	  	</c:if>
 	  	
 	  	<!-- alert bang luong -->
 	  	<c:if test="${not empty updateBangLuongSuccess}">
-		  	<div id="updateBangLuongSuccess" class="alert alert-success alert-menu message-custom">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  	<div id="updateBangLuongSuccess" class="alert alert-success message-custom">
 				${updateBangLuongSuccess}
 			</div>
 	  	</c:if>
 	  	
 	  	<!-- alert gia tri phan mem -->
 	  	<c:if test="${not empty updateGiaTriPhanMemSuccess}">
-		  	<div id="updateGiaTriPhanMemSuccess" class="alert alert-success alert-menu message-custom">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  	<div id="updateGiaTriPhanMemSuccess" class="alert alert-success message-custom">
 				${updateGiaTriPhanMemSuccess}
 			</div>
 	  	</c:if>
 	  	
 	  	<!-- alert gia tri phan mem -->
 	  	<c:if test="${not empty deleteProjectSuccess}">
-		  	<div id="deleteProjectSuccess" class="alert alert-success alert-menu message-custom">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  	<div id="deleteProjectSuccess" class="alert alert-success message-custom">
 				${deleteProjectSuccess}
 			</div>
 	  	</c:if>
@@ -242,12 +246,12 @@
 						    <c:if test="${not empty user.image}">
 						    	<img src="<c:url value="${user.image}" />" class="img-rounded" style="width: 20px; height: 20px;">
 						    </c:if>
-						    <span id="userNameInMenu">${pageContext.request.userPrincipal.name}</span>
+						    <span id="userNameInMenu" class="username">${pageContext.request.userPrincipal.name}</span>
 						    <span class="caret"></span>
 					    </a>
 					  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 					  
-					    <li role="presentation"><a role="menuitem" tabindex="-1" href="/luanvan/background" ><i class="mdi-action-assignment-ind"></i> Thông tin chung</a></li>
+					    <li role="presentation"><a role="menuitem" tabindex="-1" href="${contextPath}/background" ><i class="mdi-action-assignment-ind"></i> Thông tin chung</a></li>
 					    <li role="presentation"><a role="menuitem" tabindex="-1" onclick="formSubmitMenu()"><i class="mdi-action-settings-power"></i> Đăng xuất</a></li>
 					  </ul>
 					</li>
@@ -270,7 +274,7 @@
 			<span>THU THẬP YÊU CẦU PHẦN MỀM</span>
 		</div>
 		<div class="btn-download-home">
-			<a class="btn btn-info" href="/luanvan/resources/congvan/congvan.odt"><i class="mdi-file-cloud-download"></i> Công văn 2589/BTTTT-ƯDCNTT</a>
+			<a class="btn btn-info" href="${contextPath}/resources/congvan/congvan.odt"><i class="mdi-file-cloud-download"></i> Công văn 2589/BTTTT-ƯDCNTT</a>
 		</div>
 	</div>
 </div>

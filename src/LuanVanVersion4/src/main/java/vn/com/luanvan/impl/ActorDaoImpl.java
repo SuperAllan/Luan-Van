@@ -3,6 +3,8 @@ package vn.com.luanvan.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +14,29 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.com.luanvan.dao.ActorDao;
 import vn.com.luanvan.model.Actor;
 import vn.com.luanvan.model.Loaiactor;
-
 @Repository
 public class ActorDaoImpl implements ActorDao {
 
 	@Autowired
 	SessionFactory sessionFactory;
-	
+	@Autowired
+	DataSource dataSource;
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	public DataSource getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
 	@Transactional
 	public void add(Actor actor) {
 		sessionFactory.getCurrentSession().save(actor);

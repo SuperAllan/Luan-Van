@@ -1,5 +1,6 @@
 package vn.com.luanvan.impl;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,12 +65,13 @@ public class XepHangMoiTruongDaoImpl implements XepHangMoiTruongDao{
 
 	@Transactional
 	public float TongOnDinh(Integer projectid) {
+		DecimalFormat df = new DecimalFormat("#.##");
 		List<Xephangmoitruong> lists  = getListXepHangMoiTruong(projectid);
-		float KQTemp = 0;
+		float KQTemp = (float) 0;
 		for(Xephangmoitruong xh : lists){
 			KQTemp += xh.getOndinh();
 		}
-		return KQTemp;
+		return Float.parseFloat(df.format(KQTemp));
 	}
 
 	@Transactional

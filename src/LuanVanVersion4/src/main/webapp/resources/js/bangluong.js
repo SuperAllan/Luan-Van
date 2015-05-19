@@ -1,32 +1,36 @@
 $(document).ready(function(){
+	
+	$('#submitBangLuong').attr('disabled', 'disabled');
+	
 	$('#selectLuongNhaNuoc').change(function(){
 		if($(this).val() != "---"){
 			$('#luongNhaNuoc').val($(this).val());
 		}
 	});
 	
+	$('#selectLuongNhaNuoc').on('change', function(){
+		$('#submitBangLuong').removeAttr('disabled');
+	});
 	
-//	$('.ketQuaBaoHiem').each(function(index){
-//		var index = index +1;
-//		var as = ":nth-child("+index+")";
-//		var luongCoBan = $(this).parent().parent().find('tr'+as).find('.ketQuaLuongCoBan').text();
-//		var luongPhu = $(this).parent().parent().find('tr'+as).find('.ketQuaLuongPhu').text();
-//		var pcKhuVuc = $(this).parent().parent().find('tr'+as).find('.pcKhuVuc').val();
-//		$(this).text((parseInt(luongCoBan)+parseInt(luongPhu)+parseInt(pcKhuVuc))*0.23);
-//	});
-//	
-//	$('.ketQuaTong').each(function(index){
-//		var index = index +1;
-//		var as = ":nth-child("+index+")";
-//		var luongCoBan = $(this).parent().parent().find('tr'+as).find('.ketQuaLuongCoBan').text();
-//		var luongTangThem = $(this).parent().parent().find('tr'+as).find('.luongTangThem').val();
-//		var luongPhu = $(this).parent().parent().find('tr'+as).find('.ketQuaLuongPhu').text();
-//		var pcKhuVuc = $(this).parent().parent().find('tr'+as).find('.pcKhuVuc').val();
-//		var pcLuuDong = $(this).parent().parent().find('tr'+as).find('.pcLuuDong').val();
-//		var CPKG = $(this).parent().parent().find('tr'+as).find('.ketQuaCPKG').text();
-//		var baoHiem = $(this).parent().parent().find('tr'+as).find('.ketQuaBaoHiem').text();
-//		$(this).text((parseInt(luongCoBan)+parseInt(luongTangThem)+parseInt(luongPhu)+parseInt(pcKhuVuc)+parseInt(pcLuuDong)+parseInt(CPKG)+parseInt(baoHiem))*1);
-//	});
+	$('#luongNhaNuoc').on('change', function(){
+		$('#submitBangLuong').removeAttr('disabled');
+	});
+	
+	$("input[name='chooseBacLuong']").on('change', function(){
+		$('#submitBangLuong').removeAttr('disabled');
+	});
+	
+	$('.luongTangThem').on('change', function(){
+		$('#submitBangLuong').removeAttr('disabled');
+	}); 
+	
+	$('.pcKhuVuc').on('change', function(){
+		$('#submitBangLuong').removeAttr('disabled');
+	});
+	
+	$('.pcLuuDong').on('change', function(){
+		$('#submitBangLuong').removeAttr('disabled');
+	});
 	
 	//function format number
 	$('.formatKetQua').each(function(){

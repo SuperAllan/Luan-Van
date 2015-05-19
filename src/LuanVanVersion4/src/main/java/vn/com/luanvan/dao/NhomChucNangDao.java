@@ -14,5 +14,7 @@ public interface NhomChucNangDao{
 	
 	void update(Nhomchucnang nhom);
 	
-	Nhomchucnang findNhomChucNangByID( int id);
+	Nhomchucnang findNhomChucNangByID(int id);
+	
+	Nhomchucnang findNhomByProjectID(int projectid, String tennhom);
 }

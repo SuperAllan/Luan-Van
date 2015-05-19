@@ -1,7 +1,6 @@
 package vn.com.luanvan.controller;
 
 import java.security.Principal;
-import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -110,7 +109,7 @@ public class ProjectController {
 		String username = principal.getName();
 		Date date = new Date();
 		if(projectDao.checkProjectName(username ,projectName) == true){
-			redirectAttributes.addFlashAttribute("errorName", "Tên của dự án đã tồn tại.");
+			redirectAttributes.addFlashAttribute("errorNameProject", "Tên của dự án đã tồn tại.");
 			return "redirect:/background";
 		}else{
 			project.setTenproject(projectName);
@@ -124,10 +123,9 @@ public class ProjectController {
 			project.setUser(user);
 			project.setNgaytao(date);
 			projectDao.add(project);
-			redirectAttributes.addFlashAttribute("success", "Bạn đã tạo dự án thành công.");
+			redirectAttributes.addFlashAttribute("successCreateProject", "Tạo dự án thành công.");
 			return "redirect:/background";
 		}
-		
 	}
 	/**
 	 * 
@@ -136,18 +134,17 @@ public class ProjectController {
 	 * @return				Trả về trang detail-project.
 	 */
 	@RequestMapping(value="/detailProject", method = RequestMethod.GET)
-	public String detailProject( Principal principal, Model model, @ModelAttribute("name") String projectName){
-		//String projectName = (String) request.getParameter("name");
-		DecimalFormat df = new DecimalFormat("#.#");
+	public String detailProject(HttpServletRequest request, Principal principal, Model model, @ModelAttribute("name") String projectName){
 		String username = principal.getName();
 		Project project;
 		try{
-		project = projectDao.findProjectByName(username, projectName);
+			project = projectDao.findProjectByName(username, projectName);
 		}catch(Exception e){
 			return "404";
 		}
 		int projectid = project.getProjectid();
 		User user = userDao.findUserbyUserName(username);
+		
 		//Biến cho trang thiết kế giao diện
 		model.addAttribute("uis", uiDao.getUIByProject(projectid));
 		model.addAttribute("diagrams", diagramDao.getDiagramByProject(projectid));
@@ -165,23 +162,22 @@ public class ProjectController {
 		model.addAttribute("project", project);
 		model.addAttribute("user",user);
 		
-		//Biến cho trang vẽ use case
-		model.addAttribute("sodo", project.getSodo());
-		
 		//Biến cho trang Kỹ thuật công nghệ
 		model.addAttribute("listHeSoKyThuat", heSoKyThuatDao.getListHeSoKyThuat());
 		model.addAttribute("listXepHangKyThuat", xepHangKyThuatDao.getListXepHangKyThuat(projectid));
 		List<Float> ketQuaKT = xepHangKyThuatDao.TinhKetQua(projectid);
 		model.addAttribute("ketQuaFromKyThuat", ketQuaKT);
-		model.addAttribute("tongKetQuaFromKyThuat", xepHangKyThuatDao.TongKetqua(projectid));
+		float tongKetQuaFromKyThuat =  xepHangKyThuatDao.TongKetqua(projectid);
+		model.addAttribute("tongKetQuaFromKyThuat", tongKetQuaFromKyThuat);
 		
 		//Biến cho trang Môi trường
 		model.addAttribute("listHeSoMoiTruong", heSoMoiTruongDao.getListHeSoMoiTruong());
 		model.addAttribute("listXepHangMoiTruong", xepHangMoiTruongDao.getListXepHangMoiTruong(projectid));
 		List<Float> ketQuaMT = xepHangMoiTruongDao.TinhKetQuaMoiTruong(projectid);
 		model.addAttribute("ketQuaFromMoiTruong", ketQuaMT);
-		model.addAttribute("tongKetQuaFromMoiTruong", xepHangMoiTruongDao.TongKetQuaMoiTruong(projectid));
-		model.addAttribute("tongOnDinh", df.format(xepHangMoiTruongDao.TongOnDinh(projectid)));
+		float tongKetQuaFromMoiTruong = xepHangMoiTruongDao.TongKetQuaMoiTruong(projectid);
+		model.addAttribute("tongKetQuaFromMoiTruong", tongKetQuaFromMoiTruong);
+		model.addAttribute("tongOnDinh", xepHangMoiTruongDao.TongOnDinh(projectid));
 		model.addAttribute("tinhNoiSuy", xepHangMoiTruongDao.tinhNoiSuyLaoDong(projectid));
 		
 		//Biến cho trang Lương
@@ -205,14 +201,18 @@ public class ProjectController {
 		model.addAttribute("loaiactors", loaiactorDao.getAll());
 		model.addAttribute("soTruongHopSudung", usecaseDao.countBMT(projectid));
 		model.addAttribute("diemTungUsecase", usecaseDao.tinhDiemTungUsecase(projectid, bmtDao.getAll()));
-		model.addAttribute("tongDiemTungUsecase", usecaseDao.tongDiemTungUsecase(projectid, bmtDao.getAll()));
+		float tongDiemTungUsecase = usecaseDao.tongDiemTungUsecase(projectid, bmtDao.getAll());
+		model.addAttribute("tongDiemTungUsecase", tongDiemTungUsecase);
 		model.addAttribute("tongSoTruongHopSudung", usecaseDao.tongBMT(projectid));
 		
 		//Biến cho trang tác nhân
 		model.addAttribute("countActor", actorDao.countActor(projectid));
 		model.addAttribute("diemActor", actorDao.tinhDiemTungActor(projectid, loaiactorDao.getAll()));
-		model.addAttribute("tongDiemActor", actorDao.tinhTongDiem(projectid, loaiactorDao.getAll()));
-		
+		int tongDiemActor = actorDao.tinhTongDiem(projectid, loaiactorDao.getAll());
+		model.addAttribute("tongDiemActor", tongDiemActor);
+		//Biến cho trang giá trị phân mềm.
+		float AUCP = (float) ( (1.4 + ((-0.03) * tongKetQuaFromMoiTruong)) *(tongDiemActor + tongDiemTungUsecase) * ((tongKetQuaFromKyThuat * 0.01) + 0.6));
+		model.addAttribute("AUCP", AUCP);
 		return "detail-project";	
 	}
 	
@@ -225,27 +225,28 @@ public class ProjectController {
 	 * @return						redirect tới trang detailProject
 	 */
 	@RequestMapping(value = "/updateProject", method = RequestMethod.GET)
-	public String  updateProject(Project project, Principal principal, RedirectAttributes redirectAttributes){
+	public String  updateProject(HttpServletRequest request, Principal principal, RedirectAttributes redirectAttributes){
 		String projectName = request.getParameter("tenProject");
 		String projectNameOld = request.getParameter("tenProjectOld");
 		String description = request.getParameter("motaProject");
 		String username = principal.getName();
 		String trangthai = request.getParameter("radioTrangThai");
-		project = projectDao.findProjectByName(principal.getName(), projectNameOld);
+		Project project = projectDao.findProjectByName(principal.getName(), projectNameOld);
 		project.setTrangthai(Integer.parseInt(trangthai));
 		project.setMotaproject(description);
 		if(projectName.equals(projectNameOld) == false){
 			if(projectDao.checkProjectName(username, projectName) == false){
 				project.setTenproject(projectName);
+				redirectAttributes.addFlashAttribute("updateTrangThaiSuccess", "Cập nhật thành công!");
 			}else{
-				redirectAttributes.addAttribute("errorNameThietLap", "Tên dự án đã tồn tại.");
+				redirectAttributes.addFlashAttribute("errorNameThietLap", "Tên dự án đã tồn tại.");
 			}
+		}else{
+			redirectAttributes.addFlashAttribute("updateTrangThaiSuccess", "Cập nhật thành công!");
 		}
-		projectDao.save(project);
-		redirectAttributes.addFlashAttribute("updateTrangThaiSuccess", "Cập nhật thành công!");
 		redirectAttributes.addFlashAttribute("name", project.getTenproject());
+		projectDao.save(project);
 		return "redirect:/detailProject";
-		
 	}
 	/**
 	 * 
@@ -261,7 +262,7 @@ public class ProjectController {
 		String username = principal.getName();
 		project = projectDao.findProjectByName(username, nameProject);
 		projectDao.delete(project);
-		redirectAttributes.addFlashAttribute("deleteProjectSuccess", "Xóa dự an thành công!");
+		redirectAttributes.addFlashAttribute("deleteProjectSuccess", "Xóa dự án thành công!");
 		return "redirect:/background";
 	}
 	

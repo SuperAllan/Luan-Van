@@ -34,19 +34,35 @@ a {
 a:focus {
 	color: #0769AD;
 }
+/*
+.alert-menu{
+	display: inline-block; 
+	margin-top: 4px; 
+	margin-left: 200px; 
+	margin-bottom: 2px; 
+	padding: 15px 30px;
+}
+.alert-menu:nth-child(2){
+	margin-left: 20px;
+}
+*/
 
 .message-custom {
 	position: fixed;
-	top: 30vh;
-	left: 25vw;
+	top: 90vh;
+	left: 1vw;
 	z-index: 9999;
+	font-size: 20px;
+	padding: 15px 50px;
 }
 
 .message-custom-error {
 	position: fixed;
-	top: 23vh;
-	left: 25vw;
+	top: 90vh;
+	left: 1vw;
 	z-index: 9999;
+	font-size: 20px;
+	padding: 15px 50px;
 }
 
 .toggle-menu-detail-project {
@@ -60,7 +76,7 @@ a:focus {
 }
 
 footer {
-	background: url('/luanvan/resources/img/bg-footer.jpg');
+	background: url('../img/bg-footer.jpg');
 	color: #aaa;
 	height: 200px;
 	padding-top: 60px;
@@ -77,7 +93,7 @@ footer {
 }
 
 .content-home .panel-heading {
-	background: url('/luanvan/resources/img/dark-grey-tile.png');
+	background: url('../img/dark-grey-tile.png');
 	font-size: 20px;
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
@@ -85,7 +101,7 @@ footer {
 }
 
 .header-paragraph-home {
-	background: url('/luanvan/resources/img/gauze.png');
+	background: url('../img/gauze.png');
 	padding: 10px 10px;
 	font-size: 18px;
 	color: black;
@@ -112,7 +128,7 @@ footer {
 }
 
 .header-in-content-home {
-	background: url('/luanvan/resources/img/dark-grey-tile.png');
+	background: url('../img/dark-grey-tile.png');
 	font-size: 20px;
 	color: #aaa;
 	padding: 10px;
@@ -123,7 +139,7 @@ footer {
 }
 
 .text-icon-home {
-	background: url('/luanvan/resources/img/dark-grey-tile.png');
+	background: url('../img/dark-grey-tile.png');
 	color: white;
 	padding: 20px;
 	font-size: 18px;
@@ -151,17 +167,6 @@ footer {
 }
 .logo-home .btn-download-home a{
 	font-size: 20px;
-}
-
-.alert-menu{
-	display: inline-block; 
-	margin-top: 4px; 
-	margin-left: 200px; 
-	margin-bottom: 2px; 
-	padding: 10px 15px;
-}
-.alert-menu:nth-child(2){
-	margin-left: 20px;
 }
 
 .radio lable {

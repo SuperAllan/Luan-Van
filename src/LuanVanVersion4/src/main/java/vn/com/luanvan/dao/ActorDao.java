@@ -4,7 +4,6 @@ import java.util.List;
 
 import vn.com.luanvan.model.Actor;
 import vn.com.luanvan.model.Loaiactor;
-
 public interface ActorDao {
 	void add(Actor actor);
 	

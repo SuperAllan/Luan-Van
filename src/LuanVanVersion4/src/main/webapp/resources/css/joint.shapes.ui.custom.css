@@ -1,5 +1,6 @@
 .ui-button,
 .ui-div,
+.ui-form,
 .ui-textbox,
 .ui-textarea,
 .ui-label,
@@ -20,6 +21,8 @@
 .ui-button div,
 .ui-div button,
 .ui-div div,
+.ui-form button,
+.ui-form div,
 .ui-textarea button,
 .ui-textarea div,
 .ui-label button,
@@ -53,6 +56,8 @@
 .ui-button button.link,
 .ui-div button.delete,
 .ui-div button.copy,
+.ui-form button.delete,
+.ui-form button.copy,
 .ui-textbox button.delete,
 .ui-textbox button.copy,
 .ui-textarea button.delete,
@@ -87,6 +92,7 @@
 
 .ui-button button.delete,
 .ui-div button.delete,
+.ui-form button.delete,
 .ui-textbox button.delete,
 .ui-textarea button.delete,
 .ui-label button.delete,
@@ -101,6 +107,7 @@
 
 .ui-button button.copy,
 .ui-div button.copy,
+.ui-form button.copy,
 .ui-textbox button.copy,
 .ui-textarea button.copy,
 .ui-label button.copy,
@@ -119,6 +126,7 @@
 
 .ui-button button.delete:hover,
 .ui-div button.delete:hover,
+.ui-form button.delete:hover,
 .ui-textbox button.delete:hover,
 .ui-textarea button.delete:hover,
 .ui-label button.delete:hover,
@@ -151,6 +159,7 @@
    height: 100%;
 }
 .ui-div div,
+.ui-form div,
 .ui-button div,
 .ui-textarea div,
 .ui-textbox div,

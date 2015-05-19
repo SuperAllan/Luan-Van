@@ -38,7 +38,7 @@ public class UsecaseDaoImpl implements UsecaseDao {
 	
 	@Transactional
 	public void deleteByProject(int id) {
-		String sql = "delete from Usecase as u where u.project.projectid = :id";
+		String sql = "delete from Usecase as u where u.nhomuc.project.projectid = :id";
 		Query query = sessionFactory.getCurrentSession().createQuery(sql);
 		query.setParameter("id", id);
 		query.executeUpdate();
@@ -48,7 +48,7 @@ public class UsecaseDaoImpl implements UsecaseDao {
 	@Transactional
 	public List<Integer> countBMT(Integer projectid) {
 		List<Integer> count = new ArrayList<Integer>();
-		String hql = "select count(a) FROM Usecase as a where a.project.projectid= :id and a.tinhtien = 1 and a.bmt.bmtid = :bmtid";
+		String hql = "select count(a) FROM Usecase as a where a.nhomuc.project.projectid= :id and a.tinhtien = 1 and a.bmt.bmtid = :bmtid";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("id", projectid);
 		for(int i = 1; i <= 9; i++){
@@ -59,12 +59,12 @@ public class UsecaseDaoImpl implements UsecaseDao {
 	}
 
 	@Transactional
-	public List<Integer> tinhDiemTungUsecase(Integer projectid, List<Bmt> lists) {
+	public List<Float> tinhDiemTungUsecase(Integer projectid, List<Bmt> lists) {
 		List<Integer> count = countBMT(projectid);
-		List<Integer> ketQua = new ArrayList<Integer>();
-		int temp = 0;
+		List<Float> ketQua = new ArrayList<Float>();
+		float temp = 0;
 		for(int i = 0; i < count.size(); i++){
-			temp =  (int) (Integer.parseInt(String.valueOf(count.get(i))) * lists.get(i).getTrongso() * lists.get(i).getHesobmt());
+			temp = (Integer.parseInt(String.valueOf(count.get(i))) * lists.get(i).getTrongso() * lists.get(i).getHesobmt());
 			ketQua.add(temp);
 		}
 		return ketQua;
@@ -82,11 +82,11 @@ public class UsecaseDaoImpl implements UsecaseDao {
 	}
 
 	@Transactional
-	public Integer tongDiemTungUsecase(Integer projectid, List<Bmt> lists) {
-		List<Integer> diem = tinhDiemTungUsecase(projectid, lists);
-		int ketQua = 0;
+	public float tongDiemTungUsecase(Integer projectid, List<Bmt> lists) {
+		List<Float> diem = tinhDiemTungUsecase(projectid, lists);
+		float ketQua = 0;
 		for(int i = 0; i < diem.size(); i++){
-			ketQua +=  Integer.parseInt(String.valueOf(diem.get(i)));
+			ketQua += diem.get(i);
 		}
 		return ketQua;
 	}
@@ -94,7 +94,7 @@ public class UsecaseDaoImpl implements UsecaseDao {
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Usecase> getUsecaseByProject(int projectId) {
-		String sql = "from Usecase as b where b.project.projectid = :projectid";
+		String sql = "from Usecase as b where b.nhomuc.project.projectid = :projectid";
 		Query query = sessionFactory.getCurrentSession().createQuery(sql);
 		query.setParameter("projectid", projectId);
 		return query.list();
@@ -102,7 +102,7 @@ public class UsecaseDaoImpl implements UsecaseDao {
 	
 	@Transactional
 	public Usecase getUsecaseByName(String name, int projectID) {
-		String hql = "from Usecase as a where a.nameofuc = :name and a.project.projectid = :projectID";
+		String hql = "from Usecase as a where a.nameofuc = :name and a.nhomuc.project.projectid = :projectID";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("projectID", projectID);
 		query.setParameter("name", name);
@@ -126,7 +126,7 @@ public class UsecaseDaoImpl implements UsecaseDao {
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Usecase> getUsecaseNameDefault(int projectID) {
-		String hql = "from Usecase as a where a.nameofuc like 'Usecase:%' and a.project.projectid = :projectID";
+		String hql = "from Usecase as a where a.nameofuc like 'Usecase:%' and a.nhomuc.project.projectid = :projectID";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("projectID", projectID);
 		return query.list();
@@ -135,9 +135,9 @@ public class UsecaseDaoImpl implements UsecaseDao {
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Usecase> searchUsecase(String noidung, int projectID) {
-		String hql = "FROM Usecase as a WHERE a.project.projectid= :projectID and nameofuc like :noidung";
+		String hql = "FROM Usecase as a WHERE a.nhomuc.project.projectid= :projectID and a.nameofuc like :noidung order by nameofuc";
 		if(noidung == null || noidung.isEmpty() || noidung.equals("") || noidung.equals(" ")){
-			hql = "FROM Usecase as a WHERE a.project.projectid= :projectID";
+			hql = "FROM Usecase as a WHERE a.nhomuc.project.projectid= :projectID order by nameofuc";
 		}
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery(hql);
@@ -151,7 +151,7 @@ public class UsecaseDaoImpl implements UsecaseDao {
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Usecase> getUsecaseByProjectNhomUC(int projectId, int nhomUCID) {
-		String sql = "from Usecase as b where b.project.projectid = :projectid and b.nhomuc.nhomucid = :nhomUCID";
+		String sql = "from Usecase as b where b.nhomuc.project.projectid = :projectid and b.nhomuc.nhomucid = :nhomUCID";
 		Query query = sessionFactory.getCurrentSession().createQuery(sql);
 		query.setParameter("projectid", projectId);
 		query.setParameter("nhomUCID", nhomUCID);

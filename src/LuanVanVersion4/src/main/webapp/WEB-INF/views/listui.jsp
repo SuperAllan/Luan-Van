@@ -22,18 +22,23 @@
 	}
 $(document).ready(function(){
 	$('#scrollBarListUI').perfectScrollbar();
+	
+	$('.classLi').on('click',function(){
+		$('#searchUI').val('');
+		searchListUI('');
+	});
 });	
 </script>
 <!-- search -->
 <div class="panel-side-search">
 	<div>
-		<input style="border-radius: 4px; height: 34px;" type="search" id="input" class="form-control text-center"  title="Search" onkeyup="searchListUI(this.value)" placeholder="Nhập nội dung tìm kiếm">
+		<input style="border: solid 1px #e2e2e2; border-radius: 4px; height: 34px;" type="search" id="searchUI" class="form-control text-center"  title="Search" onkeyup="searchListUI(this.value)" placeholder="Nhập nội dung tìm kiếm">
 	</div> 
 </div>
 <!-- End search -->
 <div class="form-group" style="padding-top: 10px; font-weight: bold;">
 	<span>Tên các giao diện</span>  
-	<a href="/luanvan/diagram/newdiagramui?nameProject=${project.tenproject}" class="pull-right">
+	<a href="${contextPath}/diagram/newdiagramui?nameProject=${project.tenproject}" class="pull-right">
 		<i class="glyphicon glyphicon-plus-sign"></i> Tạo mới
 	</a>
 </div>
@@ -44,7 +49,7 @@ $(document).ready(function(){
 			<c:forEach items="${uis}" var="ui">
 				<tr>
 					<td class="UIforSearch">${ui.nameui}
-						<a class="label label-primary pull-right" href="/luanvan/diagramui/viewdiagramui?nameProject=${project.tenproject}&nameUI=${ui.nameui}">
+						<a class="label label-primary pull-right" href="${contextPath}/diagramui/viewdiagramui?nameProject=${project.tenproject}&nameUI=${ui.nameui}">
 							<i class="glyphicon glyphicon-pencil"></i>
 						</a>
 					</td>

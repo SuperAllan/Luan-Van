@@ -5,7 +5,5 @@
     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
      
     <bean id="excelView" class="vn.com.luanvan.form.ExcelBuilder" />
-    
-    <bean id="pdfView" class="vn.com.luanvan.form.PDFBuilder" />
-     
+
 </beans>

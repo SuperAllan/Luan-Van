@@ -1,6 +1,9 @@
 td{
 	vertical-align: middle !important;
 }
+#header-detailProject{
+	font-size: 16px;
+}
 
 #header-detailProject span {
 	color: #eee !important;

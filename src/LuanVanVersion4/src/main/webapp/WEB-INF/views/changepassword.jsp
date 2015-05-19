@@ -1,7 +1,7 @@
 <%@ page language="java" pageEncoding="utf8" contentType="text/html;charset=UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<form action="/luanvan/doimatkhau" method="POST" role="form" id="form-doi-mat-khau"> 
+<form action="${contextPath}/doimatkhau" method="POST" role="form" id="form-doi-mat-khau"> 
 		  <input type="hidden" name="username" id="username" class="form-control" value="${pageContext.request.userPrincipal.name}">
 		  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		<div class="form-group">
@@ -29,12 +29,12 @@
 	<div class="form-group">
 		<div class="input-group">
 		  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-		  <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" placeholder="Nhập lại mật khẩu"
+		  <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" placeholder="Nhập lại mật khẩu mới"
 		 	 data-bv-notempty="true" 
              data-bv-notempty-message="Mật khẩu phải khác rỗng." 
 		 	 data-bv-identical="true" 
              data-bv-identical-field="newPassword" 
-             data-bv-identical-message="Nhập lại mật khẩu chưa chính xác.">
+             data-bv-identical-message="Nhập lại mật khẩu mới chưa chính xác.">
 		</div>
 	</div>
 	

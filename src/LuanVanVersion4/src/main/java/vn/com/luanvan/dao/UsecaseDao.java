@@ -24,9 +24,9 @@ public interface UsecaseDao {
 	
 	Integer tongBMT(Integer projectid);
 	
-	List<Integer> tinhDiemTungUsecase(Integer projectid, List<Bmt> lists);
+	List<Float> tinhDiemTungUsecase(Integer projectid, List<Bmt> lists);
 	
-	Integer tongDiemTungUsecase(Integer projectid, List<Bmt> lists);
+	float tongDiemTungUsecase(Integer projectid, List<Bmt> lists);
 	
 	List<Usecase> getUsecaseByProject(int ProjectId);
 	

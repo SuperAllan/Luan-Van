@@ -11,7 +11,13 @@
 <div class="panel panel-info content-home">
 	<div class="panel-heading">Giới thiệu</div>
 	<div class="panel-body">
-		<div class="col-md-8">
+		<sec:authorize access="isAnonymous()">
+			<c:set var="classHome" value="col-md-8"/>
+		</sec:authorize>
+		<sec:authorize access="isAuthenticated()">
+			<c:set var="classHome" value="col-md-12"/>
+		</sec:authorize>
+		<div class="${classHome}">
 			<div class="header-paragraph-home">Công văn 2589/BTTTT-ƯDCNTT là gì?</div>
 			<div class="content-paragraph-home">
 				Bộ Thông tin và Truyền thông công bố Hướng dẫn xác định chi phí phát triển,
@@ -34,9 +40,9 @@
 				Các loại tập tin có thể tải lên hoặc tải xuống: pdf, docx, xls, tập tin ảnh (svg) ...
 			</div>
 		</div>
-	
+		<sec:authorize access="isAnonymous()">
 		<div class="form-register-home col-md-4">
-				<form action="/luanvan/dangky" method="POST" role="form" id="form-dang-ky">
+				<form action="${contextPath}/dangky?path=${pageContext}" method="POST" role="form" id="form-dang-ky">
 					<div class="form-group">
 						<div class="input-group">
 						  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -46,7 +52,10 @@
 						  		data-bv-stringlength="true"
 		              			data-bv-stringlength-min="6"
 		              			data-bv-stringlength-max="30"
-		              			data-bv-stringlength-message="Tài khoản phải ít nhất là 6 ký tự và nhiều nhất là 30 ký tự">
+		              			data-bv-stringlength-message="Tài khoản phải ít nhất là 6 ký tự và nhiều nhất là 30 ký tự"
+		              			data-bv-regexp="true"
+		              			data-bv-regexp-regexp="^[a-z0-9]+$"
+		              			data-bv-regexp-message="Tài khoản chỉ chấp nhận chữ và số." >
 						</div>
 						<div style="color: #a94442;font-size: 85%;padding-top: 5px;">
 						<c:if test="${not empty strUser}">
@@ -102,15 +111,16 @@
 		     <span style="color: black;">Sau khi đăng ký thành công. Xin vào Email để kích hoạt tài khoản. 
 			     <c:if test="${not empty userInActive}">
 			      	 Nếu không nhận được Email 
-				     <form action="/luanvan/sendMailAgain" method="POST" role="form" id="form-send-mail-again">
+				     <form action="${contextPath}/sendMailAgain" method="POST" role="form" id="form-send-mail-again">
 				     <input type="hidden" name="userInActiveForSendMail" value="${userInActive.username}">
 				     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 				   	 <a type="submit" onclick="formSubmit()">nhấn vào đây.</a>
 				   	 </form>
 			   	 </c:if>
 			 </span>
-	</div>
-	
+		</div>
+		</sec:authorize>
+		<!-- End form đăng ký -->
 		<div class="col-md-12">
 			<div class="header-in-content-home">Các tính năng</div>
 			<div class="col-md-12">

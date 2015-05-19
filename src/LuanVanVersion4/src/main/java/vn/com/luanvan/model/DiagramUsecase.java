@@ -18,7 +18,7 @@ import javax.persistence.Table;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "diagramusecase", catalog = "luanvan")
+@Table(name = "diagramusecase")
 public class DiagramUsecase implements java.io.Serializable {
 
 	private DiagramUsecaseId id;

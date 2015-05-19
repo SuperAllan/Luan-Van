@@ -12,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderBy;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -24,7 +25,7 @@ import javax.persistence.Table;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "nhomchucnang", catalog = "luanvan")
+@Table(name = "nhomchucnang")
 public class Nhomchucnang implements java.io.Serializable {
 
 	private Integer nhomid;
@@ -65,6 +66,7 @@ public class Nhomchucnang implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "nhomchucnang")
+	@OrderBy("motayeucau")
 	public Set<Chucnang> getChucnangs() {
 		return this.chucnangs;
 	}

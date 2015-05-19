@@ -10,7 +10,7 @@
  }
 </style>
 <h3 style="text-align: center;">BẢNG CHUYỂN ĐỔI YÊU CẦU CHỨC NĂNG SANG TRƯỜNG HỢP SỬ DỤNG (USE-CASE)</h3>
-<form action="/luanvan/updateChuyenDoiUsecase" role="form"  method="GET">
+<form action="${contextPath}/updateChuyenDoiUsecase" role="form"  method="GET">
 	<input type="hidden" name="tenProject" value="${project.tenproject}">
 	<div class="scrollBar" style="height: 400px; overflow: hidden; position: relative; width: 100%;">
 		<table class="table table-hover tableChuyenDoi">
@@ -27,10 +27,13 @@
 			</thead>
 			<c:forEach items="${listNhomUC}" var="listData">
 				<tbody>
-					 <tr>
+					 <tr style="background-color: #e2e2e2">
 					 	<td colspan="7">
 					 		<input type="hidden" name="listNhomUCId" value="${listData.nhomucid}" required="required">
-					 		<input type="text" name="listNhomUCName" class="form-control-bs nhomUCName" onblur="checkNhomUCName(this)" value="${listData.tennhom}" required="required">
+					 		<div>${listData.tennhom}</div>
+					 		<!--
+					 		<input type="text" name="listNhomUCName" class="form-control-bs nhomUCName" onblur="checkNhomUCName(this)" value="${listData.tennhom}" required="required" disabled="disabled">
+					 		-->
 					 	</td>
 					 </tr>
 					 	<c:forEach items="${listData.usecases}" var="listData2">
@@ -40,7 +43,10 @@
 						 	</td>
 						 	<td>
 							 	<input type="hidden" name="listUCId" value="${listData2.usecaseid}">
-							 	<textarea name="listUCName" rows="1" class="form-control" required >${listData2.nameofuc}</textarea>
+							 	<div>${listData2.nameofuc}</div>
+							 	<!-- 
+							 	<textarea name="listUCName" rows="1" class="form-control UCName" onblur="checkUCName(this)" required disabled="disabled">${listData2.nameofuc}</textarea>
+							 	 -->
 							</td>
 						 	<td>
 								<c:forEach items="${listData2.phanloais}" var="listData3">
@@ -57,7 +63,7 @@
 								</c:forEach>
 							</td>
 						 	<td>
-						 		<textarea class="form-control" rows="1" name="listMoTaUC">${listData2.motauc}</textarea>
+						 		<textarea class="form-control" rows="1" name="listMoTaUC" placeholder="Mô tả Use-case">${listData2.motauc}</textarea>
 						 	</td>
 						 	<td class="text-center">
 						 		<select class="form-control text-center" name="listTinhTien" style="text-align: center;">
@@ -93,7 +99,7 @@
 			</c:forEach>
 		</table>
 	</div>
-		<button type="submit" class="btn btn-primary" style="margin-top: 10px;" id="buttonChucNang" onclick="return checkData()">Cập nhật</button>
+		<button type="submit" class="btn btn-primary" style="margin-top: 10px;" id="submitChuyenDoi" onclick="return checkData()">Cập nhật</button>
 		
 </form>
 <script src="<c:url value="/resources/js/chuyendoi-usecase.js" />" ></script>

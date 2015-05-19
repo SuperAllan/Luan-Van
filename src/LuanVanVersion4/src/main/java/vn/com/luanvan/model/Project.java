@@ -29,7 +29,7 @@ import javax.persistence.TemporalType;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "project", catalog = "luanvan")
+@Table(name = "project")
 public class Project implements java.io.Serializable {
 
 	private Integer projectid;
@@ -38,14 +38,12 @@ public class Project implements java.io.Serializable {
 	private Date ngaytao;
 	private String tenproject;
 	private String motaproject;
-	private String sodo;
 	private int luongcoban;
 	private Trongsonoluc trongsonoluc;
 	private Luong luong;
 	private Set<Phichucnang> phichucnangs = new HashSet<Phichucnang>(0);
 	private Set<Xephangmoitruong> xephangmoitruong = new HashSet<Xephangmoitruong>(0);
 	private Set<Nhomchucnang> nhomchucnangs = new HashSet<Nhomchucnang>(0);
-	private Set<Usecase> usecases = new HashSet<Usecase>(0);
 	private Set<Nhomuc> nhomucs = new HashSet<Nhomuc>(0);
 	private Set<Actor> actors = new HashSet<Actor>(0);
 	private Set<Xephangkythuat> xephangkythuats = new HashSet<Xephangkythuat>(0);
@@ -67,14 +65,13 @@ public class Project implements java.io.Serializable {
 
 	public Project( User user, int trangthai, Date ngaytao, int luongcoban, Trongsonoluc trongsonoluc, Luong luong,
 			String tenproject, Set<Phichucnang> phichucnangs, Set<Xephangmoitruong> xephangnhoms,
-			Set<Usecase> usecases, Set<Actor> actors,Set<Xephangkythuat> xephangkythuats) {
+			Set<Actor> actors,Set<Xephangkythuat> xephangkythuats) {
 		this.user = user;
 		this.trangthai = trangthai;
 		this.ngaytao = ngaytao;
 		this.tenproject = tenproject;
 		this.phichucnangs = phichucnangs;
 		this.xephangmoitruong = xephangnhoms;
-		this.usecases = usecases;
 		this.xephangkythuats = xephangkythuats;
 		this.luongcoban = luongcoban;
 		this.trongsonoluc = trongsonoluc;
@@ -158,15 +155,6 @@ public class Project implements java.io.Serializable {
 		this.nhomchucnangs = chucnangs;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "project", cascade = CascadeType.REMOVE)
-	public Set<Usecase> getUsecases() {
-		return this.usecases;
-	}
-
-	public void setUsecases(Set<Usecase> usecases) {
-		this.usecases = usecases;
-	}
-	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "project", cascade = CascadeType.REMOVE)
 	public Set<Actor> getActors() {
 		return this.actors;
@@ -201,15 +189,6 @@ public class Project implements java.io.Serializable {
 
 	public void setMotaproject(String mota) {
 		this.motaproject = mota;
-	}
-	
-	@Column(name = "SODO")
-	public String getSodo() {
-		return this.sodo;
-	}
-
-	public void setSodo(String sodo) {
-		this.sodo = sodo;
 	}
 	
 	@Column(name = "LUONGCOBAN", nullable=true)

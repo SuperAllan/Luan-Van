@@ -26,11 +26,15 @@ public class PhichucnangDaoImpl implements PhichucnangDao{
 	public void save(Phichucnang phichucnang) {
 		sessionFactory.getCurrentSession().save(phichucnang);
 	}
-
+	
+	@Transactional
+	public void update(Phichucnang phichucnang) {
+		sessionFactory.getCurrentSession().update(phichucnang);
+	}
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Phichucnang> getListPhiChucNangByProjectID(int projectID) {
-		String hql = "FROM Phichucnang WHERE project.projectid= :ID";
+		String hql = "FROM Phichucnang WHERE project.projectid= :ID order by motayeucau";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("ID", projectID);
 		return query.list();
@@ -44,5 +48,22 @@ public class PhichucnangDaoImpl implements PhichucnangDao{
 		query.executeUpdate();
 		
 	}
+
+	@Transactional
+	public Phichucnang findByID(int id) {
+		return (Phichucnang) sessionFactory.getCurrentSession().get(Phichucnang.class, id);
+	}
+
+	@Transactional
+	public Phichucnang fintByProjectID(int projectID, String motayeucau) {
+		String hql = "FROM Phichucnang WHERE project.projectid= :ID and motayeucau= :mota";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("ID", projectID);
+		query.setParameter("mota", motayeucau);
+		return (Phichucnang) query.list().get(0);
+	}
+
+
+	
 
 }

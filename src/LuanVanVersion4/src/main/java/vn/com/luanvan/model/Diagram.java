@@ -17,7 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "diagram", catalog = "luanvan")
+@Table(name = "diagram")
 public class Diagram {
 	private int diagramid;
 	private String namediagram;

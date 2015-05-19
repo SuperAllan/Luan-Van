@@ -11,10 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellRangeAddress;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -269,8 +271,8 @@ public class ExcelBuilder extends AbstractExcelView{
     	sheet.setColumnWidth(2, 5300);
     	sheet.setColumnWidth(3, 5300);
     	sheet.setColumnWidth(4, 8700);
-    	sheet.setColumnWidth(5, 2100);
-    	sheet.setColumnWidth(6, 3200);
+    	sheet.setColumnWidth(5, 2200);
+    	sheet.setColumnWidth(6, 3500);
 	}
 	
 	@SuppressWarnings({ "static-access", "unchecked" })
@@ -430,8 +432,8 @@ public class ExcelBuilder extends AbstractExcelView{
     	
     	List<Object> listObject = documentExcel.getData();
     	List<Integer> countBMT = (List<Integer>) listObject.get(0);
-    	List<Integer> diemTungUsecase = (List<Integer>) listObject.get(1);
-    	Integer tongDiemUsecase = (Integer) listObject.get(2);
+    	List<Float> diemTungUsecase = (List<Float>) listObject.get(1);
+    	Float tongDiemUsecase =  (Float) listObject.get(2);
     	Integer tongBMT =  (Integer) listObject.get(3);
     	List<Bmt> listBMT = (List<Bmt>) listObject.get(4);
     	HSSFRow sheetRow6 = hssfSheet.createRow(6);
@@ -947,13 +949,13 @@ public class ExcelBuilder extends AbstractExcelView{
     	
     	List<Object> listObject = documentExcel.getData();
     	Integer tongActor = (Integer) listObject.get(0);
-    	Integer tongUsecase = (Integer) listObject.get(1);
+    	float tongUsecase =  (Float) listObject.get(1);
     	float tongKyThuat = (Float) listObject.get(2);
     	float tongMoiTruong = (Float) listObject.get(3);
     	float noiSuy = (Float) listObject.get(4);
     	Trongsonoluc trongSo = (Trongsonoluc) listObject.get(5);
     	Integer luongBinhQuan = (Integer) listObject.get(6);
-    	
+    	String dinhGia = (String) listObject.get(7);
     	
     	HSSFRow sheetRow7 = hssfSheet.createRow(7);
     	sheetRow7.createCell(0).setCellValue("Điểm actor (TAW)");
@@ -1020,6 +1022,7 @@ public class ExcelBuilder extends AbstractExcelView{
     	sheetRow15.createCell(1).setCellValue("H=người/giờ");
     	sheetRow15.getCell(1).setCellStyle(textCenter);
     	sheetRow15.createCell(2).setCellValue(luongBinhQuan);
+    	sheetRow15.getCell(2).setCellStyle(formatSeparator);
     	sheetRow15.createCell(3).setCellValue("");
     	
     	HSSFRow sheetRow16 = hssfSheet.createRow(16);
@@ -1027,25 +1030,30 @@ public class ExcelBuilder extends AbstractExcelView{
     	sheetRow16.getCell(0).setCellStyle(styleBold);
     	sheetRow16.createCell(1).setCellValue("G=1.4*E*P*H");
     	sheetRow16.getCell(1).setCellStyle(textCenter);
-    	sheetRow16.createCell(2).setCellValue(1.4*luongBinhQuan * noiSuy * (trongSo.getGiatri() * AUCP));
+    	sheetRow16.createCell(2).setCellValue(Integer.parseInt(dinhGia));
     	sheetRow16.getCell(2).setCellStyle(formatSeparator);
     	sheetRow16.createCell(3).setCellValue("");
     	
     	hssfSheet.setColumnWidth(0, 9900);
-		hssfSheet.setColumnWidth(1, 5200);
+		hssfSheet.setColumnWidth(1, 5200);	
 		hssfSheet.setColumnWidth(2, 3800);
 		hssfSheet.setColumnWidth(3, 11300);
 	}
 	
 	@SuppressWarnings({ "static-access", "unchecked" })
 	void createPhuLucVIII(DocumentExcel documentExcel, HSSFWorkbook workbook){
+		Font fontBold = workbook.createFont();
+        fontBold.setFontName("Arial");
+        fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		
 		CellStyle formatSeparator = workbook.createCellStyle();
 		formatSeparator.setDataFormat(HSSFDataFormat.getBuiltinFormat("#,##0"));
 		
+		CellStyle formatSeparatorBold = workbook.createCellStyle();
+		formatSeparatorBold.setDataFormat(HSSFDataFormat.getBuiltinFormat("#,##0"));
+		formatSeparatorBold.setFont(fontBold);
+		
 		CellStyle styleBold = workbook.createCellStyle();
-        Font fontBold = workbook.createFont();
-        fontBold.setFontName("Arial");
-        fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
         styleBold.setFont(fontBold);
         
 		CellStyle styleBlue = workbook.createCellStyle();
@@ -1065,6 +1073,10 @@ public class ExcelBuilder extends AbstractExcelView{
         textCenterBold.setAlignment(textCenterBold.ALIGN_CENTER);
         textCenterBold.setFont(fontBold);
 		
+        HSSFPalette palette = workbook.getCustomPalette();
+        palette.setColorAtIndex(HSSFColor.BLUE.index, (byte) 233, (byte) 227, (byte) 232);
+        palette.setColorAtIndex(HSSFColor.GREEN.index, (byte) 109, (byte) 255, (byte) 109);
+        
 		HSSFSheet hssfSheet = workbook.createSheet(documentExcel.getNameOfWorkSheet());
 		hssfSheet.addMergedRegion(new CellRangeAddress(1, 1, 1, 4));
     	HSSFRow row1 = hssfSheet.createRow(1);
@@ -1096,14 +1108,9 @@ public class ExcelBuilder extends AbstractExcelView{
     	sheetRow5.getCell(5).setCellStyle(styleBlue);
     	
     	List<Object> listObject = documentExcel.getData();
-    	Integer tongActor = (Integer) listObject.get(0);
-    	Integer tongUsecase = (Integer) listObject.get(1);
-    	float tongKyThuat = (Float) listObject.get(2);
-    	float tongMoiTruong = (Float) listObject.get(3);
-    	float noiSuy = (Float) listObject.get(4);
-    	Trongsonoluc trongSo = (Trongsonoluc) listObject.get(5);
-    	Integer luongBinhQuan = (Integer) listObject.get(6);
-    	int G = (int) (1.4*luongBinhQuan*noiSuy*(trongSo.getGiatri() * ((tongUsecase+tongActor) * (0.6+0.01*tongKyThuat) * (1.4+(-0.03*tongMoiTruong)))));
+    	String dinhGia = (String) listObject.get(0);
+    	//int G = (int) (1.4*luongBinhQuan*noiSuy*(trongSo.getGiatri() * ((tongUsecase+tongActor) * (0.6+0.01*tongKyThuat) * (1.4+(-0.03*tongMoiTruong)))));
+    	int G = Integer.parseInt(dinhGia);
     	int C = (int) (G*0.65);
     	int TL = (int) ((G+C)*0.06);
     	HSSFRow sheetRow6 = hssfSheet.createRow(6);
@@ -1158,7 +1165,7 @@ public class ExcelBuilder extends AbstractExcelView{
     	sheetRow10.createCell(1).setCellValue("Tổng cộng");
     	sheetRow10.getCell(1).setCellStyle(styleBold);
     	sheetRow10.createCell(3).setCellValue(G+C+TL);
-    	sheetRow10.getCell(3).setCellStyle(formatSeparator);
+    	sheetRow10.getCell(3).setCellStyle(formatSeparatorBold);
     	
 		hssfSheet.setColumnWidth(1, 6300);
 		hssfSheet.setColumnWidth(2, 4200);

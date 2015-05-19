@@ -2,7 +2,7 @@
 	background: url('../img/grid.gif');
 	position: relative;
 	height: 1000px;
-	width: 1500px;
+	width: 100%;
 	overflow: hidden;
 }
 
@@ -16,4 +16,34 @@
 #element-design-ui div {
 	text-align: center;
 	padding-top: 10px;
+}
+
+#message-alert-for-user {
+	position: fixed;
+	z-index: 10000;
+	background: #5cb85c;
+	top: 54px;
+	right: 10px;
+	display: none;
+	padding: 10px;
+	color: white;
+}
+
+#list-class-of-element {
+	position: fixed;
+	top: 100px;
+	width: 175px;
+	right: 0;
+	bottom: 0;
+	background: #F2f2f2;
+	padding: 10px;
+	z-index: 1000;
+	display: none;
+	overflow: auto;
+}
+
+#list-class-of-element div {
+	padding: 5px;
+	background: #FFFFCC;
+	margin-bottom: 10px;
 }

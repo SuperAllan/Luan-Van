@@ -14,33 +14,31 @@ tableChucNang tr td {
 	border: none;
 }
 </style>
-<h3 style="text-align: center;">BẢNG SẮP XẾP THỨ TỰ ƯU TIÊN CÁC YÊU CẦU 
+<h3 style="text-align: center;">CÁC YÊU CẦU 
 CHỨC NĂNG CỦA PHẦN MỀM</h3>
 
-
-<select class="form-control" id="selectPhanLoai" style="display: none;">
-<c:forEach var="list" items="${listPhanLoai}">
-<option value="${list.maloai}">${list.tenloai}</option>
-</c:forEach>
-</select>
-
-<select class="form-control" id="selectMucDo"  style="display: none;">
-<c:forEach var="list" items="${listMucDo}">
-<option value="${list.mucdoid}">${list.motamucdo}</option>
-</c:forEach>
-</select>
-
-	<input type="hidden" id="tenProjectForChucNang" name="tenProject" value="${project.tenproject}">
-	<div class="scrollBar" style="height: 500px; overflow: hidden; position: relative; width: 100%;">
+<!-- 
+	<select class="form-control" id="selectPhanLoai" style="display: none;">
+	<c:forEach var="list" items="${listPhanLoai}">
+	<option value="${list.maloai}">${list.tenloai}</option>
+	</c:forEach>
+	</select>
 	
+	<select class="form-control" id="selectMucDo"  style="display: none;">
+	<c:forEach var="list" items="${listMucDo}">
+	<option value="${list.mucdoid}">${list.motamucdo}</option>
+	</c:forEach>
+	</select>
+ -->
+	<div class="scrollBar" style="height: 500px; overflow: hidden; position: relative; width: 100%;">
 		<table class="table table-hover" id="tableChucNang">
 			<thead>
 				<tr>
-					<th>STT</th>
-					<th>Mô tả yêu cầu</th>
-					<th>Phân loại</th>
-					<th>Mức độ</th>
-					<th>Ghi chú</th>
+					<th class="text-center">STT</th>
+					<th class="text-center">Mô tả yêu cầu</th>
+					<th class="text-center">Phân loại</th>
+					<th class="text-center">Mức độ</th>
+					<th class="text-center">Ghi chú</th>
 					<th style="width: 240px;" class="text-center"><a class="text-success" onclick="themNhom();"><i class="glyphicon glyphicon-plus-sign" title="Thêm nhóm"></i> Thêm nhóm</a>
 					</th>
 				</tr>

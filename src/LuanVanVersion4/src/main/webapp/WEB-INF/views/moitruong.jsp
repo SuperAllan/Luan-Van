@@ -2,7 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 	<div class="text-center"><h3>BẢNG TÍNH TOÁN HỆ SỐ PHỨC TẠP VỀ MÔI TRƯỜNG</h3></div>
-<form action="/luanvan/updateHeSoMoiTruong" method="GET" role="form">
+<form action="${contextPath}/updateHeSoMoiTruong" method="GET" role="form">
 	<input type="hidden" name="projectNameForMoiTruong" value="${project.tenproject}">
 	<table class="table table-hover">
 		<thead>
@@ -39,7 +39,7 @@
 				</td>
 				<td class="text-left" style="border: none;">${list.motaheso}</td>
 				<td style="border: none;">${list.trongso}</td>
-				<td style="border: none;"><input type="number" class="form-control" name="giaTriXepHangMT" value="${listXepHangMoiTruong[status.index].giatrixephang}" min="0" max="5" style="width: 50px; text-align: center;" required="required"></td>
+				<td style="border: none;"><input type="number" class="form-control giaTriXepHangMT" name="giaTriXepHangMT" value="${listXepHangMoiTruong[status.index].giatrixephang}" min="0" max="5" style="text-align: center;" required="required"></td>
 				<td class="ketQuaFromMoiTruong" style="border: none;">${ketQuaFromMoiTruong[status.index]}</td>
 				<td style="border: none;">${listXepHangMoiTruong[status.index].ondinh}</td>
 			</tr>
@@ -76,5 +76,5 @@
 			</tr>	
 		</tbody>
 	</table>
-	<button type="submit" class="btn btn-primary text-center">Xác nhận</button>
+	<button type="submit" class="btn btn-primary text-center" id="submitFormMoiTruong">Cập nhật</button>
 </form>

@@ -13,7 +13,7 @@ import javax.persistence.Table;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "mucluongnhanuoc", catalog = "luanvan")
+@Table(name = "mucluongnhanuoc")
 public class Mucluongnhanuoc implements java.io.Serializable {
 
 	private int muc;

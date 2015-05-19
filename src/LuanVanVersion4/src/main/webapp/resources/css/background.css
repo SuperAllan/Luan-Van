@@ -10,7 +10,6 @@
 .description{
 	font-size: 12px;
 	word-wrap: break-word; 
-	width: 250px;
 }
 
 #anhdaidien {
@@ -33,4 +32,8 @@
 
 .hoverImg:hover {
 	opacity: 0.8;
+}
+
+#header-background {
+	font-size: 16px;
 }

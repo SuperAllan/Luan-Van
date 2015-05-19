@@ -22,7 +22,7 @@ import javax.persistence.Table;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "luong", catalog = "luanvan")
+@Table(name = "luong")
 public class Luong implements java.io.Serializable {
 
 	private Integer luongid;

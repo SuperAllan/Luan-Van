@@ -18,7 +18,7 @@ import javax.persistence.Table;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "phanloai", catalog = "luanvan")
+@Table(name = "phanloai")
 public class Phanloai implements java.io.Serializable {
 
 	private PhanloaiId id;

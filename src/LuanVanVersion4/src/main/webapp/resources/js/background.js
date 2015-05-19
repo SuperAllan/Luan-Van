@@ -1,19 +1,7 @@
-//show dialog upload file image
-function showDialog() {
-		$("#uploadImageId").click();
-	}
-
 $(document).ready(function(){
-	
+	$('#submitThongTinCaNhan').attr('disabled', 'disabled');
 
     $('#form-tao-du-an').bootstrapValidator();
-	
-	$(".projectName").each(function(){
-		if($(this).text().length > 20){
-		var formatTitle = $.trim($(this).text()).substring(0,20).split(" ").join(" ") + "...";
-		$(this).text(formatTitle);
-		}
-	});
 	
 	$(".description").each(function(){
 		if($(this).text().length > 75){
@@ -22,12 +10,33 @@ $(document).ready(function(){
 		}
 	});
 	
+	$('#buttonCreateProject').on('click', function(){
+		$('#projectName').focus();
+	});
+	
+	$('#myModal').on('shown.bs.modal', function () {
+		$("#projectName").focus();
+	})
+	
+	if($('#errorNameProject').text() != ''){
+		showMyModal();
+	}
 });
+
+function setSubmitThongTinCaNhan(){
+	$('#submitThongTinCaNhan').removeAttr('disabled');
+}
+
+//show dialog upload file image
+function showDialog() {
+		$("#uploadImageId").click();
+}
 
 // convert image to base64
 $("#uploadImageId").change(function(evt) {
 	var file = evt.target.files[0];
-	if (file) {
+	var name = file.name.split('.').pop().toLowerCase();
+	if (file && $.inArray(name, ['gif','png','jpg','jpeg']) != -1) {
 		var reader = new FileReader();
 		reader.readAsDataURL(file);
 		reader.onload = function(e) {
@@ -35,6 +44,8 @@ $("#uploadImageId").change(function(evt) {
 			$("#fileString").val(content);
 			$("#formUploadFile").submit();
 		}
+	}else{
+		alert('Dữ liệu chỉ chấp nhận các định dạng như: .gif, .png, .jpg, .jpeg');
 	}
 });
 
@@ -48,7 +59,7 @@ function checkSpecialCharacter(value){
 	for(var i = 0; i < value.length; i++){
 		console.log(value.charAt(i));
 		if(iChars.indexOf(value.charAt(i)) != -1){
-			$('#showCheckSpecialCharacter').text('Tên dự án chí chấp nhận chữ và số.');
+			$('#showCheckSpecialCharacter').text('Tên dự án chỉ chấp nhận chữ và số.');
 			$('#submitCreateProject').prop('disabled', true);
 			dem++;
 		}
@@ -58,7 +69,3 @@ function checkSpecialCharacter(value){
 		$('#submitCreateProject').prop('disabled', false);
 	}
 }
-
-
-
-

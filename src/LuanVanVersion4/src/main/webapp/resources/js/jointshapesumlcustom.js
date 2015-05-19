@@ -48,9 +48,9 @@ joint.shapes.uml.ActorView = joint.dia.ElementView.extend({
     template : [
         '<div class="uml-actor">',
             '<button class="delete">x</button>',
-            '<div class="relationship association"><img src="/luanvan/resources/img/association.png" /></div>',
-            '<div class="relationship generalization"><img src="/luanvan/resources/img/generalization.png" /></div>',
-            '<textarea class="name" onkeyup="textAreaAdjust(this)" wrap="off"></textarea>',
+            '<div class="relationship association"><img src="../resources/img/association.png" /></div>',
+            '<div class="relationship generalization"><img src="../resources/img/generalization.png" /></div>',
+            '<textarea class="name" onkeyup="textAreaAdjust(this)"></textarea>',
         '</div>'
     ].join(''),
 
@@ -143,11 +143,11 @@ joint.shapes.uml.UsecaseView = joint.dia.ElementView.extend({
 	template : [
 		'<div class="uml-usecase">',
 			'<button class="delete">x</button>',
-            '<div class="relationship association"><img src="/luanvan/resources/img/association.png" /></div>',
-            '<div class="relationship extend"><img src="/luanvan/resources/img/extend.png" /></div>',
-            '<div class="relationship include"><img src="/luanvan/resources/img/include.png" /></div>',
-            '<div class="relationship generalization"><img src="/luanvan/resources/img/generalization.png" /></div>',
-			'<textarea class="name" onkeyup="textAreaAdjust(this)" wrap="off"></textarea>',
+            '<div class="relationship association"><img src="../resources/img/association.png" /></div>',
+            '<div class="relationship extend"><img src="../resources/img/extend.png" /></div>',
+            '<div class="relationship include"><img src="../resources/img/include.png" /></div>',
+            '<div class="relationship generalization"><img src="../resources/img/generalization.png" /></div>',
+            '<textarea class="name" onkeyup="textAreaAdjust(this)"></textarea>',
 		'</div>'
 	].join(''),
 
@@ -264,3 +264,9 @@ joint.shapes.uml.Generalization = joint.dia.Link.extend({
         }
     }
 });
+
+
+function textAreaAdjust(o) {
+    o.style.height = "1px";
+    o.style.height = o.scrollHeight + "px";
+}

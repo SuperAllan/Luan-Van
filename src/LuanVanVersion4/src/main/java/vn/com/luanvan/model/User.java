@@ -19,7 +19,7 @@ import javax.persistence.Table;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "user", catalog = "luanvan")
+@Table(name = "user")
 public class User implements java.io.Serializable {
 
 	private String username;

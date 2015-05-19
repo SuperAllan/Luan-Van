@@ -5,9 +5,7 @@ $(document).ready(function() {
     $('#newPassword').change(function(){
     	$('#confirmPassword').val("");
     });
-});
 
-$(document).ready(function(){
 	if ($("#errorOldPass").text() != "") {
 		$(".classLi").each(function(){
 			$(this).removeClass("active");
@@ -18,9 +16,7 @@ $(document).ready(function(){
 		$("#matKhau").addClass("active");
 		$("#tabMatKhau").addClass("in active")
 	}
-});
-
-$(document).ready(function(){
+	
 	if ($("#successChangePassword").text() != "") {
 		$(".classLi").each(function(){
 			$(this).removeClass("active");

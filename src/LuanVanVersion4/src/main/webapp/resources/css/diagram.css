@@ -16,7 +16,7 @@ a {
 	right: 0;
 	bottom: 0;
 	height: 50px;
-	background: url('/luanvan/resources/img/bg-footer.jpg');
+	background: url('../img/bg-footer.jpg');
 	padding-right: 6px;
 	padding-left: 6px;
 }
@@ -101,7 +101,7 @@ a {
 #paper {
 	width: 1500px !important;
 	height: 1000px !important;
-	background: url('/luanvan/resources/img/grid.gif') !important;
+	background: url('../img/grid.gif') !important;
 	position: relative;
 }
 #tool-diagram {
@@ -113,8 +113,40 @@ a {
 	background: white;
 	overflow: auto;
 }
+#tool-element-diagram {
+	top: 0;
+	height: 25%;
+	right: 0;
+	left: 0;
+	position:absolute;
+	/* background: white; */
+}
+#hint-usecase-diagram {
+	top: 25%;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	/* background: red; */
+	position: absolute;
+	overflow: auto;
+}
+
+#hint-usecase-diagram div {
+	border-bottom: 1px solid #eee;
+	padding: 5px 20px 5px 30px;
+	background: white;
+	/* cursor: move; */
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+	-moz-user-select: none;     /* Firefox all */
+	-ms-user-select: none;      /* IE 10+ */
+	
+	/* No support for these yet, use at own risk */
+	-o-user-select: none;
+	user-select: none;
+}
+
 .toggle-element-view {
-	background: url('/luanvan/resources/img/gauze.png');
+	background: url('../img/gauze.png');
 	padding: 0 20px 0 20px;
 }
 .children-element-view div {
@@ -164,4 +196,15 @@ textarea {
 	margin-bottom: 10px;
 	padding-bottom: 10px;
 	padding-left: 12px;
+}
+
+#message-alert-for-user {
+	position: fixed;
+	z-index: 10000;
+	background: #5cb85c;
+	top: 54px;
+	right: 10px;
+	display: none;
+	padding: 10px;
+	color: white;
 }

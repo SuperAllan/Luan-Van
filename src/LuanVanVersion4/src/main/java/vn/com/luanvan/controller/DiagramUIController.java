@@ -1,9 +1,20 @@
 package vn.com.luanvan.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,6 +55,22 @@ public class DiagramUIController {
 	NhomucDao nhomucDao;
 	@Autowired
 	private HttpServletRequest request;
+	
+	@RequestMapping(value = "/ui/exportHTML")
+	public @ResponseBody String exportHTML(@RequestParam("xml") String xml, HttpServletResponse response) throws TransformerException, IOException {
+		String contextPath = request.getSession().getServletContext().getRealPath("");
+		String filePath = contextPath + File.separator + "resources" + File.separator + "ui" + File.separator;
+		File xslFile = new File(filePath + "htmltemplate.xsl");
+//		File xmlFile = new File(filePath + "htmltemplate.xml");
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Source xslDoc = new StreamSource(xslFile);
+        Source xmlDoc = new StreamSource(new StringReader(xml));
+
+        ByteArrayOutputStream htmlFile = new ByteArrayOutputStream();
+        Transformer transform = tf.newTransformer(xslDoc);
+        transform.transform(xmlDoc, new StreamResult(htmlFile));
+		return htmlFile.toString();
+	}
 	
 	@RequestMapping(value = "/diagram/newdiagramui")
 	public String newDiagram(Principal principal, Model model) {

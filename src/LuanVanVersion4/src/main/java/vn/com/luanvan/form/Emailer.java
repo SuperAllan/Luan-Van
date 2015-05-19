@@ -22,23 +22,16 @@ public class Emailer {
 
     public void send(String to, String subject, String content) throws Exception{
         Properties props = new Properties();
-
         props.put("mail.transport.protocol", "smtps");
         props.put("mail.smtps.host", SMTP_HOST_NAME);
         props.put("mail.smtps.auth", "true");
-        // props.put("mail.smtps.quitwait", "false");
-
         Session mailSession = Session.getDefaultInstance(props);
-        //mailSession.setDebug(true);
         Transport transport = mailSession.getTransport();
-
         MimeMessage message = new MimeMessage(mailSession);
         message.setSubject(subject, "UTF-8");
         message.setContent(content, "text/html; charset=UTF-8");
-
         message.addRecipient(Message.RecipientType.TO,
              new InternetAddress(to));
-
         transport.connect
           (SMTP_HOST_NAME, SMTP_HOST_PORT, SMTP_AUTH_USER, SMTP_AUTH_PWD);
 

@@ -18,7 +18,7 @@ import javax.persistence.Table;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "xephangmoitruong", catalog = "luanvan")
+@Table(name = "xephangmoitruong")
 public class Xephangmoitruong implements java.io.Serializable {
 
 	private XephangmoitruongId id;
@@ -38,7 +38,7 @@ public class Xephangmoitruong implements java.io.Serializable {
 	}
 
 	public Xephangmoitruong(XephangmoitruongId id, Hesomoitruong hesomoitruong,
-			Project project, Integer giatrixephang, Integer ondinh) {
+			Project project, Integer giatrixephang, float ondinh) {
 		this.id = id;
 		this.hesomoitruong = hesomoitruong;
 		this.project = project;

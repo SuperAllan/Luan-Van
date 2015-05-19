@@ -4,6 +4,6 @@
 <title>HTTP Status 404</title>
 </head>
 <body>
-	<h1>HTTP Status 404 - Page not found.</h1>
+	<h1>HTTP Status 404 - Page or file not found.</h1>
 </body>
 </html>

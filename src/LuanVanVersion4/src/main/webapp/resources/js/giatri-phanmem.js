@@ -1,5 +1,12 @@
 $(document).ready(function(){
-	$('#noLucE').text( $('#selectNoLuc').val() * parseFloat($('#AUCP').text()) );
+	
+	$('#submitGiaTriPhanMem').attr('disabled', 'disabled');
+	
+	$('#selectNoLuc').on('change', function(){
+		$('#submitGiaTriPhanMem').removeAttr('disabled');
+	});
+	
+	$('#noLucE').text( $('#selectNoLuc').val() * $('#AUCP').text());
 	
 	$('#chooseLuongFromBangLuong').text($("#CP1GioForBacLuong"+$('input[name=chooseBacLuong]:checked').val()).val());
 	
@@ -24,8 +31,9 @@ $(document).ready(function(){
 		$('#chiPhiPhanMem').text( parseInt(parseInt(dinhGia) + parseInt(chiPhiChung) + parseInt(thuThap)) );
 		
 		$('#tongCong').text($('#chiPhiPhanMem').text());
+		
 		$('.formatKetQua').each(function(){
-			var string = numeral($(this).text()).format("0,0.[00000]");
+			var string = numeral($(this).text()).format("0,0");
 			$(this).text(string);
 		});
 	});
@@ -54,13 +62,9 @@ $(document).ready(function(){
 		$('#tongCong').text($('#chiPhiPhanMem').text());
 		
 		$('.formatKetQua').each(function(){
-			var string = numeral($(this).text()).format("0,0.[00000]");
+			var string = numeral($(this).text()).format("0,0");
 			$(this).text(string);
 		});
 	});
 	
-	$('.formatKetQua').each(function(){
-		var string = numeral($(this).text()).format("0,0.[00000]");
-		$(this).text(string);
-	});
 });

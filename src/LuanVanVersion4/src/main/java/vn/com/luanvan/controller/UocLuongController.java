@@ -5,7 +5,9 @@ import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+
+
+
 
 
 
@@ -40,7 +46,6 @@ import vn.com.luanvan.model.GiatriluongId;
 import vn.com.luanvan.model.Hesomoitruong;
 import vn.com.luanvan.model.Mucdo;
 import vn.com.luanvan.model.Nhomchucnang;
-import vn.com.luanvan.model.Nhomuc;
 import vn.com.luanvan.model.Phanloaichucnang;
 import vn.com.luanvan.model.Phichucnang;
 import vn.com.luanvan.model.Project;
@@ -83,36 +88,17 @@ public class UocLuongController {
 	@Autowired
 	private HeSoMoiTruongDao heSoMoiTruongDao;
 	
-	
 	/**
+	 * 
 	 * @param request
-	 * @param nhoms				Lấy biến nhomChucNang từ trang view.
-	 * @param soLuong			Lấy biến soLuongChucNang từ trang view.
-	 * @param form				Dùng class FormChucNang tự định nghĩa ở vn.com.luanvan.form.
-	 * @param principal			Lấy username người dùng.
-	 * @param redirectAttributes	
-	 * @return					redirect tới trang detailProject.
-	 * @throws UnsupportedEncodingException 
+	 * @param principal
+	 * @param model
+	 * @return
 	 */
-	@RequestMapping(value="/themNhomChucNang", method = RequestMethod.GET)
-	public String themNhomChucNang(HttpServletRequest request, @RequestParam("parentID") Integer parentID,
-			Principal principal, RedirectAttributes redirectAttributes, Model model){
+	@RequestMapping(value="/showAllChucNang", method = RequestMethod.GET)
+	public String showAllChucNang(HttpServletRequest request, Principal principal, Model model){
 		String tenProject = request.getParameter("tenProject");
-		String nhoms = request.getParameter("nhomChucNang");
 		Project project = projectDao.findProjectByName(principal.getName(), tenProject);
-		Nhomchucnang nhom = new Nhomchucnang();
-		if(parentID != null){
-			nhom = nhomChucNangDao.findNhomChucNangByID(parentID);
-			nhom.setTennhom(nhoms);
-			nhomChucNangDao.update(nhom);
-		}else{
-			if(!nhoms.equals("null") && nhoms != null){
-			nhom.setTennhom(nhoms);
-			nhom.setProject(project);
-			nhomChucNangDao.save(nhom);
-			}
-		}
-		
 		List<Phanloaichucnang> listPhanLoai = phanLoaiChucNangDao.getListTenLoai();
 		List<Mucdo> listMucDo = mucDoDao.getListMucDo();
 		model.addAttribute("listPhanLoai", listPhanLoai);
@@ -121,15 +107,40 @@ public class UocLuongController {
 		return "show-chucnang";
 	}
 	
+	/**
+	 * 
+	 * @param request
+	 * @param parentID
+	 * @param principal
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/themNhomChucNang", method = RequestMethod.GET, produces="text/plain; charset=utf-8")
+	public @ResponseBody String themNhomChucNang(HttpServletRequest request, @RequestParam("parentID") Integer parentID,
+			@RequestParam("nhomChucNang") String nhoms, @RequestParam("tenProject") String tenProject, Principal principal, Model model){
+		Project project = projectDao.findProjectByName(principal.getName(), tenProject);
+		Nhomchucnang nhom = new Nhomchucnang();
+		if(parentID != null){
+			nhom = nhomChucNangDao.findNhomChucNangByID(parentID);
+			nhom.setTennhom(nhoms);
+			nhomChucNangDao.update(nhom);
+		}else{
+			nhom.setTennhom(nhoms);
+			nhom.setProject(project);
+			nhomChucNangDao.save(nhom);
+		}
+		nhom = nhomChucNangDao.findNhomByProjectID(project.getProjectid(), nhoms);
+		String str = "{\"nhomid\":"+nhom.getNhomid()+",\"tennhom\":\""+JSONObject.escape(nhom.getTennhom())+"\"}";
+		return str;
+	}
+	
 	@RequestMapping(value="/xoaNhomChucNang", method = RequestMethod.GET)
 	public @ResponseBody String xoaNhomChucNang(HttpServletRequest request, @RequestParam("nhomChucNangID") Integer nhomID,
 			Principal principal, RedirectAttributes redirectAttributes, Model model){
 		Nhomchucnang nhom = nhomChucNangDao.findNhomChucNangByID(nhomID);
 		String str =  "{\"chucnangs\":[ ";
 		if(nhom.getChucnangs().size() > 0){
-			
 			for(Chucnang chucs : nhom.getChucnangs()){
-				//str+="\"value\":"+chucs.getMayeucau()+",";
 				str+="{\"value\":" + chucs.getMayeucau() +"},";
 			}
 			StringBuilder b = new StringBuilder(str);
@@ -140,12 +151,20 @@ public class UocLuongController {
 		nhomChucNangDao.delete(nhom);
 		return str;
 	}
-	
-	@RequestMapping(value="/themChucNang", method = RequestMethod.GET)
+	/**
+	 * 
+	 * @param request
+	 * @param chucNang
+	 * @param nhomID
+	 * @param parentID
+	 * @param principal
+	 * @param redirectAttributes
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/themChucNang", method = RequestMethod.GET, produces="text/plain; charset=utf-8")
 	public String themChucNang(HttpServletRequest request, @RequestParam("chucNang") String chucNang, @RequestParam("nhomChucNangID") Integer nhomID,
 			@RequestParam("parentID") Integer parentID, Principal principal, RedirectAttributes redirectAttributes, Model model) {
-		String tenProject = request.getParameter("tenProject");
-		Project project = projectDao.findProjectByName(principal.getName(), tenProject);
 		Nhomchucnang nhom = nhomChucNangDao.findNhomChucNangByID(nhomID);
 		Chucnang chucs;
 		if(parentID != null){
@@ -164,8 +183,8 @@ public class UocLuongController {
 		List<Mucdo> listMucDo = mucDoDao.getListMucDo();
 		model.addAttribute("listPhanLoai", listPhanLoai);
 		model.addAttribute("listMucDo", listMucDo);
-		model.addAttribute("listNhomChucNang", nhomChucNangDao.getListNhomChucNang(project));
-		return "show-chucnang";
+		model.addAttribute("chucNang", chucNangDao.findByNhomID(nhom.getNhomid(), chucNang));
+		return "ajax-chucnang";
 	}
 	
 	@RequestMapping(value="/xoaChucNang", method = RequestMethod.GET)
@@ -203,25 +222,42 @@ public class UocLuongController {
 		chucNangDao.update(chucs);
 	}
 	
-	@RequestMapping(value="/updatePhiChucNang", method = RequestMethod.GET)
-	public String updatePhiChucNang(@RequestParam("listPhiChucNang")String[] listPhiChucNang, Principal principal, HttpServletRequest request,
-			RedirectAttributes redirectAttributes){
+	@RequestMapping(value="/showPhiChucNang", method = RequestMethod.GET)
+	public String showPhiChucNang(HttpServletRequest request, Principal principal, Model model) {
 		String tenProject = request.getParameter("tenProject");
 		Project project = projectDao.findProjectByName(principal.getName(), tenProject);
-		int projectID = project.getProjectid();
-		if(phichucnangDao.getListPhiChucNangByProjectID(projectID).size() > 0){
-			phichucnangDao.deleteAll(projectID);
+		model.addAttribute("listPhiChucNang", phichucnangDao.getListPhiChucNangByProjectID(project.getProjectid()));
+		return "show-phichucnang";
+	}
+	
+	@RequestMapping(value="/themPhiChucNang", method = RequestMethod.GET, produces="text/plain; charset=utf-8")
+	public @ResponseBody String themPhiChucNang(HttpServletRequest request, @RequestParam("phiChucNang") String phiChucNang,
+			@RequestParam("parentID") Integer parentID, Principal principal, HttpServletResponse response) {
+		String tenProject = request.getParameter("tenProject");
+		Project project = projectDao.findProjectByName(principal.getName(), tenProject);
+		Phichucnang chucs;
+		if(parentID != null){
+			chucs = phichucnangDao.findByID(parentID);
+			chucs.setMotayeucau(phiChucNang);
+			phichucnangDao.update(chucs);
+		}else{
+			chucs = new Phichucnang();
+			chucs.setMotayeucau(phiChucNang);
+			chucs.setProject(project);
+			phichucnangDao.save(chucs);
 		}
-		Phichucnang phiChucNang = new Phichucnang();
-		phiChucNang.setProject(project);
-		for(int i = 0; i < listPhiChucNang.length; i++){
-			phiChucNang.setMotayeucau(listPhiChucNang[i]);
-			phichucnangDao.save(phiChucNang);
-		}
-		redirectAttributes.addFlashAttribute("UpdatePhiChucNangSuccess", "Cập nhật phi chức năng thành công!");
-		redirectAttributes.addFlashAttribute("name", tenProject);
-		return "redirect:/detailProject";
-		
+		chucs = phichucnangDao.fintByProjectID(project.getProjectid(), phiChucNang);
+		String str = "{\"mayeucau\":"+chucs.getMayeucau()+",\"motayeucau\":\""+JSONObject.escape(chucs.getMotayeucau())+"\"}";
+		return str;
+	}
+	/**
+	 * 
+	 * @param phiChucNangID		ID của yêu cầu phi chức năng lấy từ view.
+	 */
+	@RequestMapping(value="/xoaPhiChucNang", method = RequestMethod.GET)
+	public @ResponseBody void xoaPhiChucNang(@RequestParam("phiChucNangID") Integer phiChucNangID) {
+		Phichucnang chucs = phichucnangDao.findByID(phiChucNangID);
+		phichucnangDao.delete(chucs);
 	}
 	
 	/**
@@ -238,19 +274,16 @@ public class UocLuongController {
 	 */
 	@RequestMapping(value="/updateChuyenDoiUsecase", method = RequestMethod.GET)
 	public String updateChuyenDoiUsecase(HttpServletRequest request, RedirectAttributes redirectAttributes, Principal principal,
-			@RequestParam("listNhomUCId") Integer[] listNhomUCId, @RequestParam("listNhomUCName") String[] listNhomUCName, @RequestParam("listUCId") Integer[] listUCId, 
-			@RequestParam("listUCName") String[] listUCName, @RequestParam("listMoTaUC") String[] listMoTaUC, @RequestParam("listBMT") Integer[] listBMT, @RequestParam("listTinhTien") Boolean[] listTinhTien) throws UnsupportedEncodingException{
+			@RequestParam("listUCId") Integer[] listUCId, @RequestParam("listMoTaUC") String[] listMoTaUC, 
+			@RequestParam("listBMT") Integer[] listBMT, @RequestParam("listTinhTien") Boolean[] listTinhTien){
 		String tenProject = request.getParameter("tenProject");
 		Project project = projectDao.findProjectByName(principal.getName(), tenProject);
-		for(int i = 0; i < listNhomUCId.length; i++){
-			Nhomuc nhomUC = nhomucDao.getNhomucById(listNhomUCId[i]);
-			nhomUC.setTennhom(listNhomUCName[i]);
-			nhomucDao.update(nhomUC);
-		}
+		int sizeMoTa = listMoTaUC.length;
 		for(int i = 0; i < listUCId.length; i++){
 			Usecase UC = usecaseDao.getUsecaseByID(listUCId[i]);
-			UC.setNameofuc(listUCName[i]);
-			UC.setMotauc(listMoTaUC[i]);
+			if(sizeMoTa > 0){
+				UC.setMotauc(listMoTaUC[i]);
+			}
 			UC.setTinhtien(listTinhTien[i]);
 			Bmt bmt = bmtDao.getBmtById(listBMT[i]);
 			UC.setBmt(bmt);
@@ -306,8 +339,9 @@ public class UocLuongController {
 	 */
 	@RequestMapping(value="/updateHeSoMoiTruong", method = RequestMethod.GET)
 	public String updateMoiTruong(@RequestParam("giaTriXepHangMT") Integer[] listGiaTri, 
-			Principal principal,@RequestParam("IDMoiTruong") Integer[] listIdHeSo, HttpServletRequest request, RedirectAttributes redirectAttributes) throws UnsupportedEncodingException{
-		
+			Model model,Principal principal,@RequestParam("IDMoiTruong") Integer[] listIdHeSo, HttpServletRequest request, RedirectAttributes redirectAttributes){
+		int giatri = 0;
+		float ketqua = 0;
 		String projectName = request.getParameter("projectNameForMoiTruong");
 		Project project = projectDao.findProjectByName(principal.getName(), projectName);
 		xepHangMoiTruongDao.delete(project.getProjectid());
@@ -318,11 +352,11 @@ public class UocLuongController {
 			xepHangId.setProjectid(project.getProjectid());
 			Xephangmoitruong xepHang = new Xephangmoitruong();
 			xepHang.setId(xepHangId);
-			int giatri = listGiaTri[i];
+			giatri = listGiaTri[i];
 			xepHang.setGiatrixephang(giatri);
-			float ketqua = listHSMT.get(i).getTrongso() * giatri;
+			ketqua = listHSMT.get(i).getTrongso() * giatri;
 			if(ketqua <= 0 ){
-				xepHang.setOndinh(0);
+				xepHang.setOndinh(0f);
 			}else if(ketqua > 0 && ketqua <= 1){
 				xepHang.setOndinh(0.05f);
 			}else if(ketqua > 1 && ketqua <= 2){
@@ -330,13 +364,12 @@ public class UocLuongController {
 			}else if(ketqua > 2 && ketqua <= 3){
 				xepHang.setOndinh(0.6f);	
 			}else{
-				xepHang.setOndinh(1);
+				xepHang.setOndinh(1f);
 			}
-			//xepHang.setOndinh();
 			xepHangMoiTruongDao.save(xepHang);
 		}
-		redirectAttributes.addFlashAttribute("updateMoiTruongSuccess","Cập nhật thành công!");
 		redirectAttributes.addFlashAttribute("name", project.getTenproject());
+		redirectAttributes.addFlashAttribute("updateMoiTruongSuccess","Cập nhật tác động môi trường thành công!");
 		return "redirect:/detailProject";
 	}
 	/**
@@ -374,7 +407,7 @@ public class UocLuongController {
 			giaTriLuongDao.save(giaTri);
 		}
 		projectDao.save(project);
-		redirectAttributes.addFlashAttribute("updateBangLuongSuccess","Cập nhật thành công!");
+		redirectAttributes.addFlashAttribute("updateBangLuongSuccess","Cập nhật bảng lương thành công!");
 		redirectAttributes.addFlashAttribute("name", project.getTenproject());
 		return "redirect:/detailProject";
 		
@@ -394,7 +427,7 @@ public class UocLuongController {
 		String trongso = request.getParameter("selectNoLuc");
 		project.setTrongsonoluc(trongsonolucDao.findByGiaTri(Double.parseDouble(trongso)));
 		projectDao.save(project);
-		redirectAttributes.addFlashAttribute("updateGiaTriPhanMemSuccess","Cập nhật thành công!");
+		redirectAttributes.addFlashAttribute("updateGiaTriPhanMemSuccess","Cập nhật giá trị phần mềm thành công!");
 		redirectAttributes.addFlashAttribute("name", project.getTenproject());
 		return "redirect:/detailProject";
 	}

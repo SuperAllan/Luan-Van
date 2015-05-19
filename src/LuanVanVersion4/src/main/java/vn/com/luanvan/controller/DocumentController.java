@@ -65,7 +65,6 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.apache.xmlbeans.XmlException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -135,14 +134,21 @@ public class DocumentController{
 		return false;
 	}
 	
-	
+	/**
+	 * Hàm xuất file document.
+	 * @param request		
+	 * @param response
+	 * @param principal		
+	 * @throws IOException
+	 */
 	@Autowired(required = false)
 	@RequestMapping(value="/downloadDoc", method = RequestMethod.GET)
 	@ResponseStatus(value=HttpStatus.OK)
-	public void downloadDoc(HttpServletRequest request, HttpServletResponse response, Principal principal) throws IOException, XmlException{
+	public void downloadDoc(HttpServletRequest request, HttpServletResponse response, Principal principal) throws IOException{
 		String path = request.getSession().getServletContext().getRealPath("/");
 		User user  = userDao.findUserbyUserName(principal.getName());
 		String projectName = request.getParameter("project");
+		String dinhGia = request.getParameter("dinhgia");
 		Project project = projectDao.findProjectByName(user.getUsername(), projectName);
 		int projectID = project.getProjectid();
 		String Times = "Times New Roman";
@@ -667,9 +673,9 @@ public class DocumentController{
 		}
 		List<Bmt> listBmt = bmtDao.getAll();
 		List<Integer> countBmt = usecaseDao.countBMT(projectID);
-		List<Integer> diemBmt = usecaseDao.tinhDiemTungUsecase(projectID, listBmt);
+		List<Float> diemBmt = usecaseDao.tinhDiemTungUsecase(projectID, listBmt);
 		int tongBMT = usecaseDao.tongBMT(projectID);
-		int tongDiemBMT = usecaseDao.tongDiemTungUsecase(projectID, listBmt);
+		float tongDiemBMT = usecaseDao.tongDiemTungUsecase(projectID, listBmt);
 		stt = 1;
 		for(int i = 0; i < listBmt.size(); i++){
 			if (i == 0 || i == 3 || i == 6){
@@ -842,6 +848,8 @@ public class DocumentController{
         rhKyThuat.setBold(true);
         rhKyThuat.setFontFamily(Times);
         rhKyThuat.setText(String.valueOf(ketQuaKyThuat));
+        int sizeListXepHang = listXepHang.size();
+        int sizeListKetQua = listKetQua.size();
         for(int i = 0; i < listKyThuat.size(); i++){
         	XWPFTableRow row = tableKyThuat.createRow();
     		XWPFParagraph paraKT = row.getCell(0).getParagraphs().get(0);
@@ -874,15 +882,23 @@ public class DocumentController{
             rhKT = paraKT.createRun();
             rhKT.setFontSize(13);
             rhKT.setFontFamily(Times);
-            rhKT.setText(String.valueOf(listXepHang.get(i).getGiatrixephang()));
-            
+            if(sizeListXepHang > 0){
+            	rhKT.setText(String.valueOf(listXepHang.get(i).getGiatrixephang()));
+            }else{
+            	rhKT.setText(String.valueOf(0));
+            }
             paraKT = row.getCell(4).getParagraphs().get(0);
     		paraKT.setAlignment(ParagraphAlignment.CENTER);
     		paraKT.setSpacingBefore(120);
             rhKT = paraKT.createRun();
             rhKT.setFontSize(13);
             rhKT.setFontFamily(Times);
-            rhKT.setText(String.valueOf(listKetQua.get(i)));
+            if(sizeListKetQua > 0){
+            	rhKT.setText(String.valueOf(listKetQua.get(i)));
+            }else{
+            	rhKT.setText(String.valueOf(0));
+            }
+           
             
         }
         //Tao bang ky thuat cong nghe
@@ -955,7 +971,8 @@ public class DocumentController{
 		rhMoiTruong.setBold(true);
 		rhMoiTruong.setFontFamily(Times);
 		rhMoiTruong.setText(String.valueOf(ketQuaMoiTruong));
- 		
+ 		int sizeListGiaTri = listGiaTri.size();
+ 		int sizeListKetQuaMT = listKetQuaMT.size();
  		for(int i = 0; i < listMoiTruong.size(); i++){
  			XWPFTableRow row = tableMoiTruong.createRow();
     		XWPFParagraph paraMT = row.getCell(0).getParagraphs().get(0);
@@ -980,8 +997,11 @@ public class DocumentController{
             rhMT = paraMT.createRun();
             rhMT.setFontSize(13);
             rhMT.setFontFamily(Times);
-            rhMT.setText(String.valueOf(listGiaTri.get(i).getGiatrixephang()));
-            
+            if(sizeListGiaTri > 0){
+            	rhMT.setText(String.valueOf(listGiaTri.get(i).getGiatrixephang()));
+            }else{
+            	rhMT.setText(String.valueOf(0));
+            }
             paraMT = row.getCell(3).getParagraphs().get(0);
     		paraMT.setAlignment(ParagraphAlignment.CENTER);
     		paraMT.setSpacingBefore(120);
@@ -996,15 +1016,23 @@ public class DocumentController{
             rhMT = paraMT.createRun();
             rhMT.setFontSize(13);
             rhMT.setFontFamily(Times);
-            rhMT.setText(String.valueOf(listKetQuaMT.get(i)));
-            
+            if(sizeListKetQuaMT > 0){
+            	rhMT.setText(String.valueOf(listKetQuaMT.get(i)));
+            }else{
+            	rhMT.setText(String.valueOf(0));
+            }
             paraMT = row.getCell(5).getParagraphs().get(0);
     		paraMT.setAlignment(ParagraphAlignment.CENTER);
     		paraMT.setSpacingBefore(120);
             rhMT = paraMT.createRun();
             rhMT.setFontSize(13);
             rhMT.setFontFamily(Times);
-            rhMT.setText(String.valueOf(listGiaTri.get(i).getOndinh()));
+            if(sizeListGiaTri > 0){
+            	 rhMT.setText(String.valueOf(listGiaTri.get(i).getOndinh()));
+            }else{
+            	rhMT.setText(String.valueOf(0));
+            }
+           
  		}
  		for(int i = 0; i < 2; i++){
  			XWPFTableRow rowMT = tableMoiTruong.createRow();
@@ -1180,7 +1208,9 @@ public class DocumentController{
  			}
  		}
  		float AUCP = (float) ((tongDiemActor+tongDiemBMT) * (0.6+(0.01*ketQuaKyThuat)) * (1.4+(-0.03*ketQuaMoiTruong)));
-        int G = (int) (1.4 * noiSuy * (project.getTrongsonoluc().getGiatri()*AUCP) * cp1Gio.get(project.getLuong().getBac()-1));
+ 		
+        //int G = (int) (1.4 * noiSuy * (project.getTrongsonoluc().getGiatri()*AUCP) * cp1Gio.get(project.getLuong().getBac()-1));
+ 		int G = Integer.parseInt(dinhGia);
  		XWPFTableRow row = tableGiaTri.createRow();
 		XWPFParagraph paraGiaTri = row.getCell(0).getParagraphs().get(0);
 		paraGiaTri.setAlignment(ParagraphAlignment.LEFT);
@@ -1244,7 +1274,7 @@ public class DocumentController{
             	case 4: rhGT.setText(formatter.format(1.4+((-0.03)*ketQuaMoiTruong))); break;
             	case 5: rhGT.setText(formatter.format(AUCP)); break;
             	case 6: rhGT.setText(formatter.format(noiSuy)); break;
-            	case 7: rhGT.setText(formatter.format(project.getTrongsonoluc().getGiatri()*AUCP)); break;
+            	case 7: rhGT.setText(formatter.format(project.getTrongsonoluc().getGiatri()* AUCP)); break;
             	case 8: rhGT.setText(formatter.format(cp1Gio.get(project.getLuong().getBac()-1))); break;
             	case 9: rhGT.setText(formatter.format(G)); rhGT.setBold(true); break;
             	default: break;
@@ -1411,7 +1441,7 @@ public class DocumentController{
 	
 	/**
 	 * Hàm xuất file excel.
-	 * @param projectName				Tên dự án
+	 * @param projectName				Tên dự án lấy từ view.
 	 * @param request
 	 * @param response
 	 * @param principal
@@ -1419,6 +1449,7 @@ public class DocumentController{
 	 */
 	@RequestMapping(value="/downloadExcel", method = RequestMethod.GET, produces="text/plain; charset=utf-8")
 	public ModelAndView downloadExcel(@RequestParam("project") String projectName, HttpServletRequest request, HttpServletResponse response, Principal principal){
+		String dinhGia = request.getParameter("dinhgia");
 		Project project = projectDao.findProjectByName(principal.getName(), projectName);
 		int projectid = project.getProjectid();
 		int mucLuongNhaNuoc = project.getLuongcoban();
@@ -1483,16 +1514,11 @@ public class DocumentController{
 		phuLuc7.add(xepHangMoiTruongDao.tinhNoiSuyLaoDong(projectid));
 		phuLuc7.add(project.getTrongsonoluc());
 		phuLuc7.add(luongDao.TinhCP1Gio(mucLuongNhaNuoc, luongs, listGiaTri).get(project.getLuong().getBac()-1));
+		phuLuc7.add(dinhGia);
 		listSheep.add(new DocumentExcel("Phụ lục VII", "BẢNG TÍNH TOÁN GIÁ TRỊ PHẦN MỀM", project.getTenproject(), phuLuc7));
 		
 		List<Object> phuLuc8 = new ArrayList<Object>();
-		phuLuc8.add(actorDao.tinhTongDiem(projectid, loaiactorDao.getAll()));
-		phuLuc8.add(usecaseDao.tongDiemTungUsecase(projectid, bmtDao.getAll()));
-		phuLuc8.add(xepHangKyThuatDao.TongKetqua(projectid));
-		phuLuc8.add(xepHangMoiTruongDao.TongKetQuaMoiTruong(projectid));
-		phuLuc8.add(xepHangMoiTruongDao.tinhNoiSuyLaoDong(projectid));
-		phuLuc8.add(project.getTrongsonoluc());
-		phuLuc8.add(luongDao.TinhCP1Gio(mucLuongNhaNuoc, luongs, listGiaTri).get(project.getLuong().getBac()-1));
+		phuLuc8.add(dinhGia);
 		listSheep.add(new DocumentExcel("Phụ lục VIII", "BẢNG TỔNG HỢP CHI PHÍ PHẦN MỀM", project.getTenproject(), phuLuc8));
 		return new ModelAndView("excelView", "listSheep", listSheep);
 		

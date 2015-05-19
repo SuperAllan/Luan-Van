@@ -2,11 +2,15 @@ package vn.com.luanvan.controller;
 
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
 import javax.mail.MessagingException;
+import javax.naming.NamingException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,6 +49,7 @@ public class LogRegController {
 	@Autowired
 	private ProjectDao projectDao;
 	
+	final String subject = "Đăng ký tài khoản";
 	/**
 	 * Trang chủ
 	 * @param model			
@@ -63,7 +68,6 @@ public class LogRegController {
 		}
 			return "home";
 	}
- 
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(
@@ -105,23 +109,27 @@ public class LogRegController {
 		 * @param user		
 		 * @param model
 		 * @return			Trả về trang home với biến successRegister.
+		 * @throws NamingException 
 		 * @throws MessagingException 
 		 * @throws IOException 
 		 */
-		//@Transactional(rollbackOn = Exception.class)
 		@RequestMapping(value = "/dangky", method = RequestMethod.POST)
-		public String dangKy(HttpServletRequest request, User user, Model model, HttpServletResponse response, Principal principal) {
+		public String dangKy(HttpServletRequest request, ServletRequest servletRequest, User user, Model model, HttpServletResponse response, Principal principal) throws NamingException {
 			String pass = request.getParameter("password");
 			String username = request.getParameter("username");
 			String email = request.getParameter("email");
 			String strUser = "Tài khoản đã được sử dụng.";
 			String strEmail = "Email đã được sử dụng.";
+			String existEmail = "Email không tồn tại.";
 			if(userDao.findByUserName(username) == true){
-				model.addAttribute("strUser",strUser);
+				model.addAttribute("strUser", strUser);
 				return "home";
 			}
 			else if(userDao.checkEmailInDatabase(email) == true){
-				model.addAttribute("strEmail",strEmail);
+				model.addAttribute("strEmail", strEmail);
+				return "home";
+			}else if(ExistEmail.isAddressValid(email) == false){
+				model.addAttribute("existEmail", existEmail);
 				return "home";
 			}
 			else{
@@ -138,22 +146,15 @@ public class LogRegController {
 				userRole.setUser(user);
 				userRole.setRole("ROLE_USER");
 				userroleDao.add(userRole);
-				String subject = "Đăng ký tài khoản";
-				String content = "<h3>Xin chào, bạn đã đăng ký thành công tài khoản</h3> <br>"
-		        		+"<a href=\"http://localhost:8080/luanvan/confirm/id="+user.getIdconfirm()+"\">Nhấn vào đây để kích hoạt</a>";
-				 
 				try {
-//				MimeMessage message = mailSender.createMimeMessage(); 
-//				message.setFrom(new InternetAddress("luanvan111327@gmail.com"));
-//				message.setRecipient(Message.RecipientType.TO,new InternetAddress(user.getEmail())); 		
-//				message.setSubject(subject, "UTF-8");
-//				message.setContent(content, "text/html; charset=UTF-8"); 
-//			    //sending message  
-//				mailSender.send(message);
-				Emailer sendMail = new Emailer();
-				sendMail.send(user.getEmail(), subject, content);
-				model.addAttribute("successRegister","Đăng ký thành công");
-				model.addAttribute("userInActive", user);
+					Emailer sendMail = new Emailer();
+					InetAddress ip = InetAddress.getLocalHost();
+					String contextPath = request.getContextPath();
+					String content = "<h3>Xin chào, bạn đã đăng ký thành công tài khoản</h3> <br>"
+							+"<a href=\"http://"+ip.getHostAddress()+":"+servletRequest.getServerPort()+""+contextPath+"/confirm/id="+user.getIdconfirm()+"\">Nhấn vào đây để kích hoạt</a></div>";
+					sendMail.send(user.getEmail(), subject, content);
+					model.addAttribute("successRegister","Đăng ký thành công. Xin kiểm tra Email của bạn!");
+					model.addAttribute("userInActive", user);
 				} catch (Exception e) {
 					userroleDao.delete(userRole);
 					userDao.delete(user);
@@ -178,7 +179,7 @@ public class LogRegController {
 				String hashPass = passwordEncoder.encode(request.getParameter("newPassword"));
 				user.setPassword(hashPass);
 				userDao.save(user);
-				redirectAttributes.addFlashAttribute("successChangePassword", "Bạn đã thay đổi mật khẩu thành công");
+				redirectAttributes.addFlashAttribute("successChangePassword", "Đổi mật khẩu thành công");
 			}
 			else{
 				redirectAttributes.addFlashAttribute("errorOldPass", "Nhập mật khẩu cũ không chính xác");
@@ -253,27 +254,23 @@ public class LogRegController {
 			return "confirm-mail";
 		}
 		
+		@SuppressWarnings({ "resource", "unused" })
 		@RequestMapping(value="/sendMailAgain", method = RequestMethod.POST)
-		public String sendMailAgain(HttpServletRequest request, Model model){
+		public String sendMailAgain(HttpServletRequest request, Model model, ServletRequest servletRequest) throws IOException{
 			String username = request.getParameter("userInActiveForSendMail");
 			if(username != null || username != ""){
 				User user = userDao.findUserbyUserName(username);
 				if(user.isEnabled() == false){
-					String subject = "Đăng ký tài khoản";
-					String content = "<h3>Xin chào, bạn đã đăng ký thành công tài khoản</h3> <br>"
-			        		+"<a href=\"http://localhost:8080/luanvan/confirm/id="+user.getIdconfirm()+"\">Nhấn vào đây để kích hoạt</a>";
 					try{
-//					MimeMessage message = mailSender.createMimeMessage();  
-//					message.setFrom(new InternetAddress("luanvan111327@gmail.com"));
-//					message.setRecipient(Message.RecipientType.TO,new InternetAddress(user.getEmail())); 		
-//					message.setSubject(subject, "UTF-8");
-//					message.setContent(content, "text/html; charset=UTF-8"); 
-				    //sending message  
-					//mailSender.send(message);
+						ServerSocket serverSocket = new ServerSocket(0);
+						InetAddress ip = InetAddress.getLocalHost();
 						Emailer sendMail = new Emailer();
+						String contextPath = request.getContextPath();
+						String content = "<h3>Xin chào, bạn đã đăng ký thành công tài khoản</h3> <br>"
+								+"<a href=\"http://"+ip.getHostAddress()+":"+servletRequest.getServerPort()+""+contextPath+"/confirm/id="+user.getIdconfirm()+"\">Nhấn vào đây để kích hoạt</a></div>";
 						sendMail.send(user.getEmail(), subject, content);
 						model.addAttribute("successRegister","Đăng ký thành công");
-						model.addAttribute("userInActive", user);
+						model.addAttribute("userInActive", user);	
 					}catch(Exception e){
 						return "403";
 					}

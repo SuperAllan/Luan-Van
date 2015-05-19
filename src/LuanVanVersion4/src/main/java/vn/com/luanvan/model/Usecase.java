@@ -27,47 +27,44 @@ import javax.persistence.Table;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "usecase", catalog = "luanvan")
-public class Usecase implements java.io.Serializable {
+@Table(name = "usecase")
+public class Usecase implements java.io.Serializable{
 
 	private int usecaseid;
 	private Bmt bmt;
 	private Nhomuc nhomuc;
-	private Project project;
 	private String nameofuc;
 	private String motauc;
 	private String cauhoi;
 	private boolean tinhtien;
 	private List<FileUC> files = new ArrayList<FileUC>();
 	private Set<Phanloai> phanloais = new HashSet<Phanloai>(0);
-	private Set<Chucnang> chucnangs = new HashSet<Chucnang>(0);
+//	private Set<Chucnang> chucnangs = new HashSet<Chucnang>(0);
 
 	public Usecase() {
 	}
 
-	public Usecase(Bmt bmt, Nhomuc nhomuc, Project project, String nameofuc, String motauc, boolean tinhtien) {
+	public Usecase(Bmt bmt, Nhomuc nhomuc, String nameofuc, String motauc, boolean tinhtien) {
 		this.bmt = bmt;
 		this.nhomuc = nhomuc;
-		this.project = project;
 		this.nameofuc = nameofuc;
 		this.motauc = motauc;
 		this.tinhtien = tinhtien;
 	}
 
-	public Usecase(Bmt bmt, Nhomuc nhomuc, Project project, String nameofuc, String motauc,
-			String cauhoi, boolean tinhtien, List<FileUC> files, Set<Phanloai> phanloais, Set<Chucnang> chucnangs) {
+	public Usecase(Bmt bmt, Nhomuc nhomuc, String nameofuc, String motauc,
+			String cauhoi, boolean tinhtien, List<FileUC> files, Set<Phanloai> phanloais) {
 		this.bmt = bmt;
 //		this.mucdo = mucdo;
 //		this.mucdocanthiet = mucdocanthiet;
 		this.nhomuc = nhomuc;
-		this.project = project;
 		this.nameofuc = nameofuc;
 		this.motauc = motauc;
 		this.cauhoi = cauhoi;
 		this.tinhtien = tinhtien;
 		this.files = files;
 		this.phanloais = phanloais;
-		this.chucnangs = chucnangs;
+//		this.chucnangs = chucnangs;
 	}
 
 	@Id
@@ -99,16 +96,6 @@ public class Usecase implements java.io.Serializable {
 
 	public void setNhomuc(Nhomuc nhomuc) {
 		this.nhomuc = nhomuc;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PROJECTID", nullable = false)
-	public Project getProject() {
-		return this.project;
-	}
-
-	public void setProject(Project project) {
-		this.project = project;
 	}
 
 	@Column(name = "NAMEOFUC", nullable = false)
@@ -164,14 +151,4 @@ public class Usecase implements java.io.Serializable {
 	public void setPhanloais(Set<Phanloai> phanloais) {
 		this.phanloais = phanloais;
 	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usecase")
-	public Set<Chucnang> getChucnangs() {
-		return this.chucnangs;
-	}
-
-	public void setChucnangs(Set<Chucnang> chucnangs) {
-		this.chucnangs = chucnangs;
-	}
-
 }

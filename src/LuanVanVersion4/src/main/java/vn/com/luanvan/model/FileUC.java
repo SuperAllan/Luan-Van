@@ -20,7 +20,7 @@ import javax.persistence.Table;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "file", catalog = "luanvan")
+@Table(name = "file")
 public class FileUC implements java.io.Serializable {
 
 	private Integer fileid;
